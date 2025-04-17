@@ -6,20 +6,22 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { cn } from "@/lib/utils";
 
-interface ShortlistButtonProps {
+interface LikeButtonProps {
   vendorId: number;
   className?: string;
   variant?: "default" | "outline" | "ghost";
   size?: "default" | "sm" | "lg" | "icon";
+  showText?: boolean;
 }
 
-// Simple version of ShortlistButton that doesn't depend on auth context
-function SimpleShortlistButton({ 
+// Simple version of LikeButton that doesn't depend on auth context
+function SimpleLikeButton({ 
   vendorId, 
   className,
   variant = "default",
-  size = "icon"
-}: ShortlistButtonProps) {
+  size = "icon",
+  showText = false
+}: LikeButtonProps) {
   const { toast } = useToast();
   
   const defaultClassName = "w-10 h-10 bg-white bg-opacity-70 hover:bg-opacity-100 rounded-full flex items-center justify-center transition";
@@ -27,7 +29,7 @@ function SimpleShortlistButton({
   const handleClick = () => {
     toast({
       title: "Please log in",
-      description: "You need to be logged in to shortlist vendors.",
+      description: "You need to be logged in to like vendors.",
       variant: "destructive",
     });
   };
@@ -42,31 +44,32 @@ function SimpleShortlistButton({
         className
       )}
       onClick={handleClick}
-      aria-label="Add to shortlist"
+      aria-label="Like vendor"
     >
       <Heart className="text-primary" />
+      {showText && <span className="ml-2">Like</span>}
     </Button>
   );
 }
 
-export function ShortlistButton(props: ShortlistButtonProps) {
+export function LikeButton(props: LikeButtonProps) {
   try {
     // Try to use auth context
     const { useAuth } = require("@/context/AuthContext");
     const { user, isAuthenticated } = useAuth();
     const { toast } = useToast();
     const queryClient = useQueryClient();
-    const { vendorId, className, variant = "default", size = "icon" } = props;
+    const { vendorId, className, variant = "default", size = "icon", showText = false } = props;
 
-    // Check if vendor is already shortlisted
+    // Check if vendor is already liked (shortlisted)
     const { data, isLoading } = useQuery({
       queryKey: [isAuthenticated ? `/api/shortlists/${user?.id}/${vendorId}` : null],
       enabled: isAuthenticated && !!user?.id,
     });
 
-    const isShortlisted = data?.isShortlisted;
+    const isLiked = data?.isShortlisted;
 
-    // Add to shortlist mutation
+    // Add to likes mutation
     const addMutation = useMutation({
       mutationFn: async () => {
         return apiRequest('POST', '/api/shortlists', {
@@ -78,13 +81,13 @@ export function ShortlistButton(props: ShortlistButtonProps) {
         queryClient.invalidateQueries({ queryKey: [`/api/shortlists/${user?.id}/${vendorId}`] });
         queryClient.invalidateQueries({ queryKey: ['/api/shortlists'] });
         toast({
-          title: "Added to shortlist",
-          description: "Vendor has been added to your shortlist.",
+          title: "Added to Likes",
+          description: "Vendor has been added to your liked items.",
         });
       },
     });
 
-    // Remove from shortlist mutation
+    // Remove from likes mutation
     const removeMutation = useMutation({
       mutationFn: async () => {
         return apiRequest('DELETE', `/api/shortlists/${user?.id}/${vendorId}`);
@@ -93,23 +96,23 @@ export function ShortlistButton(props: ShortlistButtonProps) {
         queryClient.invalidateQueries({ queryKey: [`/api/shortlists/${user?.id}/${vendorId}`] });
         queryClient.invalidateQueries({ queryKey: ['/api/shortlists'] });
         toast({
-          title: "Removed from shortlist",
-          description: "Vendor has been removed from your shortlist.",
+          title: "Removed from Likes",
+          description: "Vendor has been removed from your liked items.",
         });
       },
     });
 
-    const handleToggleFavorite = () => {
+    const handleToggleLike = () => {
       if (!isAuthenticated) {
         toast({
           title: "Please log in",
-          description: "You need to be logged in to shortlist vendors.",
+          description: "You need to be logged in to like vendors.",
           variant: "destructive",
         });
         return;
       }
 
-      if (isShortlisted) {
+      if (isLiked) {
         removeMutation.mutate();
       } else {
         addMutation.mutate();
@@ -126,21 +129,28 @@ export function ShortlistButton(props: ShortlistButtonProps) {
         size={size}
         className={cn(
           variant === "default" ? defaultClassName : "",
+          isLiked ? "text-pink-500 hover:text-pink-600" : "text-primary",
           className
         )}
-        onClick={handleToggleFavorite}
+        onClick={handleToggleLike}
         disabled={isLoading || addMutation.isPending || removeMutation.isPending}
-        aria-label={isShortlisted ? "Remove from shortlist" : "Add to shortlist"}
+        aria-label={isLiked ? "Unlike vendor" : "Like vendor"}
       >
-        {isShortlisted ? (
-          <Heart className="text-primary fill-primary" />
+        {isLiked ? (
+          <Heart className="text-pink-500 fill-pink-500" />
         ) : (
           <Heart className="text-primary" />
+        )}
+        {showText && (
+          <span className="ml-2">{isLiked ? 'Liked' : 'Like'}</span>
         )}
       </Button>
     );
   } catch (error) {
     // Fall back to the simple version if auth context is not available
-    return <SimpleShortlistButton {...props} />;
+    return <SimpleLikeButton {...props} />;
   }
 }
+
+// Keep the old name for backward compatibility
+export const ShortlistButton = LikeButton;

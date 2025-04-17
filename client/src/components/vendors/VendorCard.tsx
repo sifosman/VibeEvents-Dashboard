@@ -4,7 +4,7 @@ import { Vendor, Category } from "@shared/schema";
 import { Card, CardContent } from "@/components/ui/card";
 import { Globe, Instagram, MessageSquare } from "lucide-react";
 import StarRating from "../ui/star-rating";
-import { ShortlistButton } from "./ShortlistButton";
+import { LikeButton } from "./ShortlistButton";
 
 interface VendorCardProps {
   vendor: Vendor;
@@ -18,7 +18,7 @@ export function VendorCard({ vendor, category }: VendorCardProps) {
         className="relative h-48 bg-cover bg-center" 
         style={{ backgroundImage: `url('${vendor.imageUrl}')` }}
       >
-        <ShortlistButton vendorId={vendor.id} className="absolute top-4 right-4" size="sm" />
+        <LikeButton vendorId={vendor.id} className="absolute top-4 right-4" size="sm" />
       </div>
       <CardContent className="p-4">
         <h3 className="font-display font-medium text-lg mb-1 group-hover:text-primary transition">

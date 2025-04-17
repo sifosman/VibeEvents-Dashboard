@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import VendorListing from "./pages/VendorListing";
 import VendorDetail from "./pages/VendorDetail";
 import PlannerDashboard from "./pages/PlannerDashboard";
+import LikedItems from "./pages/LikedItems";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotFound from "@/pages/not-found";
@@ -24,6 +25,9 @@ function AppRouter() {
         <Route path="/vendors/:id" component={VendorDetail} />
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
+        <Route path="/likes">
+          {isAuthenticated ? <LikedItems /> : <Login />}
+        </Route>
         <Route path="/planner">
           {isAuthenticated ? <PlannerDashboard /> : <Login />}
         </Route>
@@ -37,6 +41,7 @@ function AppRouter() {
         <Route path="/" component={Home} />
         <Route path="/vendors" component={VendorListing} />
         <Route path="/vendors/:id" component={VendorDetail} />
+        <Route path="/likes" component={LikedItems} />
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
         <Route path="/planner" component={Login} />
