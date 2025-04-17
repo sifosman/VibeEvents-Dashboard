@@ -8,6 +8,7 @@ import {
   insertTimelineEventSchema 
 } from "@shared/schema";
 import { z } from "zod";
+import Stripe from "stripe";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Authentication routes
@@ -307,6 +308,149 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  // Stripe subscription routes
+  if (!process.env.STRIPE_SECRET_KEY) {
+    console.warn('Warning: STRIPE_SECRET_KEY is not set. Stripe integration will not function properly.');
+  }
+  
+  const stripe = process.env.STRIPE_SECRET_KEY ? 
+    new Stripe(process.env.STRIPE_SECRET_KEY) : 
+    undefined;
+  
+  // Create a payment intent for one-time payments
+  app.post('/api/create-payment-intent', async (req: Request, res: Response) => {
+    if (!stripe) {
+      return res.status(500).json({ message: 'Stripe is not configured' });
+    }
+    
+    try {
+      const { amount, vendorId } = req.body;
+      
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: Math.round(amount * 100), // Convert to cents
+        currency: 'zar', // South African Rand
+        metadata: { vendorId }
+      });
+      
+      res.json({ clientSecret: paymentIntent.client_secret });
+    } catch (error: any) {
+      res.status(500).json({ message: `Error creating payment intent: ${error.message}` });
+    }
+  });
+  
+  // Create a subscription
+  app.post('/api/subscriptions', async (req: Request, res: Response) => {
+    if (!stripe) {
+      return res.status(500).json({ message: 'Stripe is not configured' });
+    }
+    
+    try {
+      const { vendorId, subscriptionTier, email, name } = req.body;
+      
+      if (!vendorId || !subscriptionTier || !email) {
+        return res.status(400).json({ message: 'Missing required fields' });
+      }
+      
+      // Get the vendor
+      const vendor = await storage.getVendor(vendorId);
+      if (!vendor) {
+        return res.status(404).json({ message: 'Vendor not found' });
+      }
+      
+      // Create or get customer
+      let customerId = vendor.stripeCustomerId;
+      
+      if (!customerId) {
+        const customer = await stripe.customers.create({
+          email,
+          name,
+          metadata: { vendorId }
+        });
+        customerId = customer.id;
+        
+        // Update vendor with customer ID
+        // We'll need to add this method to storage
+        // await storage.updateVendorStripeCustomerId(vendorId, customerId);
+      }
+      
+      // Get the price ID based on tier
+      const priceId = subscriptionTier === 'basic' ? 
+        process.env.STRIPE_BASIC_PRICE_ID : 
+        process.env.STRIPE_PRO_PRICE_ID;
+      
+      if (!priceId) {
+        return res.status(500).json({ message: 'Stripe price ID not configured' });
+      }
+      
+      // Create subscription
+      const subscription = await stripe.subscriptions.create({
+        customer: customerId,
+        items: [{ price: priceId }],
+        payment_behavior: 'default_incomplete',
+        payment_settings: { save_default_payment_method: 'on_subscription' },
+        expand: ['latest_invoice.payment_intent'],
+      });
+      
+      // Update vendor with subscription ID and tier
+      // We'll need to add this method to storage
+      // await storage.updateVendorSubscription(vendorId, subscription.id, subscriptionTier);
+      
+      // Return client secret for the invoice's payment intent
+      const invoice = subscription.latest_invoice as Stripe.Invoice;
+      const paymentIntent = invoice.payment_intent as Stripe.PaymentIntent;
+      
+      res.json({
+        subscriptionId: subscription.id,
+        clientSecret: paymentIntent.client_secret,
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: `Error creating subscription: ${error.message}` });
+    }
+  });
+  
+  // Handle subscription webhook
+  app.post('/api/webhook', async (req: Request, res: Response) => {
+    if (!stripe) {
+      return res.status(500).json({ message: 'Stripe is not configured' });
+    }
+    
+    try {
+      const sig = req.headers['stripe-signature'] as string;
+      
+      if (!process.env.STRIPE_WEBHOOK_SECRET || !sig) {
+        return res.status(400).json({ message: 'Webhook secret not configured or signature missing' });
+      }
+      
+      // Verify webhook
+      const event = stripe.webhooks.constructEvent(
+        req.body,
+        sig,
+        process.env.STRIPE_WEBHOOK_SECRET
+      );
+      
+      // Handle events
+      if (event.type === 'invoice.payment_succeeded') {
+        const invoice = event.data.object as Stripe.Invoice;
+        if (invoice.subscription) {
+          // We'll need to add this method to storage
+          // await storage.updateVendorSubscriptionStatus(invoice.subscription.toString(), 'active');
+        }
+      } else if (event.type === 'customer.subscription.updated') {
+        const subscription = event.data.object as Stripe.Subscription;
+        // Update status
+        // await storage.updateVendorSubscriptionStatus(subscription.id, subscription.status);
+      } else if (event.type === 'customer.subscription.deleted') {
+        const subscription = event.data.object as Stripe.Subscription;
+        // Mark as canceled
+        // await storage.updateVendorSubscriptionStatus(subscription.id, 'canceled');
+      }
+      
+      res.json({ received: true });
+    } catch (error: any) {
+      res.status(400).json({ message: `Webhook error: ${error.message}` });
     }
   });
 

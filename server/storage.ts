@@ -28,6 +28,9 @@ export interface IStorage {
   createVendor(vendor: InsertVendor): Promise<Vendor>;
   getFeaturedVendors(limit?: number): Promise<Vendor[]>;
   searchVendors(query: string, categoryId?: number): Promise<Vendor[]>;
+  updateVendorStripeCustomerId(id: number, customerId: string): Promise<Vendor>;
+  updateVendorSubscription(id: number, subscriptionId: string, subscriptionTier: string): Promise<Vendor>;
+  updateVendorSubscriptionStatus(subscriptionId: string, status: string): Promise<Vendor | undefined>;
 
   // Shortlist operations
   getShortlists(userId: number): Promise<(Shortlist & { vendor: Vendor })[]>;
@@ -547,6 +550,65 @@ export class MemStorage implements IStorage {
   async deleteTimelineEvent(id: number): Promise<void> {
     this.timelineEvents.delete(id);
   }
+
+  // Vendor subscription operations
+  async updateVendorStripeCustomerId(id: number, customerId: string): Promise<Vendor> {
+    const vendor = this.vendors.get(id);
+    if (!vendor) {
+      throw new Error(`Vendor with ID ${id} not found`);
+    }
+
+    const updatedVendor = { ...vendor, stripeCustomerId: customerId };
+    this.vendors.set(id, updatedVendor);
+    return updatedVendor;
+  }
+
+  async updateVendorSubscription(id: number, subscriptionId: string, subscriptionTier: string): Promise<Vendor> {
+    const vendor = this.vendors.get(id);
+    if (!vendor) {
+      throw new Error(`Vendor with ID ${id} not found`);
+    }
+
+    // Set subscription details
+    const updatedVendor = { 
+      ...vendor, 
+      stripeSubscriptionId: subscriptionId, 
+      subscriptionTier: subscriptionTier,
+      subscriptionStatus: 'active',
+      // Set tier-specific features
+      cataloguePages: subscriptionTier === 'basic' ? 2 : subscriptionTier === 'pro' ? 6 : 0
+    };
+    
+    this.vendors.set(id, updatedVendor);
+    return updatedVendor;
+  }
+
+  async updateVendorSubscriptionStatus(subscriptionId: string, status: string): Promise<Vendor | undefined> {
+    // Find vendor by subscription ID
+    const vendor = Array.from(this.vendors.values()).find(
+      v => v.stripeSubscriptionId === subscriptionId
+    );
+
+    if (!vendor) {
+      return undefined;
+    }
+
+    // Update status
+    const updatedVendor = { ...vendor, subscriptionStatus: status };
+    this.vendors.set(vendor.id, updatedVendor);
+
+    // If canceled, revert to free tier
+    if (status === 'canceled') {
+      updatedVendor.subscriptionTier = 'free';
+      updatedVendor.cataloguePages = 0;
+    }
+
+    return updatedVendor;
+  }
 }
 
-export const storage = new MemStorage();
+// Import the DatabaseStorage class
+import { DatabaseStorage } from './database-storage';
+
+// Use DatabaseStorage for persistent storage
+export const storage = new DatabaseStorage();
