@@ -1,26 +1,11 @@
 import { db } from '../server/db';
-import { categories, vendors } from '../shared/schema';
+import { vendors } from '../shared/schema';
 
-async function addMarketingCategory() {
-  console.log('Adding Marketing Materials & Invitations category...');
+async function addMarketingVendors() {
+  console.log('Adding vendors for Marketing Materials & Invitations category...');
   
-  // Add new category
-  await db.insert(categories).values([
-    {
-      name: "Marketing Materials & Invitations",
-      description: "Branded Gazebos, Banners, Stickers & Event Invitations",
-      imageUrl: "https://images.unsplash.com/photo-1565538420870-da08ff96a207?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-      slug: "marketing-materials-invitations"
-    }
-  ]);
-
-  console.log('Adding sample vendors for Marketing Materials & Invitations...');
-  
-  // Get the ID of the newly created category
-  const [newCategory] = await db.select().from(categories).where(
-    cat => cat.slug.equals('marketing-materials-invitations')
-  );
-  const categoryId = newCategory.id;
+  // The category ID is 21 as we confirmed with our previous check
+  const categoryId = 21;
   
   // Add vendors for this category
   await db.insert(vendors).values([
@@ -86,9 +71,9 @@ async function addMarketingCategory() {
     }
   ]);
 
-  console.log('Marketing Materials & Invitations category and vendors added successfully!');
+  console.log('Marketing Materials & Invitations vendors added successfully!');
 }
 
-addMarketingCategory().catch(err => {
-  console.error('Error adding marketing category:', err);
+addMarketingVendors().catch(err => {
+  console.error('Error adding marketing vendors:', err);
 });
