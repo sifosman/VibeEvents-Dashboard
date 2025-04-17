@@ -30,7 +30,7 @@ export default function VendorCategories() {
       <div className="container-custom">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-display font-bold mb-4">Browse Vendors by Category</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">Find the perfect match for each aspect of your wedding</p>
+          <p className="text-muted-foreground max-w-2xl mx-auto">Find the perfect match for each aspect of your event</p>
         </div>
         
         <div className="bg-neutral rounded-lg shadow overflow-hidden mb-8">

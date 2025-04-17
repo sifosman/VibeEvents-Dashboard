@@ -186,7 +186,7 @@ export default function Timeline() {
             <DialogHeader>
               <DialogTitle>Add Timeline Event</DialogTitle>
               <DialogDescription>
-                Create a new milestone for your wedding planning journey.
+                Create a new milestone for your event planning journey.
               </DialogDescription>
             </DialogHeader>
             
@@ -311,7 +311,7 @@ export default function Timeline() {
         {!sortedEvents || sortedEvents.length === 0 ? (
           <div className="text-center py-10">
             <h3 className="text-lg font-medium mb-2">No timeline events yet</h3>
-            <p className="text-muted-foreground mb-6">Build your wedding journey with important milestones</p>
+            <p className="text-muted-foreground mb-6">Build your event journey with important milestones</p>
             <Button 
               className="bg-primary text-white hover:bg-primary/90"
               onClick={() => setIsAddEventOpen(true)}

@@ -14,7 +14,7 @@ export default function ServiceCategories() {
       <div className="container-custom">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-display font-bold mb-4">Browse Service Categories</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">Find the perfect professionals to make your wedding day memorable</p>
+          <p className="text-muted-foreground max-w-2xl mx-auto">Find the perfect professionals to make your event memorable</p>
         </div>
         
         {isLoading ? (

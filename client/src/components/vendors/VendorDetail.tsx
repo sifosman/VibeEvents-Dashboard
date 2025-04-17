@@ -101,7 +101,7 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
               </CardHeader>
               <CardContent>
                 <ul className="list-disc pl-5 space-y-1">
-                  <li>Full service wedding planning</li>
+                  <li>Full service event planning</li>
                   <li>Day-of coordination</li>
                   <li>Custom event design</li>
                   <li>Vendor management</li>
@@ -172,7 +172,7 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
               <Separator className="my-4" />
               
               <div className="text-sm text-muted-foreground">
-                <p>Tell them you found them on WeddingPro!</p>
+                <p>Tell them you found them on HowzEventz!</p>
               </div>
             </CardContent>
           </Card>

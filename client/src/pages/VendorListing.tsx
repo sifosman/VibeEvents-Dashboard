@@ -93,8 +93,8 @@ export default function VendorListing() {
         <meta 
           name="description" 
           content={selectedCategory 
-            ? `Find the best ${selectedCategory.name} vendors for your wedding day.` 
-            : "Browse and discover wedding vendors across all categories."}
+            ? `Find the best ${selectedCategory.name} vendors for your event.` 
+            : "Browse and discover event vendors across all categories."}
         />
       </Helmet>
       
