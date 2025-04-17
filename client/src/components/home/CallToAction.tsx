@@ -16,12 +16,12 @@ function SimpleCallToAction() {
                 Create Free Account
               </Button>
             </Link>
-            <Link href="/vendors">
+            <Link href="/services">
               <Button 
                 variant="outline" 
                 className="px-8 py-3 h-auto border-primary text-primary rounded-lg hover:bg-accent hover:bg-opacity-50 transition font-medium w-full sm:w-auto"
               >
-                Browse Vendors
+                Explore Services
               </Button>
             </Link>
           </div>
@@ -51,12 +51,12 @@ export default function CallToAction() {
                       Go to Planner
                     </Button>
                   </Link>
-                  <Link href="/vendors">
+                  <Link href="/services">
                     <Button 
                       variant="outline" 
                       className="px-8 py-3 h-auto border-primary text-primary rounded-lg hover:bg-accent hover:bg-opacity-50 transition font-medium w-full sm:w-auto"
                     >
-                      Browse Vendors
+                      Explore Services
                     </Button>
                   </Link>
                 </>
@@ -67,12 +67,12 @@ export default function CallToAction() {
                       Create Free Account
                     </Button>
                   </Link>
-                  <Link href="/vendors">
+                  <Link href="/services">
                     <Button 
                       variant="outline" 
                       className="px-8 py-3 h-auto border-primary text-primary rounded-lg hover:bg-accent hover:bg-opacity-50 transition font-medium w-full sm:w-auto"
                     >
-                      Browse Vendors
+                      Explore Services
                     </Button>
                   </Link>
                 </>

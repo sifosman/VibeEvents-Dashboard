@@ -18,17 +18,20 @@ export default function Hero() {
       <div className="absolute inset-0 bg-black bg-opacity-40"></div>
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="text-center px-4 max-w-3xl">
-          <h1 className="text-3xl md:text-5xl font-display font-bold text-white mb-6">Plan Your Perfect Wedding Day</h1>
-          <p className="text-white text-lg mb-8">Discover and book the best service providers for your special day</p>
+          <h1 className="text-3xl md:text-5xl font-display font-bold text-white mb-6">Plan Your Perfect Event</h1>
+          <p className="text-white text-lg mb-8">Discover and book the best service providers for all your special occasions</p>
           
           {/* Search Form */}
           <div className="bg-white rounded-lg shadow-lg p-4 md:p-6 mx-auto max-w-2xl">
             <div className="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3">
               <Select value={selectedCategory} onValueChange={setSelectedCategory}>
                 <SelectTrigger className="flex-grow px-4 py-3 rounded focus:border-primary">
-                  <SelectValue placeholder="What service are you looking for?" />
+                  <SelectValue placeholder="What are you looking for?" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="all-services">All Services</SelectItem>
+                  <SelectItem value="market-vendors">Market Vendors</SelectItem>
+                  <SelectItem value="vendor-opportunities">Vendor Opportunities</SelectItem>
                   {categories?.map((category) => (
                     <SelectItem key={category.id} value={category.slug}>
                       {category.name}
@@ -37,9 +40,14 @@ export default function Hero() {
                 </SelectContent>
               </Select>
               
-              <Link href={selectedCategory ? `/vendors?category=${selectedCategory}` : "/vendors"}>
+              <Link href={
+                selectedCategory === "all-services" ? "/services" :
+                selectedCategory === "market-vendors" ? "/market-vendors" :
+                selectedCategory === "vendor-opportunities" ? "/opportunities" :
+                selectedCategory ? `/vendors?category=${selectedCategory}` : "/services"
+              }>
                 <Button className="bg-primary text-white px-6 py-6 h-12 hover:bg-primary/90 whitespace-nowrap">
-                  Find Vendors
+                  Search
                 </Button>
               </Link>
             </div>
