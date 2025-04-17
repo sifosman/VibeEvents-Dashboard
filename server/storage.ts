@@ -55,6 +55,36 @@ export interface IStorage {
   createTimelineEvent(event: InsertTimelineEvent): Promise<TimelineEvent>;
   updateTimelineEvent(id: number, completed: boolean): Promise<TimelineEvent>;
   deleteTimelineEvent(id: number): Promise<void>;
+  
+  // WhatsApp integration operations
+  getWhatsappGroups(userId: number): Promise<WhatsappGroup[]>;
+  getWhatsappGroup(id: number): Promise<WhatsappGroup | undefined>;
+  getWhatsappGroupByGroupId(groupId: string): Promise<WhatsappGroup | undefined>;
+  createWhatsappGroup(group: InsertWhatsappGroup): Promise<WhatsappGroup>;
+  updateWhatsappGroupSettings(id: number, settings: Partial<WhatsappGroup>): Promise<WhatsappGroup>;
+  deleteWhatsappGroup(id: number): Promise<void>;
+  getWhatsappMessages(groupId: number, limit?: number): Promise<WhatsappMessage[]>;
+  createWhatsappMessage(message: InsertWhatsappMessage): Promise<WhatsappMessage>;
+  
+  // Advertising operations
+  getAdCampaigns(vendorId: number): Promise<AdCampaign[]>;
+  getAdCampaign(id: number): Promise<AdCampaign | undefined>;
+  createAdCampaign(campaign: InsertAdCampaign): Promise<AdCampaign>;
+  updateAdCampaign(id: number, data: Partial<AdCampaign>): Promise<AdCampaign>;
+  getAdAssets(campaignId: number): Promise<AdAsset[]>;
+  getAdAsset(id: number): Promise<AdAsset | undefined>;
+  createAdAsset(asset: InsertAdAsset): Promise<AdAsset>;
+  getAdPlacement(position: string): Promise<AdPlacement | undefined>;
+  getAdPlacements(): Promise<AdPlacement[]>;
+  createAdPlacement(placement: InsertAdPlacement): Promise<AdPlacement>;
+  trackAdImpression(adId: number): Promise<void>;
+  trackAdClick(adId: number): Promise<void>;
+  getFeaturedVendorAds(categoryId?: number, limit?: number): Promise<any[]>;
+  getVideoAd(position: string): Promise<any | undefined>;
+  getSeoPackages(): Promise<SeoPackage[]>;
+  getSeoPackage(id: number): Promise<SeoPackage | undefined>;
+  createSeoPackage(seoPackage: InsertSeoPackage): Promise<SeoPackage>;
+  updateSeoPackage(id: number, data: Partial<SeoPackage>): Promise<SeoPackage>;
 }
 
 export class MemStorage implements IStorage {

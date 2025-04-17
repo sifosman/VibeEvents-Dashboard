@@ -218,6 +218,10 @@ export const whatsappGroups = pgTable("whatsapp_groups", {
   groupId: text("group_id").notNull().unique(),
   eventId: integer("event_id"),
   status: text("status").notNull().default("active"),
+  taskSync: boolean("task_sync").default(true),
+  timelineSync: boolean("timeline_sync").default(true),
+  notificationsEnabled: boolean("notifications_enabled").default(true),
+  lastActivity: timestamp("last_activity"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
