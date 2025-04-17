@@ -1,5 +1,5 @@
 import { db } from './db';
-import { eq, like, and, desc, sql } from 'drizzle-orm';
+import { eq, like, and, desc, sql, gte, lte } from 'drizzle-orm';
 import { 
   users, type User, type InsertUser,
   categories, type Category, type InsertCategory,
@@ -15,7 +15,8 @@ import {
   seoPackages, type SeoPackage, type InsertSeoPackage,
   calendarEvents, type CalendarEvent, type InsertCalendarEvent,
   conversations, type Conversation, type InsertConversation,
-  messages, type Message, type InsertMessage
+  messages, type Message, type InsertMessage,
+  publicHolidays
 } from '@shared/schema';
 import { IStorage } from './storage';
 
