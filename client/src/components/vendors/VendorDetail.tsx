@@ -15,6 +15,8 @@ import { LikeButton } from "./ShortlistButton";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Reviews from "./Reviews";
+import VendorCalendar from "../calendar/VendorCalendar";
+import "../calendar/calendar-styles.css";
 
 interface VendorDetailProps {
   vendorId: number;
