@@ -118,16 +118,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Vendor routes
   app.get('/api/vendors', async (req: Request, res: Response) => {
     try {
-      const { category, search, dietary, cuisine } = req.query;
+      const { 
+        category, 
+        search, 
+        dietary, 
+        cuisine, 
+        isThemed, 
+        themeType, 
+        priceRange, 
+        location 
+      } = req.query;
+      
       let vendors;
       
-      if (search) {
+      if (search || isThemed) {
         const categoryId = category ? parseInt(category as string) : undefined;
+        const searchQuery = search ? (search as string) : '';
+        
+        // Build complex filters object
+        const filters: any = {};
+        
+        // Add themed filters if present
+        if (isThemed === 'true') {
+          filters.isThemed = true;
+          
+          // Add specific theme types if provided
+          if (themeType) {
+            filters.themeTypes = Array.isArray(themeType) 
+              ? themeType as string[] 
+              : [themeType as string];
+          }
+        }
+        
+        // Add price range if provided
+        if (priceRange) {
+          filters.priceRange = priceRange as string;
+        }
+        
+        // Add location if provided
+        if (location) {
+          filters.location = location as string;
+        }
+        
         vendors = await storage.searchVendors(
-          search as string, 
+          searchQuery, 
           categoryId,
           dietary as string | undefined,
-          cuisine as string | undefined
+          cuisine as string | undefined,
+          Object.keys(filters).length > 0 ? filters : undefined
         );
       } else if (category) {
         vendors = await storage.getVendorsByCategory(parseInt(category as string));

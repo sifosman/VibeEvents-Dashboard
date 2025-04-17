@@ -88,29 +88,47 @@ export class DatabaseStorage implements IStorage {
       .limit(limit);
   }
 
-  async searchVendors(query: string, categoryId?: number, dietary?: string, cuisine?: string): Promise<Vendor[]> {
+  async searchVendors(
+    query: string, 
+    categoryId?: number, 
+    dietary?: string, 
+    cuisine?: string,
+    filters?: {
+      isThemed?: boolean;
+      themeTypes?: string[];
+      dietaryOptions?: string[];
+      cuisineTypes?: string[];
+      priceRange?: string;
+      location?: string;
+    }
+  ): Promise<Vendor[]> {
     const likeQuery = `%${query}%`;
-    let filters = [];
+    let sqlFilters = [];
     
     // Add name search filter
-    filters.push(like(vendors.name, likeQuery));
+    sqlFilters.push(like(vendors.name, likeQuery));
     
     // Add category filter if provided
     if (categoryId) {
-      filters.push(eq(vendors.categoryId, categoryId));
+      sqlFilters.push(eq(vendors.categoryId, categoryId));
+    }
+    
+    // If isThemed filter is specified, add it to SQL filters
+    if (filters?.isThemed !== undefined) {
+      sqlFilters.push(eq(vendors.isThemed, filters.isThemed));
     }
     
     // Execute the query with basic filters
     let results = await db
       .select()
       .from(vendors)
-      .where(and(...filters))
+      .where(and(...sqlFilters))
       .orderBy(desc(vendors.rating));
     
-    // Post-query filtering for dietary options and cuisine types
+    // Post-query filtering for array and complex filter types
     // We need to do this in-memory because we're filtering array fields
     
-    // Filter by dietary preferences if specified (including alcohol-free)
+    // Handle legacy dietary parameter for backward compatibility
     if (dietary) {
       // Convert to lowercase for case-insensitive comparison
       const dietaryLower = dietary.toLowerCase();
@@ -130,7 +148,7 @@ export class DatabaseStorage implements IStorage {
       });
     }
     
-    // Filter by cuisine type if specified
+    // Handle legacy cuisine parameter for backward compatibility
     if (cuisine) {
       // Convert to lowercase for case-insensitive comparison
       const cuisineLower = cuisine.toLowerCase();
@@ -140,6 +158,51 @@ export class DatabaseStorage implements IStorage {
                vendor.cuisineTypes.some(type => 
                  type.toLowerCase().includes(cuisineLower));
       });
+    }
+    
+    // Handle new filter structure
+    if (filters) {
+      // Filter by specific theme types
+      if (filters.themeTypes && filters.themeTypes.length > 0) {
+        results = results.filter(vendor => 
+          vendor.themeTypes?.some(theme => 
+            filters.themeTypes?.includes(theme)
+          )
+        );
+      }
+      
+      // Filter by dietary options
+      if (filters.dietaryOptions && filters.dietaryOptions.length > 0) {
+        results = results.filter(vendor => 
+          vendor.dietaryOptions?.some(option => 
+            filters.dietaryOptions?.includes(option)
+          )
+        );
+      }
+      
+      // Filter by cuisine types
+      if (filters.cuisineTypes && filters.cuisineTypes.length > 0) {
+        results = results.filter(vendor => 
+          vendor.cuisineTypes?.some(cuisine => 
+            filters.cuisineTypes?.includes(cuisine)
+          )
+        );
+      }
+      
+      // Filter by price range
+      if (filters.priceRange) {
+        results = results.filter(vendor => 
+          vendor.priceRange === filters.priceRange
+        );
+      }
+      
+      // Filter by location
+      if (filters.location) {
+        const lowerLocation = filters.location.toLowerCase();
+        results = results.filter(vendor => 
+          vendor.location?.toLowerCase().includes(lowerLocation)
+        );
+      }
     }
     
     return results;
