@@ -1244,6 +1244,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
       
+      // Return a correctly formatted response for the calendar component
+      console.log(`Returning ${events.length} events and ${publicHolidays.length} holidays for calendar`);
       res.status(200).json({
         events,
         publicHolidays

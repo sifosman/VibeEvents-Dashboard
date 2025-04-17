@@ -5,11 +5,18 @@ import { queryClient } from '@/lib/queryClient';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, Clock, MapPin, Calendar as CalendarIcon } from 'lucide-react';
+import { Loader2, Clock, MapPin, Calendar as CalendarIcon, AlertCircle } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { CalendarEvent } from '@shared/schema';
 import 'react-calendar/dist/Calendar.css';
 import './calendar-styles.css';
+
+// Define interfaces for the API responses
+interface CalendarApiResponse {
+  events: CalendarEvent[];
+  publicHolidays: any[];
+}
 
 interface VendorCalendarProps {
   vendorId: number;
@@ -39,36 +46,50 @@ export function VendorCalendar({ vendorId, userId, vendorName }: VendorCalendarP
   }, [vendorId, monthStart, monthEnd]);
 
   // Fetch events for the selected vendor for the current month view
-  const { data: events, isLoading: eventsLoading, error: eventsError } = useQuery<CalendarEvent[]>({
-    queryKey: [`/api/calendar/availability/${vendorId}`, {
-      start: monthStart.toISOString(),
-      end: monthEnd.toISOString()
-    }],
-    retry: 2,
-    onError: (error) => {
-      console.error('Error fetching calendar events:', error);
-      toast({
-        title: 'Error loading calendar',
-        description: 'Could not load availability information. Please try again later.',
-        variant: 'destructive'
-      });
+  const { data: eventsData, isLoading: eventsLoading, error: eventsError } = useQuery<CalendarApiResponse>({
+    queryKey: [`/api/calendar/availability/${vendorId}`],
+    queryFn: async () => {
+      console.log(`Fetching calendar events for month range: ${monthStart.toISOString()} to ${monthEnd.toISOString()}`);
+      const url = `/api/calendar/availability/${vendorId}?start=${encodeURIComponent(monthStart.toISOString())}&end=${encodeURIComponent(monthEnd.toISOString())}`;
+      const response = await fetch(url);
+      
+      if (!response.ok) {
+        console.error('Calendar API error status:', response.status);
+        const errorText = await response.text();
+        console.error('Calendar API error:', errorText);
+        throw new Error(`Failed to load calendar data: ${errorText}`);
+      }
+      
+      const data = await response.json();
+      console.log('Calendar API response:', data);
+      return data;
     },
-    onSuccess: (data) => {
-      console.log(`Successfully loaded ${data?.length || 0} calendar events`);
-    }
+    retry: 2,
   });
 
+  const events = eventsData?.events || [];
+  
   // Get specific day events when a day is selected
-  const { data: dayEvents, isLoading: dayEventsLoading, error: dayEventsError } = useQuery<CalendarEvent[]>({
-    queryKey: [`/api/calendar/availability/${vendorId}`, {
-      start: new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0).toISOString(),
-      end: new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59).toISOString()
-    }],
+  const { data: dayEventsData, isLoading: dayEventsLoading, error: dayEventsError } = useQuery<CalendarApiResponse>({
+    queryKey: [`/api/calendar/availability/${vendorId}/day`, date.toISOString()],
+    queryFn: async () => {
+      const dayStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
+      const dayEnd = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
+      
+      console.log(`Fetching calendar events for day: ${dayStart.toISOString()} to ${dayEnd.toISOString()}`);
+      const url = `/api/calendar/availability/${vendorId}?start=${encodeURIComponent(dayStart.toISOString())}&end=${encodeURIComponent(dayEnd.toISOString())}`;
+      const response = await fetch(url);
+      
+      if (!response.ok) {
+        throw new Error('Failed to load day events');
+      }
+      
+      return await response.json();
+    },
     enabled: view === 'booking',
-    onError: (error) => {
-      console.error('Error fetching day events:', error);
-    }
   });
+  
+  const dayEvents = dayEventsData?.events || [];
 
   // Create a new calendar event (booking)
   const createEventMutation = useMutation({
@@ -223,7 +244,15 @@ export function VendorCalendar({ vendorId, userId, vendorName }: VendorCalendarP
 
   return (
     <div className="space-y-4">
-      {view === 'calendar' ? (
+      {eventsError ? (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>
+            We couldn't load the calendar data. Please try again later.
+          </AlertDescription>
+        </Alert>
+      ) : view === 'calendar' ? (
         <>
           <div className="bg-white p-4 rounded-lg shadow">
             {eventsLoading ? (
