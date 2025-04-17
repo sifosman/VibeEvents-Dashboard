@@ -14,10 +14,10 @@ export default function SubscriptionPlans() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           {/* Free Plan */}
           <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
-            <div className="p-8">
+            <div className="p-6">
               <h3 className="text-xl font-display font-semibold mb-2">Free Listing</h3>
               <div className="text-3xl font-bold mb-6">R0 <span className="text-sm text-muted-foreground font-normal">/month</span></div>
               <ul className="space-y-3 mb-8">
@@ -49,9 +49,9 @@ export default function SubscriptionPlans() {
             <div className="absolute top-0 right-0 bg-primary text-white px-4 py-1 text-sm font-medium">
               Popular
             </div>
-            <div className="p-8">
+            <div className="p-6">
               <h3 className="text-xl font-display font-semibold mb-2">Basic</h3>
-              <div className="text-3xl font-bold mb-6">R50 <span className="text-sm text-muted-foreground font-normal">/month</span></div>
+              <div className="text-3xl font-bold mb-6">R80 <span className="text-sm text-muted-foreground font-normal">/month</span></div>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-center">
                   <Check className="h-5 w-5 text-green-500 mr-2" />
@@ -82,9 +82,9 @@ export default function SubscriptionPlans() {
 
           {/* Pro Plan */}
           <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
-            <div className="p-8">
+            <div className="p-6">
               <h3 className="text-xl font-display font-semibold mb-2">Pro</h3>
-              <div className="text-3xl font-bold mb-6">R90 <span className="text-sm text-muted-foreground font-normal">/month</span></div>
+              <div className="text-3xl font-bold mb-6">R130 <span className="text-sm text-muted-foreground font-normal">/month</span></div>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-center">
                   <Check className="h-5 w-5 text-green-500 mr-2" />
@@ -92,28 +92,67 @@ export default function SubscriptionPlans() {
                 </li>
                 <li className="flex items-center">
                   <Check className="h-5 w-5 text-green-500 mr-2" />
-                  <span>7-photo album gallery</span>
+                  <span>8-photo album gallery</span>
                 </li>
                 <li className="flex items-center">
                   <Check className="h-5 w-5 text-green-500 mr-2" />
-                  <span>Full contact details with social links</span>
+                  <span>80-word bio</span>
                 </li>
                 <li className="flex items-center">
                   <Check className="h-5 w-5 text-green-500 mr-2" />
-                  <span>Google Maps directions</span>
+                  <span>Full contact details</span>
+                </li>
+                <li className="flex items-center">
+                  <Check className="h-5 w-5 text-green-500 mr-2" />
+                  <span>Address with map</span>
                 </li>
                 <li className="flex items-center">
                   <Check className="h-5 w-5 text-green-500 mr-2" />
                   <span>6-page digital catalogue</span>
                 </li>
-                <li className="flex items-center">
-                  <Check className="h-5 w-5 text-green-500 mr-2" />
-                  <span>Priority online support</span>
-                </li>
               </ul>
               <Link href="/vendor-signup/pro">
-                <Button className="w-full bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-700 text-white">
+                <Button className="w-full bg-primary hover:bg-primary/90">
                   Go Pro
+                </Button>
+              </Link>
+            </div>
+          </div>
+
+          {/* Pro Platinum Plan */}
+          <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-purple-200">
+            <div className="p-6">
+              <h3 className="text-xl font-display font-semibold mb-2">Pro Platinum</h3>
+              <div className="text-3xl font-bold mb-6">R190 <span className="text-sm text-muted-foreground font-normal">/month</span></div>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-center">
+                  <Check className="h-5 w-5 text-green-500 mr-2" />
+                  <span>Premium business listing</span>
+                </li>
+                <li className="flex items-center">
+                  <Check className="h-5 w-5 text-green-500 mr-2" />
+                  <span>15-photo album gallery</span>
+                </li>
+                <li className="flex items-center">
+                  <Check className="h-5 w-5 text-green-500 mr-2" />
+                  <span>250-word bio</span>
+                </li>
+                <li className="flex items-center">
+                  <Check className="h-5 w-5 text-green-500 mr-2" />
+                  <span>Online quotes system</span>
+                </li>
+                <li className="flex items-center">
+                  <Check className="h-5 w-5 text-green-500 mr-2" />
+                  <span>Calendar availability view</span>
+                </li>
+                <li className="flex items-center">
+                  <Check className="h-5 w-5 text-green-500 mr-2" />
+                  <span>10-page digital catalogue</span>
+                </li>
+              </ul>
+              <Link href="/vendor-signup/platinum">
+                <Button className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white">
+                  Get Platinum
                 </Button>
               </Link>
             </div>

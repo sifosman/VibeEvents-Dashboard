@@ -377,12 +377,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Get the price ID based on tier
-      const priceId = subscriptionTier === 'basic' ? 
-        process.env.STRIPE_BASIC_PRICE_ID : 
-        process.env.STRIPE_PRO_PRICE_ID;
+      let priceId;
+      if (subscriptionTier === 'basic') {
+        priceId = process.env.STRIPE_BASIC_PRICE_ID;
+      } else if (subscriptionTier === 'pro') {
+        priceId = process.env.STRIPE_PRO_PRICE_ID;
+      } else if (subscriptionTier === 'platinum') {
+        priceId = process.env.STRIPE_PLATINUM_PRICE_ID;
+      } else {
+        return res.status(400).json({ message: 'Invalid subscription tier' });
+      }
       
       if (!priceId) {
-        return res.status(500).json({ message: 'Stripe price ID not configured' });
+        return res.status(500).json({ message: `Stripe price ID for ${subscriptionTier} tier not configured` });
       }
       
       // Create subscription
