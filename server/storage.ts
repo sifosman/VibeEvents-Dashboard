@@ -10,7 +10,10 @@ import {
   adCampaigns, type AdCampaign, type InsertAdCampaign,
   adAssets, type AdAsset, type InsertAdAsset,
   adPlacements, type AdPlacement, type InsertAdPlacement,
-  seoPackages, type SeoPackage, type InsertSeoPackage
+  seoPackages, type SeoPackage, type InsertSeoPackage,
+  calendarEvents, type CalendarEvent, type InsertCalendarEvent,
+  conversations, type Conversation, type InsertConversation,
+  messages, type Message, type InsertMessage
 } from "@shared/schema";
 
 // Interface for storage operations
@@ -85,6 +88,23 @@ export interface IStorage {
   getSeoPackage(id: number): Promise<SeoPackage | undefined>;
   createSeoPackage(seoPackage: InsertSeoPackage): Promise<SeoPackage>;
   updateSeoPackage(id: number, data: Partial<SeoPackage>): Promise<SeoPackage>;
+  
+  // Calendar operations
+  getCalendarEvents(userId: number): Promise<CalendarEvent[]>;
+  getCalendarEvent(id: number): Promise<CalendarEvent | undefined>;
+  createCalendarEvent(event: InsertCalendarEvent): Promise<CalendarEvent>;
+  updateCalendarEvent(id: number, data: Partial<CalendarEvent>): Promise<CalendarEvent>;
+  deleteCalendarEvent(id: number): Promise<void>;
+  
+  // Messaging operations
+  getUserConversations(userId: number, role: 'host' | 'provider'): Promise<Conversation[]>;
+  getConversation(id: number): Promise<Conversation | undefined>;
+  createConversation(conversation: InsertConversation): Promise<Conversation>;
+  updateConversationStatus(id: number, status: string): Promise<Conversation>;
+  updateConversationLastMessage(id: number): Promise<void>;
+  getMessages(conversationId: number): Promise<Message[]>;
+  createMessage(message: InsertMessage): Promise<Message>;
+  markMessagesAsRead(conversationId: number, userId: number): Promise<void>;
 }
 
 export class MemStorage implements IStorage {
@@ -94,6 +114,15 @@ export class MemStorage implements IStorage {
   private shortlists: Map<number, Shortlist>;
   private tasks: Map<number, Task>;
   private timelineEvents: Map<number, TimelineEvent>;
+  private whatsappGroups: Map<number, WhatsappGroup>;
+  private whatsappMessages: Map<number, WhatsappMessage>;
+  private adCampaigns: Map<number, AdCampaign>;
+  private adAssets: Map<number, AdAsset>;
+  private adPlacements: Map<number, AdPlacement>;
+  private seoPackages: Map<number, SeoPackage>;
+  private calendarEvents: Map<number, CalendarEvent>;
+  private conversations: Map<number, Conversation>;
+  private messages: Map<number, Message>;
   
   private userIdCounter: number;
   private categoryIdCounter: number;
@@ -101,6 +130,15 @@ export class MemStorage implements IStorage {
   private shortlistIdCounter: number;
   private taskIdCounter: number;
   private timelineEventIdCounter: number;
+  private whatsappGroupIdCounter: number;
+  private whatsappMessageIdCounter: number;
+  private adCampaignIdCounter: number;
+  private adAssetIdCounter: number;
+  private adPlacementIdCounter: number;
+  private seoPackageIdCounter: number;
+  private calendarEventIdCounter: number;
+  private conversationIdCounter: number;
+  private messageIdCounter: number;
 
   constructor() {
     this.users = new Map();
@@ -109,6 +147,15 @@ export class MemStorage implements IStorage {
     this.shortlists = new Map();
     this.tasks = new Map();
     this.timelineEvents = new Map();
+    this.whatsappGroups = new Map();
+    this.whatsappMessages = new Map();
+    this.adCampaigns = new Map();
+    this.adAssets = new Map();
+    this.adPlacements = new Map();
+    this.seoPackages = new Map();
+    this.calendarEvents = new Map();
+    this.conversations = new Map();
+    this.messages = new Map();
     
     this.userIdCounter = 1;
     this.categoryIdCounter = 1;
@@ -116,6 +163,15 @@ export class MemStorage implements IStorage {
     this.shortlistIdCounter = 1;
     this.taskIdCounter = 1;
     this.timelineEventIdCounter = 1;
+    this.whatsappGroupIdCounter = 1;
+    this.whatsappMessageIdCounter = 1;
+    this.adCampaignIdCounter = 1;
+    this.adAssetIdCounter = 1;
+    this.adPlacementIdCounter = 1;
+    this.seoPackageIdCounter = 1;
+    this.calendarEventIdCounter = 1;
+    this.conversationIdCounter = 1;
+    this.messageIdCounter = 1;
     
     // Initialize with sample data
     this.initializeData();
@@ -639,6 +695,293 @@ export class MemStorage implements IStorage {
 
   async deleteTimelineEvent(id: number): Promise<void> {
     this.timelineEvents.delete(id);
+  }
+
+  // WhatsApp integration operations
+  async getWhatsappGroups(userId: number): Promise<WhatsappGroup[]> {
+    return Array.from(this.whatsappGroups.values())
+      .filter(group => group.userId === userId);
+  }
+
+  async getWhatsappGroup(id: number): Promise<WhatsappGroup | undefined> {
+    return this.whatsappGroups.get(id);
+  }
+
+  async getWhatsappGroupByGroupId(groupId: string): Promise<WhatsappGroup | undefined> {
+    return Array.from(this.whatsappGroups.values())
+      .find(group => group.groupId === groupId);
+  }
+
+  async createWhatsappGroup(group: InsertWhatsappGroup): Promise<WhatsappGroup> {
+    const id = this.whatsappGroupIdCounter++;
+    const createdAt = new Date();
+    const newGroup: WhatsappGroup = { ...group, id, createdAt };
+    this.whatsappGroups.set(id, newGroup);
+    return newGroup;
+  }
+
+  async updateWhatsappGroupSettings(id: number, settings: Partial<WhatsappGroup>): Promise<WhatsappGroup> {
+    const group = this.whatsappGroups.get(id);
+    if (!group) {
+      throw new Error(`WhatsApp group with id ${id} not found`);
+    }
+    const updatedGroup: WhatsappGroup = { ...group, ...settings };
+    this.whatsappGroups.set(id, updatedGroup);
+    return updatedGroup;
+  }
+
+  async deleteWhatsappGroup(id: number): Promise<void> {
+    this.whatsappGroups.delete(id);
+  }
+
+  async getWhatsappMessages(groupId: number, limit?: number): Promise<WhatsappMessage[]> {
+    const messages = Array.from(this.whatsappMessages.values())
+      .filter(message => message.groupId === groupId)
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    
+    return limit ? messages.slice(0, limit) : messages;
+  }
+
+  async createWhatsappMessage(message: InsertWhatsappMessage): Promise<WhatsappMessage> {
+    const id = this.whatsappMessageIdCounter++;
+    const createdAt = new Date();
+    const newMessage: WhatsappMessage = { ...message, id, createdAt };
+    this.whatsappMessages.set(id, newMessage);
+    return newMessage;
+  }
+
+  // Advertising operations
+  async getAdCampaigns(vendorId: number): Promise<AdCampaign[]> {
+    return Array.from(this.adCampaigns.values())
+      .filter(campaign => campaign.vendorId === vendorId);
+  }
+
+  async getAdCampaign(id: number): Promise<AdCampaign | undefined> {
+    return this.adCampaigns.get(id);
+  }
+
+  async createAdCampaign(campaign: InsertAdCampaign): Promise<AdCampaign> {
+    const id = this.adCampaignIdCounter++;
+    const createdAt = new Date();
+    const newCampaign: AdCampaign = { ...campaign, id, createdAt };
+    this.adCampaigns.set(id, newCampaign);
+    return newCampaign;
+  }
+
+  async updateAdCampaign(id: number, data: Partial<AdCampaign>): Promise<AdCampaign> {
+    const campaign = this.adCampaigns.get(id);
+    if (!campaign) {
+      throw new Error(`Ad campaign with id ${id} not found`);
+    }
+    const updatedCampaign: AdCampaign = { ...campaign, ...data };
+    this.adCampaigns.set(id, updatedCampaign);
+    return updatedCampaign;
+  }
+
+  async getAdAssets(campaignId: number): Promise<AdAsset[]> {
+    return Array.from(this.adAssets.values())
+      .filter(asset => asset.campaignId === campaignId);
+  }
+
+  async getAdAsset(id: number): Promise<AdAsset | undefined> {
+    return this.adAssets.get(id);
+  }
+
+  async createAdAsset(asset: InsertAdAsset): Promise<AdAsset> {
+    const id = this.adAssetIdCounter++;
+    const newAsset: AdAsset = { ...asset, id };
+    this.adAssets.set(id, newAsset);
+    return newAsset;
+  }
+
+  async getAdPlacement(position: string): Promise<AdPlacement | undefined> {
+    return Array.from(this.adPlacements.values())
+      .find(placement => placement.position === position);
+  }
+
+  async getAdPlacements(): Promise<AdPlacement[]> {
+    return Array.from(this.adPlacements.values());
+  }
+
+  async createAdPlacement(placement: InsertAdPlacement): Promise<AdPlacement> {
+    const id = this.adPlacementIdCounter++;
+    const newPlacement: AdPlacement = { ...placement, id };
+    this.adPlacements.set(id, newPlacement);
+    return newPlacement;
+  }
+
+  async trackAdImpression(adId: number): Promise<void> {
+    // In a real implementation, we would track impressions in a database
+  }
+
+  async trackAdClick(adId: number): Promise<void> {
+    // In a real implementation, we would track clicks in a database
+  }
+
+  async getFeaturedVendorAds(categoryId?: number, limit = 5): Promise<any[]> {
+    const vendors = Array.from(this.vendors.values())
+      .filter(vendor => !categoryId || vendor.categoryId === categoryId)
+      .filter(vendor => vendor.subscriptionTier === 'pro' || vendor.subscriptionTier === 'platinum')
+      .sort(() => Math.random() - 0.5); // Randomize featured vendors
+    
+    return vendors.slice(0, limit).map(vendor => ({
+      id: vendor.id,
+      name: vendor.name,
+      description: vendor.description,
+      imageUrl: vendor.imageUrl,
+      categoryId: vendor.categoryId,
+      subscriptionTier: vendor.subscriptionTier
+    }));
+  }
+
+  async getVideoAd(position: string): Promise<any | undefined> {
+    const placement = await this.getAdPlacement(position);
+    if (!placement || placement.type !== 'video') {
+      return undefined;
+    }
+    
+    const assets = Array.from(this.adAssets.values())
+      .filter(asset => asset.type === 'video' && asset.active)
+      .sort(() => Math.random() - 0.5); // Randomize video ads
+    
+    return assets[0];
+  }
+
+  async getSeoPackages(): Promise<SeoPackage[]> {
+    return Array.from(this.seoPackages.values());
+  }
+
+  async getSeoPackage(id: number): Promise<SeoPackage | undefined> {
+    return this.seoPackages.get(id);
+  }
+
+  async createSeoPackage(seoPackage: InsertSeoPackage): Promise<SeoPackage> {
+    const id = this.seoPackageIdCounter++;
+    const newPackage: SeoPackage = { ...seoPackage, id };
+    this.seoPackages.set(id, newPackage);
+    return newPackage;
+  }
+
+  async updateSeoPackage(id: number, data: Partial<SeoPackage>): Promise<SeoPackage> {
+    const seoPackage = this.seoPackages.get(id);
+    if (!seoPackage) {
+      throw new Error(`SEO package with id ${id} not found`);
+    }
+    const updatedPackage: SeoPackage = { ...seoPackage, ...data };
+    this.seoPackages.set(id, updatedPackage);
+    return updatedPackage;
+  }
+  
+  // Calendar operations
+  async getCalendarEvents(userId: number): Promise<CalendarEvent[]> {
+    return Array.from(this.calendarEvents.values())
+      .filter(event => event.userId === userId)
+      .sort((a, b) => a.startDate.getTime() - b.startDate.getTime());
+  }
+
+  async getCalendarEvent(id: number): Promise<CalendarEvent | undefined> {
+    return this.calendarEvents.get(id);
+  }
+
+  async createCalendarEvent(event: InsertCalendarEvent): Promise<CalendarEvent> {
+    const id = this.calendarEventIdCounter++;
+    const createdAt = new Date();
+    const newEvent: CalendarEvent = { ...event, id, createdAt };
+    this.calendarEvents.set(id, newEvent);
+    return newEvent;
+  }
+
+  async updateCalendarEvent(id: number, data: Partial<CalendarEvent>): Promise<CalendarEvent> {
+    const event = this.calendarEvents.get(id);
+    if (!event) {
+      throw new Error(`Calendar event with id ${id} not found`);
+    }
+    const updatedEvent: CalendarEvent = { ...event, ...data };
+    this.calendarEvents.set(id, updatedEvent);
+    return updatedEvent;
+  }
+
+  async deleteCalendarEvent(id: number): Promise<void> {
+    this.calendarEvents.delete(id);
+  }
+  
+  // Messaging operations
+  async getUserConversations(userId: number, role: 'host' | 'provider'): Promise<Conversation[]> {
+    return Array.from(this.conversations.values())
+      .filter(conversation => role === 'host' ? 
+        conversation.hostId === userId : 
+        conversation.providerId === userId)
+      .sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
+  }
+  
+  async getConversation(id: number): Promise<Conversation | undefined> {
+    return this.conversations.get(id);
+  }
+  
+  async createConversation(conversation: InsertConversation): Promise<Conversation> {
+    const id = this.conversationIdCounter++;
+    const createdAt = new Date();
+    const updatedAt = new Date();
+    const newConversation: Conversation = { 
+      ...conversation, 
+      id, 
+      createdAt, 
+      updatedAt, 
+      status: conversation.status || 'active' 
+    };
+    this.conversations.set(id, newConversation);
+    return newConversation;
+  }
+  
+  async updateConversationStatus(id: number, status: string): Promise<Conversation> {
+    const conversation = this.conversations.get(id);
+    if (!conversation) {
+      throw new Error(`Conversation with id ${id} not found`);
+    }
+    const updatedConversation: Conversation = { 
+      ...conversation, 
+      status, 
+      updatedAt: new Date() 
+    };
+    this.conversations.set(id, updatedConversation);
+    return updatedConversation;
+  }
+  
+  async updateConversationLastMessage(id: number): Promise<void> {
+    const conversation = this.conversations.get(id);
+    if (!conversation) {
+      throw new Error(`Conversation with id ${id} not found`);
+    }
+    conversation.updatedAt = new Date();
+    this.conversations.set(id, conversation);
+  }
+  
+  async getMessages(conversationId: number): Promise<Message[]> {
+    return Array.from(this.messages.values())
+      .filter(message => message.conversationId === conversationId)
+      .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+  }
+  
+  async createMessage(message: InsertMessage): Promise<Message> {
+    const id = this.messageIdCounter++;
+    const createdAt = new Date();
+    const newMessage: Message = { ...message, id, createdAt, read: false };
+    this.messages.set(id, newMessage);
+    
+    // Update conversation last activity
+    await this.updateConversationLastMessage(message.conversationId);
+    
+    return newMessage;
+  }
+  
+  async markMessagesAsRead(conversationId: number, userId: number): Promise<void> {
+    const messages = Array.from(this.messages.values())
+      .filter(message => message.conversationId === conversationId && message.senderId !== userId && !message.read);
+    
+    for (const message of messages) {
+      message.read = true;
+      this.messages.set(message.id, message);
+    }
   }
 
   // Vendor subscription operations
