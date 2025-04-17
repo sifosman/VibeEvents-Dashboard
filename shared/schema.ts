@@ -55,6 +55,14 @@ export const vendors = pgTable("vendors", {
   wordCount: integer("word_count").default(40),
   onlineQuotes: boolean("online_quotes").default(false),
   calendarView: boolean("calendar_view").default(false),
+  acceptPayments: boolean("accept_payments").default(false),
+  acceptDeposits: boolean("accept_deposits").default(false),
+  priorityListing: boolean("priority_listing").default(false),
+  eventAlerts: boolean("event_alerts").default(false),
+  promotionalEmails: boolean("promotional_emails").default(false),
+  onlineContracts: boolean("online_contracts").default(false),
+  leadNotifications: boolean("lead_notifications").default(false),
+  featuredListing: boolean("featured_listing").default(false),
   googleMapsLink: text("google_maps_link"),
   facebookUrl: text("facebook_url"),
   twitterUrl: text("twitter_url"),
@@ -114,6 +122,66 @@ export const insertTimelineEventSchema = createInsertSchema(timelineEvents).omit
   createdAt: true,
 });
 
+// Event lead notifications table
+export const eventLeads = pgTable("event_leads", {
+  id: serial("id").primaryKey(),
+  vendorId: integer("vendor_id").notNull(),
+  userId: integer("user_id"),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone"),
+  eventType: text("event_type"),
+  eventDate: timestamp("event_date"),
+  budget: text("budget"),
+  message: text("message"),
+  status: text("status").notNull().default("new"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertEventLeadSchema = createInsertSchema(eventLeads).omit({
+  id: true,
+  createdAt: true,
+});
+
+// Online quote requests table
+export const quoteRequests = pgTable("quote_requests", {
+  id: serial("id").primaryKey(),
+  vendorId: integer("vendor_id").notNull(),
+  userId: integer("user_id"),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone"),
+  eventType: text("event_type"),
+  eventDate: timestamp("event_date"),
+  requirements: text("requirements"),
+  budget: text("budget"),
+  status: text("status").notNull().default("pending"),
+  quoteAmount: doublePrecision("quote_amount"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertQuoteRequestSchema = createInsertSchema(quoteRequests).omit({
+  id: true,
+  createdAt: true,
+});
+
+// Booking deposits table
+export const bookingDeposits = pgTable("booking_deposits", {
+  id: serial("id").primaryKey(),
+  vendorId: integer("vendor_id").notNull(),
+  userId: integer("user_id"),
+  quoteRequestId: integer("quote_request_id"),
+  amount: doublePrecision("amount").notNull(),
+  paymentStatus: text("payment_status").notNull().default("pending"),
+  stripePaymentIntentId: text("stripe_payment_intent_id"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertBookingDepositSchema = createInsertSchema(bookingDeposits).omit({
+  id: true,
+  createdAt: true,
+});
+
 // Type exports
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -132,3 +200,12 @@ export type InsertTask = z.infer<typeof insertTaskSchema>;
 
 export type TimelineEvent = typeof timelineEvents.$inferSelect;
 export type InsertTimelineEvent = z.infer<typeof insertTimelineEventSchema>;
+
+export type EventLead = typeof eventLeads.$inferSelect;
+export type InsertEventLead = z.infer<typeof insertEventLeadSchema>;
+
+export type QuoteRequest = typeof quoteRequests.$inferSelect;
+export type InsertQuoteRequest = z.infer<typeof insertQuoteRequestSchema>;
+
+export type BookingDeposit = typeof bookingDeposits.$inferSelect;
+export type InsertBookingDeposit = z.infer<typeof insertBookingDepositSchema>;
