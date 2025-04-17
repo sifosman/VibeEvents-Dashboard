@@ -173,6 +173,60 @@ export class MemStorage implements IStorage {
         slug: "entertainment"
       },
       {
+        name: "Children's Entertainment",
+        description: "Jumping Castles, Face Painters & Magicians",
+        imageUrl: "https://images.unsplash.com/photo-1477901789551-39e3bf90d848?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        slug: "childrens-entertainment"
+      },
+      {
+        name: "Specialty Performers",
+        description: "Comedians, Acrobats & Live Acts",
+        imageUrl: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        slug: "specialty-performers"
+      },
+      {
+        name: "Event Staff",
+        description: "Barristers, Servers & Wait Staff",
+        imageUrl: "https://images.unsplash.com/photo-1587316505523-263a6d54f5b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        slug: "event-staff"
+      },
+      {
+        name: "Event Support Crew",
+        description: "Setup, Cleanup & Technical Crews",
+        imageUrl: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        slug: "event-support-crew"
+      },
+      {
+        name: "Influencers & Social Media",
+        description: "Content Creators & Event Promotion",
+        imageUrl: "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        slug: "influencers-social-media"
+      },
+      {
+        name: "Event Hosts & MCs",
+        description: "Professional Hosts & Announcers",
+        imageUrl: "https://images.unsplash.com/photo-1560439514-e960a3ef5019?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        slug: "event-hosts-mcs"
+      },
+      {
+        name: "Sports & Recreational",
+        description: "Sports Entertainers & Game Equipment",
+        imageUrl: "https://images.unsplash.com/photo-1526232836161-30dcca643052?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        slug: "sports-recreational"
+      },
+      {
+        name: "Cultural Performers",
+        description: "Traditional Dancers & Cultural Entertainers",
+        imageUrl: "https://images.unsplash.com/photo-1527522883525-97e1a9ad7a5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        slug: "cultural-performers"
+      },
+      {
+        name: "Security Services",
+        description: "Event Security & Access Control",
+        imageUrl: "https://images.unsplash.com/photo-1629117241053-48e55b8f4cf3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        slug: "security-services"
+      },
+      {
         name: "Market Vendors",
         description: "Food Stalls, Clothing, Crafts & More",
         imageUrl: "https://images.unsplash.com/photo-1533900298318-6b8da08a523e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
