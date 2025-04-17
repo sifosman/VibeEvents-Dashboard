@@ -20,7 +20,7 @@ function SimpleHeader() {
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
               <Heart className="text-primary mr-2" />
-              <h1 className="text-primary font-display font-bold text-2xl">EventZA</h1>
+              <h1 className="text-primary font-display font-bold text-2xl">HowzEvent</h1>
             </Link>
           </div>
           
@@ -129,7 +129,7 @@ export default function Header() {
             <div className="flex items-center">
               <Link href="/" className="flex items-center">
                 <Heart className="text-primary mr-2" />
-                <h1 className="text-primary font-display font-bold text-2xl">EventZA</h1>
+                <h1 className="text-primary font-display font-bold text-2xl">HowzEvent</h1>
               </Link>
             </div>
             

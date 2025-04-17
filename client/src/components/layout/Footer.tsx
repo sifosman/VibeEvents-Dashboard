@@ -10,7 +10,7 @@ export default function Footer() {
           <div>
             <div className="flex items-center mb-4">
               <Heart className="text-primary mr-2" />
-              <h3 className="text-primary font-display font-bold text-xl">EventZA</h3>
+              <h3 className="text-primary font-display font-bold text-xl">HowzEvent</h3>
             </div>
             <p className="text-muted-foreground text-sm mb-4">
               Your comprehensive event planning platform to find and book the best service providers for all your special occasions.
@@ -67,7 +67,7 @@ export default function Footer() {
         
         <div className="border-t border-gray-200 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-muted-foreground text-sm mb-4 md:mb-0">© 2025 EventZA. All rights reserved.</p>
+            <p className="text-muted-foreground text-sm mb-4 md:mb-0">© 2025 HowzEvent. All rights reserved.</p>
             <div className="flex space-x-4">
               <Link href="#" className="text-muted-foreground hover:text-primary text-sm transition">Terms</Link>
               <Link href="#" className="text-muted-foreground hover:text-primary text-sm transition">Privacy</Link>

@@ -185,7 +185,7 @@ export default function SubscriptionPlans() {
 
         <div className="mt-12 text-center">
           <p className="text-muted-foreground mb-4">
-            Join over 500+ service providers who have increased bookings by 30%+ with EventZA
+            Join over 500+ service providers who have increased bookings by 30%+ with HowzEvent
           </p>
           <div className="mt-6 flex flex-wrap justify-center items-center gap-6">
             <div className="bg-white p-4 rounded-lg shadow-sm">
