@@ -369,6 +369,30 @@ export class MemStorage implements IStorage {
         description: "Drone Photography, Videography & Displays",
         imageUrl: "https://images.unsplash.com/photo-1473968512647-3e447244af8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         slug: "aerial-services"
+      },
+      {
+        name: "Memorial Services",
+        description: "Funeral Planning, Gravestones & Memorial Items",
+        imageUrl: "https://images.unsplash.com/photo-1486825586573-7131f7991bdd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        slug: "memorial-services"
+      },
+      {
+        name: "Gift Services",
+        description: "Gift Parcels, Hampers & Personalized Gifts",
+        imageUrl: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        slug: "gift-services"
+      },
+      {
+        name: "Event Infrastructure",
+        description: "Portable Toilets, Generators & Essential Equipment",
+        imageUrl: "https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        slug: "event-infrastructure"
+      },
+      {
+        name: "Staffing Services",
+        description: "Waiters, Bartenders & Service Staff",
+        imageUrl: "https://images.unsplash.com/photo-1516788875874-c5912cae7b43?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        slug: "staffing-services"
       }
     ];
 
@@ -626,6 +650,112 @@ export class MemStorage implements IStorage {
         location: "New Orleans, LA",
         isThemed: true,
         themeTypes: ["Masquerade", "Vintage", "Carnival", "Mardi Gras"]
+      },
+      {
+        name: "Serene Memorial Services",
+        description: "Compassionate funeral planning services offering support during difficult times. Comprehensive arrangements including venues, catering, and remembrance items.",
+        imageUrl: "https://images.unsplash.com/photo-1542856391-010fb87dcfed?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        categoryId: 24, // Memorial Services
+        priceRange: "$$$",
+        rating: 4.9,
+        reviewCount: 67,
+        instagramUrl: "https://instagram.com/",
+        websiteUrl: "https://example.com/",
+        whatsappNumber: "+1234567890",
+        location: "Chicago, IL"
+      },
+      {
+        name: "Stone Eternity Monuments",
+        description: "Custom gravestones, memorials, and commemorative plaques crafted with care. Various materials and designs available to honor your loved ones.",
+        imageUrl: "https://images.unsplash.com/photo-1486825586573-7131f7991bdd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        categoryId: 24, // Memorial Services
+        priceRange: "$$",
+        rating: 4.7,
+        reviewCount: 43,
+        instagramUrl: "https://instagram.com/",
+        websiteUrl: "https://example.com/",
+        whatsappNumber: "+1234567890",
+        location: "Philadelphia, PA"
+      },
+      {
+        name: "Elegant Florals",
+        description: "Exceptional floral arrangements for all occasions. Specializing in event floristry, bouquets, and custom arrangements.",
+        imageUrl: "https://images.unsplash.com/photo-1561181286-d5ee89f677f0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        categoryId: 6, // Decor & Design
+        priceRange: "$$",
+        rating: 4.8,
+        reviewCount: 91,
+        instagramUrl: "https://instagram.com/",
+        websiteUrl: "https://example.com/",
+        whatsappNumber: "+1234567890",
+        location: "Portland, OR"
+      },
+      {
+        name: "Floral Artistry",
+        description: "Professional flower arrangers creating stunning displays for events and venues. Custom designs reflecting your style and theme.",
+        imageUrl: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        categoryId: 6, // Decor & Design
+        priceRange: "$$$",
+        rating: 4.5,
+        reviewCount: 58,
+        instagramUrl: "https://instagram.com/",
+        websiteUrl: "https://example.com/",
+        whatsappNumber: "+1234567890",
+        location: "Seattle, WA"
+      },
+      {
+        name: "Gift Haven",
+        description: "Custom gift parcels and hampers for any occasion. Personalized gift selections with elegant presentation.",
+        imageUrl: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        categoryId: 25, // Gift Services
+        priceRange: "$$",
+        rating: 4.6,
+        reviewCount: 72,
+        instagramUrl: "https://instagram.com/",
+        websiteUrl: "https://example.com/",
+        whatsappNumber: "+1234567890",
+        location: "San Francisco, CA"
+      },
+      {
+        name: "Portable Facilities Pro",
+        description: "High-quality portable toilets and sanitation stations for events of all sizes. Clean, modern facilities with regular servicing.",
+        imageUrl: "https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        categoryId: 26, // Event Infrastructure
+        priceRange: "$$",
+        rating: 4.3,
+        reviewCount: 47,
+        instagramUrl: "https://instagram.com/",
+        websiteUrl: "https://example.com/",
+        whatsappNumber: "+1234567890",
+        location: "Austin, TX"
+      },
+      {
+        name: "Elite Server Staff",
+        description: "Professional waiters and service staff for events. Well-trained, experienced, and attentive personnel to ensure smooth service.",
+        imageUrl: "https://images.unsplash.com/photo-1516788875874-c5912cae7b43?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        categoryId: 27, // Staffing Services
+        priceRange: "$$",
+        rating: 4.7,
+        reviewCount: 83,
+        instagramUrl: "https://instagram.com/",
+        websiteUrl: "https://example.com/",
+        whatsappNumber: "+1234567890",
+        location: "Los Angeles, CA"
+      },
+      {
+        name: "Gourmet Patisserie",
+        description: "Artisanal pastries and desserts made with premium ingredients. Custom creations for special events and celebrations.",
+        imageUrl: "https://images.unsplash.com/photo-1551404974-5d42d6e44401?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        categoryId: 2, // Catering & Bakers
+        priceRange: "$$$",
+        rating: 4.9,
+        reviewCount: 64,
+        instagramUrl: "https://instagram.com/",
+        websiteUrl: "https://example.com/",
+        whatsappNumber: "+1234567890",
+        location: "New York, NY",
+        dietaryOptions: ["Vegan", "Gluten-Free", "Organic"],
+        cuisineTypes: ["French", "European", "Fusion"]
       }
     ];
 
