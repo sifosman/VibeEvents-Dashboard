@@ -176,6 +176,13 @@ export class DatabaseStorage implements IStorage {
           vendor.location?.toLowerCase().includes(lowerLocation)
         );
       }
+      
+      // Filter by servesAlcohol flag
+      if (filters.servesAlcohol !== undefined) {
+        results = results.filter(vendor => 
+          vendor.servesAlcohol === filters.servesAlcohol
+        );
+      }
     }
     
     return results;
