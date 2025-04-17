@@ -364,6 +364,102 @@ export type InsertAdPlacement = z.infer<typeof insertAdPlacementSchema>;
 export type SeoPackage = typeof seoPackages.$inferSelect;
 export type InsertSeoPackage = z.infer<typeof insertSeoPackageSchema>;
 
+// Analytics tables
+export const pageViews = pgTable("page_views", {
+  id: serial("id").primaryKey(),
+  pageType: text("page_type").notNull(), // 'vendor', 'category', 'home', etc.
+  referenceId: integer("reference_id"), // ID of the vendor, category, etc. being viewed
+  userId: integer("user_id"), // Optional - may be anonymous
+  sessionId: text("session_id").notNull(), // To track unique sessions
+  ipAddress: text("ip_address"), // For geolocation analytics
+  userAgent: text("user_agent"), // For device analytics
+  referrer: text("referrer"), // Where the visitor came from
+  timestamp: timestamp("timestamp").defaultNow(),
+  durationSeconds: integer("duration_seconds"), // How long they viewed the page
+  country: text("country"), // Derived from IP
+  region: text("region"), // Derived from IP
+  city: text("city"), // Derived from IP
+});
+
+export const insertPageViewSchema = createInsertSchema(pageViews).omit({
+  id: true,
+  timestamp: true,
+});
+
+export const vendorAnalytics = pgTable("vendor_analytics", {
+  id: serial("id").primaryKey(),
+  vendorId: integer("vendor_id").notNull(),
+  date: timestamp("date").notNull(),
+  pageViews: integer("page_views").notNull().default(0),
+  uniqueVisitors: integer("unique_visitors").notNull().default(0),
+  profileClicks: integer("profile_clicks").notNull().default(0),
+  contactClicks: integer("contact_clicks").notNull().default(0),
+  websiteClicks: integer("website_clicks").notNull().default(0),
+  shortlistAdds: integer("shortlist_adds").notNull().default(0),
+  inquiries: integer("inquiries").notNull().default(0),
+  leadsGenerated: integer("leads_generated").notNull().default(0),
+  quoteRequests: integer("quote_requests").notNull().default(0),
+  bookings: integer("bookings").notNull().default(0),
+  revenue: doublePrecision("revenue").notNull().default(0),
+  averageEngagementTime: integer("average_engagement_time").notNull().default(0), // in seconds
+});
+
+export const insertVendorAnalyticsSchema = createInsertSchema(vendorAnalytics).omit({
+  id: true,
+});
+
+export const appAnalytics = pgTable("app_analytics", {
+  id: serial("id").primaryKey(),
+  date: timestamp("date").notNull(),
+  totalPageViews: integer("total_page_views").notNull().default(0),
+  uniqueVisitors: integer("unique_visitors").notNull().default(0),
+  newUserSignups: integer("new_user_signups").notNull().default(0),
+  searchCount: integer("search_count").notNull().default(0),
+  eventLeadsCreated: integer("event_leads_created").notNull().default(0),
+  categoryViews: json("category_views"), // JSON structure with category_id: view_count
+  locationBreakdown: json("location_breakdown"), // JSON structure with location: count
+  deviceBreakdown: json("device_breakdown"), // JSON structure with device_type: count
+  referrerBreakdown: json("referrer_breakdown"), // JSON structure with referrer: count
+  activeUsers: integer("active_users").notNull().default(0),
+  vendorSignups: integer("vendor_signups").notNull().default(0),
+  subscriptionConversions: integer("subscription_conversions").notNull().default(0),
+  subscriptionRevenue: doublePrecision("subscription_revenue").notNull().default(0),
+  adRevenue: doublePrecision("ad_revenue").notNull().default(0),
+  totalRevenue: doublePrecision("total_revenue").notNull().default(0),
+});
+
+export const insertAppAnalyticsSchema = createInsertSchema(appAnalytics).omit({
+  id: true,
+});
+
+export const userEvents = pgTable("user_events", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull(),
+  eventType: text("event_type").notNull(), // 'login', 'search', 'view_vendor', 'shortlist', etc.
+  eventData: json("event_data"), // Additional data specific to the event
+  ipAddress: text("ip_address"),
+  userAgent: text("user_agent"),
+  timestamp: timestamp("timestamp").defaultNow(),
+});
+
+export const insertUserEventSchema = createInsertSchema(userEvents).omit({
+  id: true,
+  timestamp: true,
+});
+
+// Type exports for analytics tables
+export type PageView = typeof pageViews.$inferSelect;
+export type InsertPageView = z.infer<typeof insertPageViewSchema>;
+
+export type VendorAnalytics = typeof vendorAnalytics.$inferSelect;
+export type InsertVendorAnalytics = z.infer<typeof insertVendorAnalyticsSchema>;
+
+export type AppAnalytics = typeof appAnalytics.$inferSelect;
+export type InsertAppAnalytics = z.infer<typeof insertAppAnalyticsSchema>;
+
+export type UserEvent = typeof userEvents.$inferSelect;
+export type InsertUserEvent = z.infer<typeof insertUserEventSchema>;
+
 // Event opportunities table - for event planners to post events seeking vendors
 export const eventOpportunities = pgTable("event_opportunities", {
   id: serial("id").primaryKey(),

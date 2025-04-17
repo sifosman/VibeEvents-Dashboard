@@ -99,6 +99,11 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
     if (themeType) filters.themeType = themeType;
     if (dietary) filters.dietary = dietary;
     if (cuisine) filters.cuisine = cuisine;
+    if (country) filters.country = country;
+    if (region) filters.region = region;
+    if (province) filters.province = province;
+    if (area) filters.area = area;
+    if (town) filters.town = town;
     
     onFilter({ 
       search, 
@@ -107,7 +112,12 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
       isThemed,
       themeType,
       dietary,
-      cuisine
+      cuisine,
+      country,
+      region,
+      province,
+      area,
+      town
     });
     
     // Update URL with query params
@@ -128,6 +138,11 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
     setThemeType("");
     setDietary("");
     setCuisine("");
+    setCountry("");
+    setRegion("");
+    setProvince("");
+    setArea("");
+    setTown("");
     onFilter({});
     setLocation("/vendors");
   };

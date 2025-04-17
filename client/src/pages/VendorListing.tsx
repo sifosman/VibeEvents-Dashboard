@@ -27,6 +27,11 @@ export default function VendorListing() {
     themeType: "",
     dietary: "",
     cuisine: "",
+    country: "",
+    region: "",
+    province: "",
+    area: "",
+    town: "",
   });
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
@@ -40,6 +45,11 @@ export default function VendorListing() {
     const themeTypeParam = params.get("themeType") || "";
     const dietaryParam = params.get("dietary") || "";
     const cuisineParam = params.get("cuisine") || "";
+    const countryParam = params.get("country") || "";
+    const regionParam = params.get("region") || "";
+    const provinceParam = params.get("province") || "";
+    const areaParam = params.get("area") || "";
+    const townParam = params.get("town") || "";
     
     setFilters({
       search: searchParam,
@@ -49,6 +59,11 @@ export default function VendorListing() {
       themeType: themeTypeParam,
       dietary: dietaryParam,
       cuisine: cuisineParam,
+      country: countryParam,
+      region: regionParam,
+      province: provinceParam,
+      area: areaParam,
+      town: townParam,
     });
   }, [location]);
 
@@ -210,7 +225,20 @@ export default function VendorListing() {
                     Try adjusting your filters or search criteria
                   </p>
                   <Button 
-                    onClick={() => handleFilterChange({ search: "", category: "", priceRange: "" })}
+                    onClick={() => handleFilterChange({ 
+                      search: "", 
+                      category: "", 
+                      priceRange: "",
+                      isThemed: false,
+                      themeType: "",
+                      dietary: "",
+                      cuisine: "",
+                      country: "",
+                      region: "",
+                      province: "",
+                      area: "",
+                      town: ""
+                    })}
                     className="bg-primary text-white hover:bg-primary/90"
                   >
                     Clear Filters
