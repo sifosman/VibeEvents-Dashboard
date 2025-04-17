@@ -11,8 +11,10 @@ import {
 import { MapPin, Globe, Instagram, MessageSquare, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import StarRating from "../ui/star-rating";
-import { ShortlistButton } from "./ShortlistButton";
+import { LikeButton } from "./ShortlistButton";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Reviews from "./Reviews";
 
 interface VendorDetailProps {
   vendorId: number;
@@ -27,6 +29,9 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
     queryKey: [vendor ? `/api/categories/${vendor.categoryId}` : null],
     enabled: !!vendor,
   });
+
+  // Temporary hard-coded user ID for demos (will be replaced with actual auth)
+  const userId = 1;
 
   if (vendorLoading) {
     return (
@@ -47,12 +52,15 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
     return <div className="text-center py-10">Vendor not found</div>;
   }
 
+  // Check if vendor subscription allows reviews (premium or premium pro)
+  const hasReviewFeature = vendor.subscriptionTier === 'premium' || vendor.subscriptionTier === 'premium pro';
+
   return (
     <div className="space-y-8">
       <div className="relative h-64 md:h-96 bg-cover bg-center rounded-lg overflow-hidden" style={{ backgroundImage: `url('${vendor.imageUrl}')` }}>
         <div className="absolute inset-0 bg-black bg-opacity-20"></div>
         <div className="absolute top-4 right-4">
-          <ShortlistButton vendorId={vendor.id} className="bg-white bg-opacity-90 hover:bg-opacity-100" />
+          <LikeButton vendorId={vendor.id} className="bg-white bg-opacity-90 hover:bg-opacity-100" />
         </div>
       </div>
 
@@ -64,6 +72,16 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
               {category && (
                 <div className="category-badge inline-block">
                   {category.name}
+                </div>
+              )}
+              {vendor.subscriptionTier === 'premium' && (
+                <div className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                  Premium Vendor
+                </div>
+              )}
+              {vendor.subscriptionTier === 'premium pro' && (
+                <div className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-amber-300 to-amber-500 text-amber-900">
+                  Premium Pro
                 </div>
               )}
               {vendor.location && (
@@ -87,38 +105,106 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
           </div>
 
           <Separator className="my-6" />
-          
-          <div>
-            <h2 className="font-display text-xl font-semibold mb-4">About {vendor.name}</h2>
-            <p className="text-muted-foreground mb-6">{vendor.description}</p>
-            {/* Additional details could be added here */}
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-lg font-semibold">Services</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ul className="list-disc pl-5 space-y-1">
-                  <li>Full service event planning</li>
-                  <li>Day-of coordination</li>
-                  <li>Custom event design</li>
-                  <li>Vendor management</li>
-                </ul>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-lg font-semibold">Availability</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-2">Contact for availability details</p>
-                <p className="text-sm">Popular dates book quickly - reach out early!</p>
-              </CardContent>
-            </Card>
-          </div>
+
+          <Tabs defaultValue="about" className="w-full">
+            <TabsList className="mb-6">
+              <TabsTrigger value="about">About</TabsTrigger>
+              <TabsTrigger value="services">Services</TabsTrigger>
+              {hasReviewFeature && (
+                <TabsTrigger value="reviews">
+                  Reviews ({vendor.reviewCount || 0})
+                </TabsTrigger>
+              )}
+            </TabsList>
+
+            <TabsContent value="about">
+              <div>
+                <h2 className="font-display text-xl font-semibold mb-4">About {vendor.name}</h2>
+                <p className="text-muted-foreground mb-6">{vendor.description}</p>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-lg font-semibold">Features</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="list-disc pl-5 space-y-1">
+                        {vendor.dietaryOptions && vendor.dietaryOptions.length > 0 && (
+                          <li>Dietary options: {vendor.dietaryOptions.join(', ')}</li>
+                        )}
+                        {vendor.cuisineTypes && vendor.cuisineTypes.length > 0 && (
+                          <li>Cuisine types: {vendor.cuisineTypes.join(', ')}</li>
+                        )}
+                        <li>Event types: Weddings, Corporate, Private celebrations</li>
+                        <li>Available year-round</li>
+                      </ul>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-lg font-semibold">Availability</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-muted-foreground mb-2">Contact for availability details</p>
+                      <p className="text-sm">Popular dates book quickly - reach out early!</p>
+                      {vendor.calendarView && (
+                        <Button className="mt-4 w-full" variant="outline">View Calendar</Button>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="services">
+              <div>
+                <h2 className="font-display text-xl font-semibold mb-4">Services</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-lg font-semibold">Standard Services</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="list-disc pl-5 space-y-1">
+                        <li>Full service event planning</li>
+                        <li>Day-of coordination</li>
+                        <li>Custom event design</li>
+                        <li>Vendor management</li>
+                      </ul>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-lg font-semibold">Add-on Services</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="list-disc pl-5 space-y-1">
+                        <li>Guest management</li>
+                        <li>Budget tracking</li>
+                        <li>Custom timeline creation</li>
+                        <li>On-site management</li>
+                      </ul>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                <div className="mt-6">
+                  <h3 className="font-medium mb-2">Service Area</h3>
+                  <p className="text-muted-foreground">
+                    Primarily serving the greater Cape Town area. Available for destination events with additional travel fees.
+                  </p>
+                </div>
+              </div>
+            </TabsContent>
+
+            {hasReviewFeature && (
+              <TabsContent value="reviews">
+                <Reviews vendorId={vendorId} userId={userId} vendor={vendor} />
+              </TabsContent>
+            )}
+          </Tabs>
         </div>
         
         <div className="md:w-1/3">
@@ -178,9 +264,10 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
           </Card>
           
           <div className="mt-6">
-            <ShortlistButton 
+            <LikeButton 
               vendorId={vendor.id} 
               variant="outline"
+              showText
               className="w-full justify-center border-primary text-primary hover:bg-accent"
             />
           </div>

@@ -166,6 +166,90 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: 'Server error' });
     }
   });
+  
+  // Reviews API endpoints
+  app.get('/api/reviews', async (req: Request, res: Response) => {
+    try {
+      const vendorId = req.query.vendorId ? parseInt(req.query.vendorId as string) : undefined;
+      
+      if (!vendorId) {
+        return res.status(400).json({ message: 'Vendor ID is required' });
+      }
+      
+      const reviews = await storage.getReviewsByVendor(vendorId);
+      res.json(reviews);
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+  
+  app.post('/api/reviews', async (req: Request, res: Response) => {
+    try {
+      const { userId, vendorId, rating, reviewText, title, eventDate, serviceUsed } = req.body;
+      
+      // Validate that the vendor exists and has the appropriate subscription
+      const vendor = await storage.getVendor(vendorId);
+      
+      if (!vendor) {
+        return res.status(404).json({ message: 'Vendor not found' });
+      }
+      
+      // Only premium and premium pro vendors can have reviews
+      if (vendor.subscriptionTier !== 'premium' && vendor.subscriptionTier !== 'premium pro') {
+        return res.status(403).json({ 
+          message: 'Reviews are only available for premium and premium pro vendors'
+        });
+      }
+      
+      // Validate word count (maximum 120 words)
+      if (reviewText && reviewText.trim().split(/\s+/).length > 120) {
+        return res.status(400).json({ 
+          message: 'Review is too long. Please limit your review to 120 words.'
+        });
+      }
+      
+      const review = await storage.createReview({
+        userId,
+        vendorId,
+        rating,
+        reviewText,
+        title,
+        eventDate: eventDate ? new Date(eventDate) : null,
+        serviceUsed: serviceUsed || null,
+        isVerified: false, // Admin would verify reviews
+      });
+      
+      // Update the vendor's average rating and review count
+      await storage.updateVendorRatings(vendorId);
+      
+      res.status(201).json(review);
+    } catch (error) {
+      console.error('Error creating review:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+  
+  app.post('/api/reviews/:id/reply', async (req: Request, res: Response) => {
+    try {
+      const reviewId = parseInt(req.params.id);
+      const { adminReply } = req.body;
+      
+      // In a real implementation, validate that the user is the vendor or admin
+      
+      const review = await storage.getReview(reviewId);
+      
+      if (!review) {
+        return res.status(404).json({ message: 'Review not found' });
+      }
+      
+      const updatedReview = await storage.updateReviewReply(reviewId, adminReply);
+      res.json(updatedReview);
+    } catch (error) {
+      console.error('Error updating review reply:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
 
   // Shortlist routes
   app.get('/api/shortlists', async (req: Request, res: Response) => {
