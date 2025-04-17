@@ -77,6 +77,10 @@ export default function SubscriptionPlans() {
                   <Check className="h-5 w-5 text-green-500 mr-2" />
                   <span>Event lead notifications</span>
                 </li>
+                <li className="flex items-center">
+                  <Check className="h-5 w-5 text-green-500 mr-2" />
+                  <span>Basic WhatsApp integration</span>
+                </li>
               </ul>
               <Link href="/vendor-signup/basic">
                 <Button className="w-full bg-primary hover:bg-primary/90">Subscribe Now</Button>
@@ -88,7 +92,7 @@ export default function SubscriptionPlans() {
           <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
             <div className="p-6">
               <h3 className="text-xl font-display font-semibold mb-2">Pro</h3>
-              <div className="text-3xl font-bold mb-6">R130 <span className="text-sm text-muted-foreground font-normal">/month</span></div>
+              <div className="text-3xl font-bold mb-6">R180 <span className="text-sm text-muted-foreground font-normal">/month</span></div>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-center">
                   <Check className="h-5 w-5 text-green-500 mr-2" />
@@ -122,6 +126,14 @@ export default function SubscriptionPlans() {
                   <Check className="h-5 w-5 text-green-500 mr-2" />
                   <span>Featured in search results</span>
                 </li>
+                <li className="flex items-center">
+                  <Check className="h-5 w-5 text-green-500 mr-2" />
+                  <span>1 promotional 15-second video</span>
+                </li>
+                <li className="flex items-center">
+                  <Check className="h-5 w-5 text-green-500 mr-2" />
+                  <span>WhatsApp group integration</span>
+                </li>
               </ul>
               <Link href="/vendor-signup/pro">
                 <Button className="w-full bg-primary hover:bg-primary/90">
@@ -135,7 +147,7 @@ export default function SubscriptionPlans() {
           <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-purple-200">
             <div className="p-6">
               <h3 className="text-xl font-display font-semibold mb-2">Pro Platinum</h3>
-              <div className="text-3xl font-bold mb-6">R190 <span className="text-sm text-muted-foreground font-normal">/month</span></div>
+              <div className="text-3xl font-bold mb-6">R240 <span className="text-sm text-muted-foreground font-normal">/month</span></div>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-center">
                   <Check className="h-5 w-5 text-green-500 mr-2" />
@@ -172,6 +184,18 @@ export default function SubscriptionPlans() {
                 <li className="flex items-center">
                   <Check className="h-5 w-5 text-green-500 mr-2" />
                   <span>Event opportunity alerts</span>
+                </li>
+                <li className="flex items-center">
+                  <Check className="h-5 w-5 text-green-500 mr-2" />
+                  <span>1 promotional 120-minute video</span>
+                </li>
+                <li className="flex items-center">
+                  <Check className="h-5 w-5 text-green-500 mr-2" />
+                  <span>Advanced WhatsApp integration</span>
+                </li>
+                <li className="flex items-center">
+                  <Check className="h-5 w-5 text-green-500 mr-2" />
+                  <span>Priority customer support</span>
                 </li>
               </ul>
               <Link href="/vendor-signup/platinum">

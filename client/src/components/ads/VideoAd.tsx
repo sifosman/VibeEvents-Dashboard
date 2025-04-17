@@ -234,7 +234,7 @@ export default function VideoAd({
                 {ad.vendorName}
               </div>
               <div className="bg-black/60 text-white text-xs px-2 py-1 rounded">
-                Ad • {Math.ceil(ad.duration)}s
+                Ad • {ad.duration >= 60 ? `${Math.floor(ad.duration / 60)}m ${ad.duration % 60}s` : `${Math.ceil(ad.duration)}s`}
               </div>
             </div>
             
