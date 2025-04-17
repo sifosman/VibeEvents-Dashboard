@@ -4,7 +4,13 @@ import {
   vendors, type Vendor, type InsertVendor,
   shortlists, type Shortlist, type InsertShortlist,
   tasks, type Task, type InsertTask,
-  timelineEvents, type TimelineEvent, type InsertTimelineEvent
+  timelineEvents, type TimelineEvent, type InsertTimelineEvent,
+  whatsappGroups, type WhatsappGroup, type InsertWhatsappGroup,
+  whatsappMessages, type WhatsappMessage, type InsertWhatsappMessage,
+  adCampaigns, type AdCampaign, type InsertAdCampaign,
+  adAssets, type AdAsset, type InsertAdAsset,
+  adPlacements, type AdPlacement, type InsertAdPlacement,
+  seoPackages, type SeoPackage, type InsertSeoPackage
 } from "@shared/schema";
 
 // Interface for storage operations

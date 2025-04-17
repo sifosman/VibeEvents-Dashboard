@@ -209,3 +209,131 @@ export type InsertQuoteRequest = z.infer<typeof insertQuoteRequestSchema>;
 
 export type BookingDeposit = typeof bookingDeposits.$inferSelect;
 export type InsertBookingDeposit = z.infer<typeof insertBookingDepositSchema>;
+
+// WhatsApp integration tables
+export const whatsappGroups = pgTable("whatsapp_groups", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull(),
+  groupName: text("group_name").notNull(),
+  groupId: text("group_id").notNull().unique(),
+  eventId: integer("event_id"),
+  status: text("status").notNull().default("active"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertWhatsappGroupSchema = createInsertSchema(whatsappGroups).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const whatsappMessages = pgTable("whatsapp_messages", {
+  id: serial("id").primaryKey(),
+  groupId: integer("group_id").notNull(),
+  senderId: text("sender_id").notNull(),
+  senderName: text("sender_name").notNull(),
+  message: text("message").notNull(),
+  messageType: text("message_type").notNull().default("text"),
+  hasTaskAction: boolean("has_task_action").default(false),
+  hasTimelineAction: boolean("has_timeline_action").default(false),
+  createdTaskId: integer("created_task_id"),
+  createdTimelineId: integer("created_timeline_id"),
+  timestamp: timestamp("timestamp").defaultNow(),
+});
+
+export const insertWhatsappMessageSchema = createInsertSchema(whatsappMessages).omit({
+  id: true,
+  timestamp: true,
+});
+
+// Advertising tables
+export const adCampaigns = pgTable("ad_campaigns", {
+  id: serial("id").primaryKey(),
+  vendorId: integer("vendor_id").notNull(),
+  name: text("name").notNull(),
+  description: text("description"),
+  budget: doublePrecision("budget").notNull(),
+  startDate: timestamp("start_date").notNull(),
+  endDate: timestamp("end_date").notNull(),
+  status: text("status").notNull().default("pending"),
+  type: text("type").notNull(), // banner, featured, video
+  targetAudience: text("target_audience"), // JSON string for targeting options
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertAdCampaignSchema = createInsertSchema(adCampaigns).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const adAssets = pgTable("ad_assets", {
+  id: serial("id").primaryKey(),
+  campaignId: integer("campaign_id").notNull(),
+  assetType: text("asset_type").notNull(), // image, video, html
+  assetUrl: text("asset_url").notNull(),
+  title: text("title"),
+  description: text("description"),
+  callToAction: text("call_to_action"),
+  dimensions: text("dimensions"), // Format: "WidthxHeight"
+  uploadedAt: timestamp("uploaded_at").defaultNow(),
+});
+
+export const insertAdAssetSchema = createInsertSchema(adAssets).omit({
+  id: true,
+  uploadedAt: true,
+});
+
+export const adPlacements = pgTable("ad_placements", {
+  id: serial("id").primaryKey(),
+  campaignId: integer("campaign_id").notNull(),
+  assetId: integer("asset_id").notNull(),
+  position: text("position").notNull(), // homepage_top, search_results, category_page, etc.
+  priority: integer("priority").notNull().default(1),
+  pricing: text("pricing").notNull(), // CPM, CPC, fixed
+  cost: doublePrecision("cost").notNull(),
+  impressions: integer("impressions").default(0),
+  clicks: integer("clicks").default(0),
+  startDate: timestamp("start_date").notNull(),
+  endDate: timestamp("end_date").notNull(),
+  status: text("status").notNull().default("pending"),
+});
+
+export const insertAdPlacementSchema = createInsertSchema(adPlacements).omit({
+  id: true,
+});
+
+export const seoPackages = pgTable("seo_packages", {
+  id: serial("id").primaryKey(),
+  vendorId: integer("vendor_id").notNull(),
+  packageName: text("package_name").notNull(),
+  price: doublePrecision("price").notNull(),
+  keywords: text("keywords").array(),
+  priority: integer("priority").default(1),
+  startDate: timestamp("start_date").notNull(),
+  endDate: timestamp("end_date").notNull(),
+  status: text("status").notNull().default("active"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertSeoPackageSchema = createInsertSchema(seoPackages).omit({
+  id: true,
+  createdAt: true,
+});
+
+// Type exports for new tables
+export type WhatsappGroup = typeof whatsappGroups.$inferSelect;
+export type InsertWhatsappGroup = z.infer<typeof insertWhatsappGroupSchema>;
+
+export type WhatsappMessage = typeof whatsappMessages.$inferSelect;
+export type InsertWhatsappMessage = z.infer<typeof insertWhatsappMessageSchema>;
+
+export type AdCampaign = typeof adCampaigns.$inferSelect;
+export type InsertAdCampaign = z.infer<typeof insertAdCampaignSchema>;
+
+export type AdAsset = typeof adAssets.$inferSelect;
+export type InsertAdAsset = z.infer<typeof insertAdAssetSchema>;
+
+export type AdPlacement = typeof adPlacements.$inferSelect;
+export type InsertAdPlacement = z.infer<typeof insertAdPlacementSchema>;
+
+export type SeoPackage = typeof seoPackages.$inferSelect;
+export type InsertSeoPackage = z.infer<typeof insertSeoPackageSchema>;
