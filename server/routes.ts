@@ -5,7 +5,13 @@ import {
   insertUserSchema, 
   insertShortlistSchema, 
   insertTaskSchema, 
-  insertTimelineEventSchema 
+  insertTimelineEventSchema,
+  insertWhatsappGroupSchema,
+  insertWhatsappMessageSchema,
+  insertAdCampaignSchema,
+  insertAdAssetSchema,
+  insertAdPlacementSchema,
+  insertSeoPackageSchema
 } from "@shared/schema";
 import { z } from "zod";
 import Stripe from "stripe";
@@ -311,6 +317,263 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // WhatsApp integration routes
+  app.get('/api/whatsapp-groups/:userId', async (req: Request, res: Response) => {
+    try {
+      const userId = parseInt(req.params.userId);
+      const groups = await storage.getWhatsappGroups(userId);
+      res.status(200).json(groups);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.post('/api/whatsapp-groups', async (req: Request, res: Response) => {
+    try {
+      const validatedData = insertWhatsappGroupSchema.parse(req.body);
+      const group = await storage.createWhatsappGroup(validatedData);
+      res.status(201).json(group);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: 'Invalid input data', errors: error.errors });
+      }
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.patch('/api/whatsapp-groups/:id/task-sync', async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { syncEnabled } = req.body;
+      
+      if (syncEnabled === undefined) {
+        return res.status(400).json({ message: 'Sync status is required' });
+      }
+      
+      const group = await storage.updateWhatsappGroupSettings(id, {
+        taskSync: syncEnabled
+      });
+      res.status(200).json(group);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.patch('/api/whatsapp-groups/:id/timeline-sync', async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { syncEnabled } = req.body;
+      
+      if (syncEnabled === undefined) {
+        return res.status(400).json({ message: 'Sync status is required' });
+      }
+      
+      const group = await storage.updateWhatsappGroupSettings(id, {
+        timelineSync: syncEnabled
+      });
+      res.status(200).json(group);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.patch('/api/whatsapp-groups/:id/notifications', async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { enabled } = req.body;
+      
+      if (enabled === undefined) {
+        return res.status(400).json({ message: 'Enabled status is required' });
+      }
+      
+      const group = await storage.updateWhatsappGroupSettings(id, {
+        notificationsEnabled: enabled
+      });
+      res.status(200).json(group);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.delete('/api/whatsapp-groups/:id', async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteWhatsappGroup(id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.get('/api/whatsapp-messages/:groupId', async (req: Request, res: Response) => {
+    try {
+      const groupId = parseInt(req.params.groupId);
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
+      const messages = await storage.getWhatsappMessages(groupId, limit);
+      res.status(200).json(messages);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.post('/api/whatsapp-messages', async (req: Request, res: Response) => {
+    try {
+      const validatedData = insertWhatsappMessageSchema.parse(req.body);
+      const message = await storage.createWhatsappMessage(validatedData);
+      res.status(201).json(message);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: 'Invalid input data', errors: error.errors });
+      }
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  // Advertising routes
+  app.get('/api/ads/campaigns/:vendorId', async (req: Request, res: Response) => {
+    try {
+      const vendorId = parseInt(req.params.vendorId);
+      const campaigns = await storage.getAdCampaigns(vendorId);
+      res.status(200).json(campaigns);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.post('/api/ads/campaigns', async (req: Request, res: Response) => {
+    try {
+      const validatedData = insertAdCampaignSchema.parse(req.body);
+      const campaign = await storage.createAdCampaign(validatedData);
+      res.status(201).json(campaign);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: 'Invalid input data', errors: error.errors });
+      }
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.get('/api/ads/assets/:campaignId', async (req: Request, res: Response) => {
+    try {
+      const campaignId = parseInt(req.params.campaignId);
+      const assets = await storage.getAdAssets(campaignId);
+      res.status(200).json(assets);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.post('/api/ads/assets', async (req: Request, res: Response) => {
+    try {
+      const validatedData = insertAdAssetSchema.parse(req.body);
+      const asset = await storage.createAdAsset(validatedData);
+      res.status(201).json(asset);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: 'Invalid input data', errors: error.errors });
+      }
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.get('/api/ads/:position', async (req: Request, res: Response) => {
+    try {
+      const { position } = req.params;
+      const adPlacement = await storage.getAdPlacement(position);
+      
+      if (!adPlacement) {
+        return res.status(404).json({ message: 'No ad available for this position' });
+      }
+      
+      res.status(200).json(adPlacement);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.get('/api/ads/video/:position', async (req: Request, res: Response) => {
+    try {
+      const { position } = req.params;
+      const videoAd = await storage.getVideoAd(position);
+      
+      if (!videoAd) {
+        return res.status(404).json({ message: 'No video ad available for this position' });
+      }
+      
+      res.status(200).json(videoAd);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.get('/api/ads/featured-vendors', async (req: Request, res: Response) => {
+    try {
+      const categoryId = req.query.categoryId ? parseInt(req.query.categoryId as string) : undefined;
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 3;
+      
+      const featuredVendors = await storage.getFeaturedVendorAds(categoryId, limit);
+      res.status(200).json(featuredVendors);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.post('/api/ads/:id/impression', async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.trackAdImpression(id);
+      res.status(200).json({ success: true });
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.post('/api/ads/:id/click', async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.trackAdClick(id);
+      res.status(200).json({ success: true });
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.post('/api/ads/:id/video-progress', async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { progress } = req.body;
+      
+      // Just track the progress - no need to store this data for now
+      // We could add this feature later if needed
+      
+      res.status(200).json({ success: true });
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.get('/api/seo-packages', async (req: Request, res: Response) => {
+    try {
+      const seoPackages = await storage.getSeoPackages();
+      res.status(200).json(seoPackages);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.post('/api/seo-packages', async (req: Request, res: Response) => {
+    try {
+      const validatedData = insertSeoPackageSchema.parse(req.body);
+      const seoPackage = await storage.createSeoPackage(validatedData);
+      res.status(201).json(seoPackage);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: 'Invalid input data', errors: error.errors });
+      }
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+  
   // Stripe subscription routes
   if (!process.env.STRIPE_SECRET_KEY) {
     console.warn('Warning: STRIPE_SECRET_KEY is not set. Stripe integration will not function properly.');

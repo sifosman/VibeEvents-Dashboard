@@ -51,7 +51,7 @@ export default function SubscriptionPlans() {
             </div>
             <div className="p-6">
               <h3 className="text-xl font-display font-semibold mb-2">Basic</h3>
-              <div className="text-3xl font-bold mb-6">R80 <span className="text-sm text-muted-foreground font-normal">/month</span></div>
+              <div className="text-3xl font-bold mb-6">R130 <span className="text-sm text-muted-foreground font-normal">/month</span></div>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-center">
                   <Check className="h-5 w-5 text-green-500 mr-2" />

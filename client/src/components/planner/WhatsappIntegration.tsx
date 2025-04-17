@@ -252,7 +252,7 @@ export default function WhatsappIntegration({ userId }: { userId: number }) {
                                 </p>
                               </div>
                               <Switch 
-                                checked={group.taskSync} 
+                                checked={group.taskSync || false} 
                                 onCheckedChange={(checked) => 
                                   toggleTaskSyncMutation.mutate({ 
                                     groupId: group.id, 
@@ -272,7 +272,7 @@ export default function WhatsappIntegration({ userId }: { userId: number }) {
                                 </p>
                               </div>
                               <Switch 
-                                checked={group.timelineSync} 
+                                checked={group.timelineSync || false} 
                                 onCheckedChange={(checked) => 
                                   toggleTaskSyncMutation.mutate({ 
                                     groupId: group.id, 
@@ -292,7 +292,7 @@ export default function WhatsappIntegration({ userId }: { userId: number }) {
                                 </p>
                               </div>
                               <Switch 
-                                checked={group.notificationsEnabled} 
+                                checked={group.notificationsEnabled || false} 
                                 onCheckedChange={(checked) => 
                                   toggleTaskSyncMutation.mutate({ 
                                     groupId: group.id, 
@@ -329,7 +329,7 @@ export default function WhatsappIntegration({ userId }: { userId: number }) {
                   
                   <p className="text-sm text-muted-foreground">
                     Last activity: {
-                      new Date(group.lastActivity || group.createdAt).toLocaleDateString('en-US', {
+                      new Date(group.lastActivity || group.createdAt || Date.now()).toLocaleDateString('en-US', {
                         month: 'short',
                         day: 'numeric',
                         hour: '2-digit',
