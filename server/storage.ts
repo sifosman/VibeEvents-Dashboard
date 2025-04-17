@@ -113,6 +113,28 @@ export interface IStorage {
   createReview(review: InsertReview): Promise<Review>;
   updateReviewReply(id: number, adminReply: string): Promise<Review>;
   updateVendorRatings(vendorId: number): Promise<void>;
+  
+  // Blog operations
+  getBlogPosts(filters?: { status?: string, category?: string, tag?: string }): Promise<BlogPost[]>;
+  getBlogPost(id: number): Promise<BlogPost | undefined>;
+  getBlogPostBySlug(slug: string): Promise<BlogPost | undefined>;
+  createBlogPost(post: InsertBlogPost): Promise<BlogPost>;
+  updateBlogPost(id: number, post: Partial<BlogPost>): Promise<BlogPost>;
+  deleteBlogPost(id: number): Promise<void>;
+  incrementBlogPostView(id: number): Promise<void>;
+  
+  // Blog comment operations
+  getBlogComments(postId: number): Promise<BlogComment[]>;
+  createBlogComment(comment: InsertBlogComment): Promise<BlogComment>;
+  updateBlogCommentStatus(id: number, status: string): Promise<BlogComment>;
+  
+  // Notice board operations
+  getNotices(filters?: { status?: string, category?: string, audience?: string }): Promise<Notice[]>;
+  getNotice(id: number): Promise<Notice | undefined>;
+  createNotice(notice: InsertNotice): Promise<Notice>;
+  updateNotice(id: number, notice: Partial<Notice>): Promise<Notice>;
+  deleteNotice(id: number): Promise<void>;
+  incrementNoticeView(id: number): Promise<void>;
 }
 
 export class MemStorage implements IStorage {

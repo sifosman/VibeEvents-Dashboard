@@ -37,6 +37,7 @@ export const vendors = pgTable("vendors", {
   name: text("name").notNull(),
   description: text("description").notNull(),
   imageUrl: text("image_url").notNull(),
+  logoUrl: text("logo_url"),  // Company logo for subscribers
   categoryId: integer("category_id").notNull(),
   priceRange: text("price_range").notNull(),
   rating: doublePrecision("rating").notNull().default(0),
@@ -66,6 +67,13 @@ export const vendors = pgTable("vendors", {
   onlineContracts: boolean("online_contracts").default(false),
   leadNotifications: boolean("lead_notifications").default(false),
   featuredListing: boolean("featured_listing").default(false),
+  // Payment provider integrations
+  paymentProviders: text("payment_providers").array(), // stripe, paypal, payfast, etc.
+  stripeConnectId: text("stripe_connect_id"), // For Stripe Connect integration
+  paypalMerchantId: text("paypal_merchant_id"),
+  payfastMerchantId: text("payfast_merchant_id"),
+  acceptedPaymentMethods: text("accepted_payment_methods").array(), // credit_card, eft, bank_transfer, etc.
+  // Social and external links
   googleMapsLink: text("google_maps_link"),
   facebookUrl: text("facebook_url"),
   twitterUrl: text("twitter_url"),
@@ -176,8 +184,16 @@ export const bookingDeposits = pgTable("booking_deposits", {
   quoteRequestId: integer("quote_request_id"),
   amount: doublePrecision("amount").notNull(),
   paymentStatus: text("payment_status").notNull().default("pending"),
+  paymentGateway: text("payment_gateway").notNull(), // stripe, paypal, payfast, etc.
+  // Payment gateway specific fields
   stripePaymentIntentId: text("stripe_payment_intent_id"),
+  paypalTransactionId: text("paypal_transaction_id"),
+  payfastPaymentId: text("payfast_payment_id"),
+  paymentReference: text("payment_reference"), // Custom reference for tracking
+  paymentMethod: text("payment_method"), // credit_card, bank_transfer, wallet, etc.
+  paymentNotes: text("payment_notes"),
   createdAt: timestamp("created_at").defaultNow(),
+  completedAt: timestamp("completed_at"),
 });
 
 export const insertBookingDepositSchema = createInsertSchema(bookingDeposits).omit({
@@ -526,3 +542,85 @@ export type InsertConversation = z.infer<typeof insertConversationSchema>;
 
 export type Message = typeof messages.$inferSelect;
 export type InsertMessage = z.infer<typeof insertMessageSchema>;
+
+// Blog posts table
+export const blogPosts = pgTable("blog_posts", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  slug: text("slug").notNull().unique(),
+  content: text("content").notNull(),
+  excerpt: text("excerpt"), // Short summary for listings
+  featuredImageUrl: text("featured_image_url"),
+  authorId: integer("author_id").notNull(), // User ID of author
+  publishedAt: timestamp("published_at"),
+  status: text("status").notNull().default("draft"), // draft, published, archived
+  categories: text("categories").array(),
+  tags: text("tags").array(),
+  viewCount: integer("view_count").default(0),
+  commentCount: integer("comment_count").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertBlogPostSchema = createInsertSchema(blogPosts).omit({
+  id: true,
+  slug: true, // Generate from title
+  createdAt: true,
+  updatedAt: true,
+  viewCount: true,
+  commentCount: true,
+});
+
+// Blog comments table
+export const blogComments = pgTable("blog_comments", {
+  id: serial("id").primaryKey(),
+  postId: integer("post_id").notNull(),
+  userId: integer("user_id").notNull(),
+  parentCommentId: integer("parent_comment_id"), // For nested comments
+  content: text("content").notNull(),
+  status: text("status").notNull().default("pending"), // pending, approved, spam, rejected
+  isAuthorResponse: boolean("is_author_response").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertBlogCommentSchema = createInsertSchema(blogComments).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  status: true,
+});
+
+// Notice board items
+export const notices = pgTable("notices", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  authorId: integer("author_id").notNull(),
+  priority: text("priority").notNull().default("normal"), // low, normal, high, urgent
+  category: text("category").notNull(), // general, events, important, announcement
+  startDate: timestamp("start_date").notNull().defaultNow(), // When to start showing the notice
+  endDate: timestamp("end_date"), // When to stop showing the notice (optional)
+  audiences: text("audiences").array(), // all, vendors, event-planners, specific-users, etc.
+  viewCount: integer("view_count").default(0),
+  status: text("status").notNull().default("active"), // active, draft, expired, archived
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertNoticeSchema = createInsertSchema(notices).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  viewCount: true,
+});
+
+// Type exports for blog and notices
+export type BlogPost = typeof blogPosts.$inferSelect;
+export type InsertBlogPost = z.infer<typeof insertBlogPostSchema>;
+
+export type BlogComment = typeof blogComments.$inferSelect;
+export type InsertBlogComment = z.infer<typeof insertBlogCommentSchema>;
+
+export type Notice = typeof notices.$inferSelect;
+export type InsertNotice = z.infer<typeof insertNoticeSchema>;
