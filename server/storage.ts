@@ -10,10 +10,7 @@ import {
   adCampaigns, type AdCampaign, type InsertAdCampaign,
   adAssets, type AdAsset, type InsertAdAsset,
   adPlacements, type AdPlacement, type InsertAdPlacement,
-  seoPackages, type SeoPackage, type InsertSeoPackage,
-  calendarEvents, type CalendarEvent, type InsertCalendarEvent,
-  conversations, type Conversation, type InsertConversation,
-  messages, type Message, type InsertMessage
+  seoPackages, type SeoPackage, type InsertSeoPackage
 } from "@shared/schema";
 
 // Interface for storage operations
@@ -88,23 +85,6 @@ export interface IStorage {
   getSeoPackage(id: number): Promise<SeoPackage | undefined>;
   createSeoPackage(seoPackage: InsertSeoPackage): Promise<SeoPackage>;
   updateSeoPackage(id: number, data: Partial<SeoPackage>): Promise<SeoPackage>;
-
-  // Calendar operations
-  getCalendarEvents(userId: number): Promise<CalendarEvent[]>;
-  getCalendarEvent(id: number): Promise<CalendarEvent | undefined>;
-  createCalendarEvent(event: InsertCalendarEvent): Promise<CalendarEvent>;
-  updateCalendarEvent(id: number, data: Partial<InsertCalendarEvent>): Promise<CalendarEvent>;
-  deleteCalendarEvent(id: number): Promise<void>;
-
-  // Messaging operations
-  getUserConversations(userId: number, role: 'host' | 'provider'): Promise<Conversation[]>;
-  getConversation(id: number): Promise<(Conversation & { host: User, provider: User }) | undefined>;
-  createConversation(conversation: InsertConversation): Promise<Conversation>;
-  updateConversationStatus(id: number, status: string): Promise<Conversation>;
-  updateConversationLastMessage(id: number): Promise<Conversation>;
-  getMessages(conversationId: number): Promise<Message[]>;
-  createMessage(message: InsertMessage): Promise<Message>;
-  markMessagesAsRead(conversationId: number, userId: number): Promise<void>;
 }
 
 export class MemStorage implements IStorage {
@@ -114,15 +94,6 @@ export class MemStorage implements IStorage {
   private shortlists: Map<number, Shortlist>;
   private tasks: Map<number, Task>;
   private timelineEvents: Map<number, TimelineEvent>;
-  private whatsappGroups: Map<number, WhatsappGroup>;
-  private whatsappMessages: Map<number, WhatsappMessage>;
-  private adCampaigns: Map<number, AdCampaign>;
-  private adAssets: Map<number, AdAsset>;
-  private adPlacements: Map<number, AdPlacement>;
-  private seoPackages: Map<number, SeoPackage>;
-  private calendarEvents: Map<number, CalendarEvent>;
-  private conversations: Map<number, Conversation>;
-  private messages: Map<number, Message>;
   
   private userIdCounter: number;
   private categoryIdCounter: number;
@@ -130,15 +101,6 @@ export class MemStorage implements IStorage {
   private shortlistIdCounter: number;
   private taskIdCounter: number;
   private timelineEventIdCounter: number;
-  private whatsappGroupIdCounter: number;
-  private whatsappMessageIdCounter: number;
-  private adCampaignIdCounter: number;
-  private adAssetIdCounter: number;
-  private adPlacementIdCounter: number;
-  private seoPackageIdCounter: number;
-  private calendarEventIdCounter: number;
-  private conversationIdCounter: number;
-  private messageIdCounter: number;
 
   constructor() {
     this.users = new Map();
@@ -147,15 +109,6 @@ export class MemStorage implements IStorage {
     this.shortlists = new Map();
     this.tasks = new Map();
     this.timelineEvents = new Map();
-    this.whatsappGroups = new Map();
-    this.whatsappMessages = new Map();
-    this.adCampaigns = new Map();
-    this.adAssets = new Map();
-    this.adPlacements = new Map();
-    this.seoPackages = new Map();
-    this.calendarEvents = new Map();
-    this.conversations = new Map();
-    this.messages = new Map();
     
     this.userIdCounter = 1;
     this.categoryIdCounter = 1;
@@ -163,15 +116,6 @@ export class MemStorage implements IStorage {
     this.shortlistIdCounter = 1;
     this.taskIdCounter = 1;
     this.timelineEventIdCounter = 1;
-    this.whatsappGroupIdCounter = 1;
-    this.whatsappMessageIdCounter = 1;
-    this.adCampaignIdCounter = 1;
-    this.adAssetIdCounter = 1;
-    this.adPlacementIdCounter = 1;
-    this.seoPackageIdCounter = 1;
-    this.calendarEventIdCounter = 1;
-    this.conversationIdCounter = 1;
-    this.messageIdCounter = 1;
     
     // Initialize with sample data
     this.initializeData();
