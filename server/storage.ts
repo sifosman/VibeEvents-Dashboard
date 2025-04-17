@@ -154,6 +154,9 @@ export class MemStorage implements IStorage {
   private conversations: Map<number, Conversation>;
   private messages: Map<number, Message>;
   private reviews: Map<number, Review>;
+  private blogPosts: Map<number, BlogPost>;
+  private blogComments: Map<number, BlogComment>;
+  private notices: Map<number, Notice>;
   
   private userIdCounter: number;
   private categoryIdCounter: number;
@@ -171,6 +174,9 @@ export class MemStorage implements IStorage {
   private conversationIdCounter: number;
   private messageIdCounter: number;
   private reviewIdCounter: number;
+  private blogPostIdCounter: number;
+  private blogCommentIdCounter: number;
+  private noticeIdCounter: number;
 
   constructor() {
     this.users = new Map();
@@ -189,6 +195,9 @@ export class MemStorage implements IStorage {
     this.conversations = new Map();
     this.messages = new Map();
     this.reviews = new Map();
+    this.blogPosts = new Map();
+    this.blogComments = new Map();
+    this.notices = new Map();
     
     this.userIdCounter = 1;
     this.categoryIdCounter = 1;
@@ -206,6 +215,9 @@ export class MemStorage implements IStorage {
     this.conversationIdCounter = 1;
     this.messageIdCounter = 1;
     this.reviewIdCounter = 1;
+    this.blogPostIdCounter = 1;
+    this.blogCommentIdCounter = 1;
+    this.noticeIdCounter = 1;
     
     // Initialize with sample data
     this.initializeData();
@@ -251,10 +263,22 @@ export class MemStorage implements IStorage {
         slug: "decor-design"
       },
       {
+        name: "Themed Decor",
+        description: "Specialized Theme Setups & Props",
+        imageUrl: "https://images.unsplash.com/photo-1567016526105-22da7c13for8?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        slug: "themed-decor"
+      },
+      {
         name: "Transportation",
-        description: "Luxury Cars & Shuttles",
+        description: "Luxury Cars, Shuttles & Services",
         imageUrl: "https://images.unsplash.com/photo-1630331276975-4179847a9b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         slug: "transportation"
+      },
+      {
+        name: "Specialty Transportation",
+        description: "Helicopters, Drones & Unique Vehicles",
+        imageUrl: "https://images.unsplash.com/photo-1595762537251-c92f1483a047?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        slug: "specialty-transportation"
       },
       {
         name: "Entertainment",
@@ -327,6 +351,24 @@ export class MemStorage implements IStorage {
         description: "Open Applications for Events",
         imageUrl: "https://images.unsplash.com/photo-1556125574-d7f27ec36a06?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         slug: "vendor-opportunities"
+      },
+      {
+        name: "Costumes & Attire",
+        description: "Bridal Wear, Themed Costumes & Formal Attire",
+        imageUrl: "https://images.unsplash.com/photo-1509319117193-57bab727e09d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        slug: "costumes-attire"
+      },
+      {
+        name: "Themed Party Services",
+        description: "Complete Themed Party Planning & Execution",
+        imageUrl: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        slug: "themed-party-services"
+      },
+      {
+        name: "Aerial Services",
+        description: "Drone Photography, Videography & Displays",
+        imageUrl: "https://images.unsplash.com/photo-1473968512647-3e447244af8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        slug: "aerial-services"
       }
     ];
 
@@ -515,6 +557,71 @@ export class MemStorage implements IStorage {
         websiteUrl: "https://example.com/",
         whatsappNumber: "+1234567890",
         location: "Dallas, TX"
+      },
+      {
+        name: "Fairy Tale Themes",
+        description: "Magical themed decorations and setups for your fairy tale event. Perfect for weddings and children's parties.",
+        imageUrl: "https://images.unsplash.com/photo-1526653054310-70f690177e36?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        categoryId: 7, // Themed Decor
+        priceRange: "$$$",
+        rating: 4.7,
+        reviewCount: 53,
+        instagramUrl: "https://instagram.com/",
+        websiteUrl: "https://example.com/",
+        whatsappNumber: "+1234567890",
+        location: "Orlando, FL"
+      },
+      {
+        name: "Luxury Helicopter Tours",
+        description: "Make a grand entrance or take a scenic tour with our luxury helicopter services.",
+        imageUrl: "https://images.unsplash.com/photo-1583997064298-0cf2d6a0cb85?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        categoryId: 9, // Specialty Transportation
+        priceRange: "$$$$",
+        rating: 4.9,
+        reviewCount: 34,
+        instagramUrl: "https://instagram.com/",
+        websiteUrl: "https://example.com/",
+        whatsappNumber: "+1234567890",
+        location: "Las Vegas, NV"
+      },
+      {
+        name: "Aerial Drone Displays",
+        description: "Breathtaking drone light shows and aerial photography for your special event.",
+        imageUrl: "https://images.unsplash.com/photo-1473968512647-3e447244af8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        categoryId: 23, // Aerial Services
+        priceRange: "$$$",
+        rating: 4.8,
+        reviewCount: 29,
+        instagramUrl: "https://instagram.com/",
+        websiteUrl: "https://example.com/",
+        whatsappNumber: "+1234567890",
+        location: "San Diego, CA"
+      },
+      {
+        name: "Bridal Elegance",
+        description: "Exquisite bridal wear and accessories for your perfect day. Custom fittings and designs available.",
+        imageUrl: "https://images.unsplash.com/photo-1550614000-4895a10e1bfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        categoryId: 21, // Costumes & Attire
+        priceRange: "$$$",
+        rating: 4.6,
+        reviewCount: 87,
+        instagramUrl: "https://instagram.com/",
+        websiteUrl: "https://example.com/",
+        whatsappNumber: "+1234567890",
+        location: "New York, NY"
+      },
+      {
+        name: "Masquerade Costumes",
+        description: "High-quality themed costumes and masks for masquerade balls and themed parties.",
+        imageUrl: "https://images.unsplash.com/photo-1581346087896-982da6ea164d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+        categoryId: 21, // Costumes & Attire
+        priceRange: "$$",
+        rating: 4.3,
+        reviewCount: 41,
+        instagramUrl: "https://instagram.com/",
+        websiteUrl: "https://example.com/",
+        whatsappNumber: "+1234567890",
+        location: "New Orleans, LA"
       }
     ];
 
