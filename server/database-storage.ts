@@ -129,40 +129,7 @@ export class DatabaseStorage implements IStorage {
     // Post-query filtering for array and complex filter types
     // We need to do this in-memory because we're filtering array fields
     
-    // Handle legacy dietary parameter for backward compatibility
-    if (dietary && typeof dietary === 'string') {
-      // Convert to lowercase for case-insensitive comparison
-      const dietaryLower = dietary.toLowerCase();
-      
-      results = results.filter(vendor => {
-        // Special handling for "alcohol-free" which applies to both venues and food vendors
-        if (dietaryLower === 'alcohol-free') {
-          return vendor.dietaryOptions && 
-                 Array.isArray(vendor.dietaryOptions) &&
-                 vendor.dietaryOptions.some(option => 
-                   typeof option === 'string' && option.toLowerCase() === 'alcohol-free');
-        }
-        
-        // For other dietary options
-        return vendor.dietaryOptions && 
-               Array.isArray(vendor.dietaryOptions) &&
-               vendor.dietaryOptions.some(option => 
-                 typeof option === 'string' && option.toLowerCase() === dietaryLower);
-      });
-    }
-    
-    // Handle legacy cuisine parameter for backward compatibility
-    if (cuisine && typeof cuisine === 'string') {
-      // Convert to lowercase for case-insensitive comparison
-      const cuisineLower = cuisine.toLowerCase();
-      
-      results = results.filter(vendor => {
-        return vendor.cuisineTypes && 
-               Array.isArray(vendor.cuisineTypes) &&
-               vendor.cuisineTypes.some(type => 
-                 typeof type === 'string' && type.toLowerCase().includes(cuisineLower));
-      });
-    }
+    // No legacy parameters needed
     
     // Handle new filter structure
     if (filters) {
