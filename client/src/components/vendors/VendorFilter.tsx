@@ -26,11 +26,29 @@ interface VendorFilterProps {
     search?: string;
     category?: string;
     priceRange?: string;
+    isThemed?: boolean;
+    themeType?: string;
+    dietary?: string;
+    cuisine?: string;
+    country?: string;
+    region?: string;
+    province?: string;
+    area?: string;
+    town?: string;
   }) => void;
   initialFilters?: {
     search?: string;
     category?: string;
     priceRange?: string;
+    isThemed?: boolean;
+    themeType?: string;
+    dietary?: string;
+    cuisine?: string;
+    country?: string;
+    region?: string;
+    province?: string;
+    area?: string;
+    town?: string;
   };
 }
 
@@ -39,10 +57,36 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
   const [search, setSearch] = useState(initialFilters.search || "");
   const [category, setCategory] = useState(initialFilters.category || "");
   const [priceRange, setPriceRange] = useState(initialFilters.priceRange || "");
+  const [isThemed, setIsThemed] = useState(initialFilters.isThemed || false);
+  const [themeType, setThemeType] = useState(initialFilters.themeType || "");
+  const [dietary, setDietary] = useState(initialFilters.dietary || "");
+  const [cuisine, setCuisine] = useState(initialFilters.cuisine || "");
+  const [country, setCountry] = useState(initialFilters.country || "");
+  const [region, setRegion] = useState(initialFilters.region || "");
+  const [province, setProvince] = useState(initialFilters.province || "");
+  const [area, setArea] = useState(initialFilters.area || "");
+  const [town, setTown] = useState(initialFilters.town || "");
 
   const { data: categories } = useQuery<Category[]>({
     queryKey: ['/api/categories'],
   });
+
+  const themeOptions = [
+    "Fairy Tale", "Rustic", "Beach", "Vintage", "Modern", "Boho",
+    "Garden", "Minimalist", "Luxury", "Cultural", "Fantasy", 
+    "Seasonal", "Sports", "Movie", "Historical", "Magical"
+  ];
+
+  const dietaryOptions = [
+    "Halaal", "Kosher", "Vegan", "Vegetarian", "Gluten-Free", 
+    "Dairy-Free", "Nut-Free", "Alcohol-Free"
+  ];
+
+  const cuisineOptions = [
+    "Mediterranean", "Indian", "Asian", "Mexican", "Italian", 
+    "French", "American", "African", "Middle Eastern", "Latin American",
+    "Greek", "Japanese", "Thai", "Chinese", "Spanish", "Fusion"
+  ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,8 +95,20 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
     if (search) filters.search = search;
     if (category) filters.category = category;
     if (priceRange) filters.priceRange = priceRange;
+    if (isThemed) filters.isThemed = 'true';
+    if (themeType) filters.themeType = themeType;
+    if (dietary) filters.dietary = dietary;
+    if (cuisine) filters.cuisine = cuisine;
     
-    onFilter({ search, category, priceRange });
+    onFilter({ 
+      search, 
+      category, 
+      priceRange,
+      isThemed,
+      themeType,
+      dietary,
+      cuisine
+    });
     
     // Update URL with query params
     const params = new URLSearchParams();
@@ -68,6 +124,10 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
     setSearch("");
     setCategory("");
     setPriceRange("");
+    setIsThemed(false);
+    setThemeType("");
+    setDietary("");
+    setCuisine("");
     onFilter({});
     setLocation("/vendors");
   };
@@ -131,6 +191,192 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
                       <SelectItem value="$$$$">$$$$ - Luxury</SelectItem>
                     </SelectContent>
                   </Select>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+            
+            <AccordionItem value="themed">
+              <AccordionTrigger>Themed Services</AccordionTrigger>
+              <AccordionContent>
+                <div className="space-y-4">
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="isThemed"
+                      checked={isThemed}
+                      onChange={(e) => setIsThemed(e.target.checked)}
+                      className="h-4 w-4 rounded border-gray-300 focus:ring-primary"
+                    />
+                    <label htmlFor="isThemed" className="ml-2 text-sm">
+                      Show themed vendors only
+                    </label>
+                  </div>
+                  
+                  {isThemed && (
+                    <div className="ml-2 pt-2 border-t border-gray-200">
+                      <Label htmlFor="themeType" className="mb-2 block text-sm">Theme Type</Label>
+                      <Select value={themeType} onValueChange={setThemeType}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a theme" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="">Any Theme</SelectItem>
+                          {themeOptions.map((theme) => (
+                            <SelectItem key={theme} value={theme}>
+                              {theme}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+            
+            <AccordionItem value="dietary">
+              <AccordionTrigger>Dietary Options</AccordionTrigger>
+              <AccordionContent>
+                <div className="space-y-2">
+                  <Select value={dietary} onValueChange={setDietary}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select dietary requirement" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">Any Dietary Option</SelectItem>
+                      {dietaryOptions.map((option) => (
+                        <SelectItem key={option} value={option}>
+                          {option}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+            
+            <AccordionItem value="cuisine">
+              <AccordionTrigger>Cuisine Types</AccordionTrigger>
+              <AccordionContent>
+                <div className="space-y-2">
+                  <Select value={cuisine} onValueChange={setCuisine}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select cuisine type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">Any Cuisine</SelectItem>
+                      {cuisineOptions.map((option) => (
+                        <SelectItem key={option} value={option}>
+                          {option}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+            
+            <AccordionItem value="location">
+              <AccordionTrigger>Location</AccordionTrigger>
+              <AccordionContent>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="country" className="text-sm">Country</Label>
+                    <Select value={country} onValueChange={setCountry}>
+                      <SelectTrigger id="country">
+                        <SelectValue placeholder="Select country" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">Any Country</SelectItem>
+                        <SelectItem value="South Africa">South Africa</SelectItem>
+                        <SelectItem value="Nigeria">Nigeria</SelectItem>
+                        <SelectItem value="Ghana">Ghana</SelectItem>
+                        <SelectItem value="Kenya">Kenya</SelectItem>
+                        <SelectItem value="Egypt">Egypt</SelectItem>
+                        <SelectItem value="Morocco">Morocco</SelectItem>
+                        <SelectItem value="Tanzania">Tanzania</SelectItem>
+                        <SelectItem value="Ethiopia">Ethiopia</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  {country && (
+                    <div className="space-y-2">
+                      <Label htmlFor="region" className="text-sm">Region</Label>
+                      <Select value={region} onValueChange={setRegion}>
+                        <SelectTrigger id="region">
+                          <SelectValue placeholder="Select region" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="">Any Region</SelectItem>
+                          {country === "South Africa" && (
+                            <>
+                              <SelectItem value="Gauteng">Gauteng</SelectItem>
+                              <SelectItem value="Western Cape">Western Cape</SelectItem>
+                              <SelectItem value="Eastern Cape">Eastern Cape</SelectItem>
+                              <SelectItem value="KwaZulu-Natal">KwaZulu-Natal</SelectItem>
+                              <SelectItem value="Free State">Free State</SelectItem>
+                              <SelectItem value="North West">North West</SelectItem>
+                              <SelectItem value="Mpumalanga">Mpumalanga</SelectItem>
+                              <SelectItem value="Limpopo">Limpopo</SelectItem>
+                              <SelectItem value="Northern Cape">Northern Cape</SelectItem>
+                            </>
+                          )}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+                  
+                  {region && (
+                    <div className="space-y-2">
+                      <Label htmlFor="province" className="text-sm">Province</Label>
+                      <Select value={province} onValueChange={setProvince}>
+                        <SelectTrigger id="province">
+                          <SelectValue placeholder="Select province" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="">Any Province</SelectItem>
+                          {/* Province options would be dynamically loaded based on region */}
+                          <SelectItem value="Example Province 1">Example Province 1</SelectItem>
+                          <SelectItem value="Example Province 2">Example Province 2</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+                  
+                  {province && (
+                    <div className="space-y-2">
+                      <Label htmlFor="area" className="text-sm">Area</Label>
+                      <Select value={area} onValueChange={setArea}>
+                        <SelectTrigger id="area">
+                          <SelectValue placeholder="Select area" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="">Any Area</SelectItem>
+                          {/* Area options would be dynamically loaded based on province */}
+                          <SelectItem value="Example Area 1">Example Area 1</SelectItem>
+                          <SelectItem value="Example Area 2">Example Area 2</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+                  
+                  {area && (
+                    <div className="space-y-2">
+                      <Label htmlFor="town" className="text-sm">Town</Label>
+                      <Select value={town} onValueChange={setTown}>
+                        <SelectTrigger id="town">
+                          <SelectValue placeholder="Select town" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="">Any Town</SelectItem>
+                          {/* Town options would be dynamically loaded based on area */}
+                          <SelectItem value="Example Town 1">Example Town 1</SelectItem>
+                          <SelectItem value="Example Town 2">Example Town 2</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
                 </div>
               </AccordionContent>
             </AccordionItem>

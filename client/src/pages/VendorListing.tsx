@@ -23,6 +23,10 @@ export default function VendorListing() {
     search: "",
     category: "",
     priceRange: "",
+    isThemed: false,
+    themeType: "",
+    dietary: "",
+    cuisine: "",
   });
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
@@ -32,11 +36,19 @@ export default function VendorListing() {
     const searchParam = params.get("search") || "";
     const categoryParam = params.get("category") || "";
     const priceRangeParam = params.get("priceRange") || "";
+    const isThemedParam = params.get("isThemed") === "true";
+    const themeTypeParam = params.get("themeType") || "";
+    const dietaryParam = params.get("dietary") || "";
+    const cuisineParam = params.get("cuisine") || "";
     
     setFilters({
       search: searchParam,
       category: categoryParam,
       priceRange: priceRangeParam,
+      isThemed: isThemedParam,
+      themeType: themeTypeParam,
+      dietary: dietaryParam,
+      cuisine: cuisineParam,
     });
   }, [location]);
 
