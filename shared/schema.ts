@@ -45,6 +45,9 @@ export const vendors = pgTable("vendors", {
   websiteUrl: text("website_url"),
   whatsappNumber: text("whatsapp_number"),
   location: text("location"),
+  // Dietary options and cuisines
+  dietaryOptions: text("dietary_options").array(),  // halaal, kosher, vegan, vegetarian, gluten-free, dairy-free, nut-free
+  cuisineTypes: text("cuisine_types").array(),      // Mediterranean, Indian, Asian, Mexican, Italian, French, American, African, etc.
   // Subscription related fields
   subscriptionTier: text("subscription_tier").default("free"),
   stripeCustomerId: text("stripe_customer_id"),
@@ -420,6 +423,23 @@ export const insertReviewSchema = createInsertSchema(reviews).omit({
   adminReplyDate: true,
 });
 
+// Public holidays table
+export const publicHolidays = pgTable("public_holidays", {
+  id: serial("id").primaryKey(),
+  countryCode: text("country_code").notNull(), // ISO country code (e.g., 'ZA' for South Africa)
+  name: text("name").notNull(),
+  date: timestamp("date").notNull(),
+  description: text("description"),
+  isNational: boolean("is_national").default(true),
+  type: text("type").default("public"), // public, religious, observance
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertPublicHolidaySchema = createInsertSchema(publicHolidays).omit({
+  id: true,
+  createdAt: true,
+});
+
 // Calendar events table
 export const calendarEvents = pgTable("calendar_events", {
   id: serial("id").primaryKey(),
@@ -432,7 +452,7 @@ export const calendarEvents = pgTable("calendar_events", {
   allDay: boolean("all_day").default(false),
   location: text("location"),
   status: text("status").default("confirmed"), // confirmed, tentative, cancelled
-  type: text("type").default("booking"), // booking, block, availability
+  type: text("type").default("booking"), // booking, block, availability, holiday
   color: text("color"), // For UI display purposes
   recurrenceRule: text("recurrence_rule"), // For recurring events
   externalCalendarId: text("external_calendar_id"), // For sync with external calendars

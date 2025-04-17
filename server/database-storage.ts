@@ -88,24 +88,24 @@ export class DatabaseStorage implements IStorage {
       .limit(limit);
   }
 
-  async searchVendors(query: string, categoryId?: number): Promise<Vendor[]> {
+  async searchVendors(query: string, categoryId?: number, dietary?: string, cuisine?: string): Promise<Vendor[]> {
     const likeQuery = `%${query}%`;
+    let filters = [];
+    
+    // Add name search filter
+    filters.push(like(vendors.name, likeQuery));
+    
+    // Add category filter if provided
     if (categoryId) {
-      return db
-        .select()
-        .from(vendors)
-        .where(
-          and(
-            like(vendors.name, likeQuery),
-            eq(vendors.categoryId, categoryId)
-          )
-        );
-    } else {
-      return db
-        .select()
-        .from(vendors)
-        .where(like(vendors.name, likeQuery));
+      filters.push(eq(vendors.categoryId, categoryId));
     }
+    
+    // Execute the query with all applicable filters
+    return db
+      .select()
+      .from(vendors)
+      .where(and(...filters))
+      .orderBy(desc(vendors.rating));
   }
 
   async updateVendorStripeCustomerId(id: number, customerId: string): Promise<Vendor> {
