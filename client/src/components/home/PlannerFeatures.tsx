@@ -9,10 +9,11 @@ export default function PlannerFeatures() {
       <div className="container-custom">
         <div className="flex flex-col lg:flex-row gap-12 items-center">
           <div className="lg:w-1/2">
-            <h2 className="text-3xl md:text-4xl font-display font-bold mb-6">Organize Your Perfect Day With Our Planner</h2>
+            <h2 className="text-3xl md:text-4xl font-display font-bold mb-6">Organize Any Event With Our Smart Planner</h2>
             <p className="text-muted-foreground mb-8">
-              Keep all your wedding planning in one place with our innovative planner tools. 
-              Shortlist your favorite vendors, assign tasks to your team, and keep track of every detail.
+              Keep all your event planning in one place with our innovative planner tools. 
+              Whether it's a corporate conference, cultural festival, market day, or sports tournament - 
+              shortlist vendors, assign tasks to your team, and track every detail with ease.
             </p>
             
             <div className="space-y-4">
@@ -32,7 +33,7 @@ export default function PlannerFeatures() {
                 </div>
                 <div>
                   <h3 className="font-display font-medium text-lg mb-1">Task Management</h3>
-                  <p className="text-muted-foreground text-sm">Assign tasks to friends and family helping with your wedding planning.</p>
+                  <p className="text-muted-foreground text-sm">Assign tasks to team members, friends and family helping with your event.</p>
                 </div>
               </div>
               
