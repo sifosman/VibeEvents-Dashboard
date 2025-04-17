@@ -118,12 +118,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Vendor routes
   app.get('/api/vendors', async (req: Request, res: Response) => {
     try {
-      const { category, search } = req.query;
+      const { category, search, dietary, cuisine } = req.query;
       let vendors;
       
       if (search) {
         const categoryId = category ? parseInt(category as string) : undefined;
-        vendors = await storage.searchVendors(search as string, categoryId);
+        vendors = await storage.searchVendors(
+          search as string, 
+          categoryId,
+          dietary as string | undefined,
+          cuisine as string | undefined
+        );
       } else if (category) {
         vendors = await storage.getVendorsByCategory(parseInt(category as string));
       } else {
@@ -132,6 +137,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       res.status(200).json(vendors);
     } catch (error) {
+      console.error('Error fetching vendors:', error);
       res.status(500).json({ message: 'Server error' });
     }
   });
@@ -567,6 +573,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: 'Server error' });
     }
   });
+  
+  // Public holidays routes
+  app.get('/api/public-holidays/:countryCode', async (req: Request, res: Response) => {
+    try {
+      const { countryCode } = req.params;
+      const holidays = await storage.getPublicHolidays(countryCode);
+      res.status(200).json(holidays);
+    } catch (error) {
+      console.error('Error fetching public holidays:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+  
+  app.post('/api/public-holidays', async (req: Request, res: Response) => {
+    try {
+      const validatedData = insertPublicHolidaySchema.parse(req.body);
+      const holiday = await storage.createPublicHoliday(validatedData);
+      res.status(201).json(holiday);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: 'Invalid input data', errors: error.errors });
+      }
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
 
   app.post('/api/seo-packages', async (req: Request, res: Response) => {
     try {
@@ -967,6 +998,99 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.deleteCalendarEvent(id);
       res.status(204).send();
     } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+  
+  // Endpoint for vendors to mark days as fully booked
+  app.post('/api/calendar/block-day', async (req: Request, res: Response) => {
+    try {
+      const { vendorId, date, description } = req.body;
+      
+      if (!vendorId || !date) {
+        return res.status(400).json({ message: 'vendorId and date are required' });
+      }
+      
+      // Check if vendor has premium or pro subscription
+      const vendor = await storage.getVendor(vendorId);
+      
+      if (!vendor) {
+        return res.status(404).json({ message: 'Vendor not found' });
+      }
+      
+      // Check if vendor has premium or pro subscription
+      if (!['pro', 'platinum'].includes(vendor.subscriptionTier)) {
+        return res.status(403).json({ 
+          message: 'Feature only available for Pro and Premium Pro vendors',
+          requiredTier: 'pro'
+        });
+      }
+      
+      // Convert date string to Date objects for the entire day
+      const blockDate = new Date(date);
+      const startDate = new Date(blockDate);
+      startDate.setHours(0, 0, 0, 0);
+      
+      const endDate = new Date(blockDate);
+      endDate.setHours(23, 59, 59, 999);
+      
+      // Create calendar event for blocked day
+      const calendarEvent = await storage.createCalendarEvent({
+        vendorId,
+        title: 'Fully Booked',
+        description: description || 'This day is marked as unavailable',
+        startDate,
+        endDate,
+        allDay: true,
+        type: 'block',
+        color: '#FF0000', // Red color for blocked days
+        status: 'confirmed'
+      });
+      
+      res.status(201).json(calendarEvent);
+    } catch (error) {
+      console.error('Error blocking day in calendar:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+  
+  // Endpoint to get vendor availability for a specific period
+  app.get('/api/calendar/availability/:vendorId', async (req: Request, res: Response) => {
+    try {
+      const vendorId = parseInt(req.params.vendorId);
+      const { start, end } = req.query;
+      
+      if (!start || !end) {
+        return res.status(400).json({ message: 'Start and end dates are required' });
+      }
+      
+      // Get the vendor's calendar events for the specified period
+      const events = await storage.getVendorCalendarEvents(
+        vendorId, 
+        new Date(start as string), 
+        new Date(end as string)
+      );
+      
+      // Get public holidays for the vendor's location (if available)
+      let publicHolidays = [];
+      const vendor = await storage.getVendor(vendorId);
+      
+      if (vendor && vendor.location) {
+        // Extract country code from location (assuming format like "Cape Town, ZA")
+        const locationParts = vendor.location.split(',');
+        if (locationParts.length > 1) {
+          const countryCode = locationParts[locationParts.length - 1].trim();
+          // Get public holidays for this country
+          publicHolidays = await storage.getPublicHolidays(countryCode);
+        }
+      }
+      
+      res.status(200).json({
+        events,
+        publicHolidays
+      });
+    } catch (error) {
+      console.error('Error fetching vendor availability:', error);
       res.status(500).json({ message: 'Server error' });
     }
   });

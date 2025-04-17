@@ -100,12 +100,49 @@ export class DatabaseStorage implements IStorage {
       filters.push(eq(vendors.categoryId, categoryId));
     }
     
-    // Execute the query with all applicable filters
-    return db
+    // Execute the query with basic filters
+    let results = await db
       .select()
       .from(vendors)
       .where(and(...filters))
       .orderBy(desc(vendors.rating));
+    
+    // Post-query filtering for dietary options and cuisine types
+    // We need to do this in-memory because we're filtering array fields
+    
+    // Filter by dietary preferences if specified (including alcohol-free)
+    if (dietary) {
+      // Convert to lowercase for case-insensitive comparison
+      const dietaryLower = dietary.toLowerCase();
+      
+      results = results.filter(vendor => {
+        // Special handling for "alcohol-free" which applies to both venues and food vendors
+        if (dietaryLower === 'alcohol-free') {
+          return vendor.dietaryOptions && 
+                 vendor.dietaryOptions.some(option => 
+                   option.toLowerCase() === 'alcohol-free');
+        }
+        
+        // For other dietary options
+        return vendor.dietaryOptions && 
+               vendor.dietaryOptions.some(option => 
+                 option.toLowerCase() === dietaryLower);
+      });
+    }
+    
+    // Filter by cuisine type if specified
+    if (cuisine) {
+      // Convert to lowercase for case-insensitive comparison
+      const cuisineLower = cuisine.toLowerCase();
+      
+      results = results.filter(vendor => {
+        return vendor.cuisineTypes && 
+               vendor.cuisineTypes.some(type => 
+                 type.toLowerCase().includes(cuisineLower));
+      });
+    }
+    
+    return results;
   }
 
   async updateVendorStripeCustomerId(id: number, customerId: string): Promise<Vendor> {
@@ -534,12 +571,43 @@ export class DatabaseStorage implements IStorage {
     return updatedPackage;
   }
   
+  // Public Holidays operations
+  async getPublicHolidays(countryCode: string): Promise<any[]> {
+    return db
+      .select()
+      .from(publicHolidays)
+      .where(eq(publicHolidays.countryCode, countryCode))
+      .orderBy(publicHolidays.date);
+  }
+  
+  async createPublicHoliday(holiday: any): Promise<any> {
+    const [newHoliday] = await db
+      .insert(publicHolidays)
+      .values(holiday)
+      .returning();
+    return newHoliday;
+  }
+  
   // Calendar operations
   async getCalendarEvents(userId: number): Promise<CalendarEvent[]> {
     return db
       .select()
       .from(calendarEvents)
       .where(eq(calendarEvents.userId, userId))
+      .orderBy(calendarEvents.startDate);
+  }
+  
+  async getVendorCalendarEvents(vendorId: number, startDate: Date, endDate: Date): Promise<CalendarEvent[]> {
+    return db
+      .select()
+      .from(calendarEvents)
+      .where(
+        and(
+          eq(calendarEvents.vendorId, vendorId),
+          gte(calendarEvents.startDate, startDate),
+          lte(calendarEvents.endDate, endDate)
+        )
+      )
       .orderBy(calendarEvents.startDate);
   }
   
