@@ -33,19 +33,17 @@ export function VendorCalendar({ vendorId, userId, vendorName }: VendorCalendarP
 
   // Fetch events for the selected vendor for the current month view
   const { data: events, isLoading: eventsLoading } = useQuery<CalendarEvent[]>({
-    queryKey: ['/api/calendar-events', {
-      vendorId, 
-      startDate: monthStart.toISOString(),
-      endDate: monthEnd.toISOString()
+    queryKey: [`/api/calendar/availability/${vendorId}`, {
+      start: monthStart.toISOString(),
+      end: monthEnd.toISOString()
     }],
   });
 
   // Get specific day events when a day is selected
   const { data: dayEvents, isLoading: dayEventsLoading } = useQuery<CalendarEvent[]>({
-    queryKey: ['/api/calendar-events', {
-      vendorId,
-      startDate: date.toISOString(),
-      endDate: new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59).toISOString()
+    queryKey: [`/api/calendar/availability/${vendorId}`, {
+      start: new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0).toISOString(),
+      end: new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59).toISOString()
     }],
     enabled: view === 'booking',
   });
@@ -73,7 +71,7 @@ export function VendorCalendar({ vendorId, userId, vendorName }: VendorCalendarP
         title: 'Booking created',
         description: 'Your booking has been successfully created',
       });
-      queryClient.invalidateQueries({ queryKey: ['/api/calendar-events'] });
+      queryClient.invalidateQueries({ queryKey: [`/api/calendar/availability/${vendorId}`] });
       setView('calendar');
       setSelectedTimeSlot(null);
       setBookingDetails({
