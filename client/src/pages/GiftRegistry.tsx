@@ -32,7 +32,9 @@ import {
   Store,
   Heart,
   ChevronUp,
-  ChevronDown
+  ChevronDown,
+  MoreHorizontal,
+  XCircle
 } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';

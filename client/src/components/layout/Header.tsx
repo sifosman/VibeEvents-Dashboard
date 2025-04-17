@@ -115,6 +115,7 @@ export default function Header() {
       { name: "Home", href: "/" },
       { name: "Browse Vendors", href: "/vendors" },
       { name: "My Planner", href: "/planner" },
+      { name: "Gift Registry", href: "/gift-registry" },
       { name: "Help", href: "/help" },
     ];
 
