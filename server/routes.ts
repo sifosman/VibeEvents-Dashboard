@@ -1209,6 +1209,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: 'Start and end dates are required' });
       }
       
+      console.log(`Calendar request for vendor ${vendorId} from ${start} to ${end}`);
+      
+      // Get the vendor first to verify it exists and has calendar enabled
+      const vendor = await storage.getVendor(vendorId);
+      
+      if (!vendor) {
+        return res.status(404).json({ message: 'Vendor not found' });
+      }
+      
+      if (!vendor.calendarView) {
+        return res.status(403).json({ message: 'Calendar view not enabled for this vendor' });
+      }
+      
       // Get the vendor's calendar events for the specified period
       const events = await storage.getVendorCalendarEvents(
         vendorId, 
@@ -1216,9 +1229,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         new Date(end as string)
       );
       
+      console.log(`Found ${events.length} calendar events for vendor ${vendorId}`);
+      
       // Get public holidays for the vendor's location (if available)
       let publicHolidays = [];
-      const vendor = await storage.getVendor(vendorId);
       
       if (vendor && vendor.location) {
         // Extract country code from location (assuming format like "Cape Town, ZA")

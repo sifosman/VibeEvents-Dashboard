@@ -9,6 +9,7 @@ import { Loader2, Clock, MapPin, Calendar as CalendarIcon } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { CalendarEvent } from '@shared/schema';
 import 'react-calendar/dist/Calendar.css';
+import './calendar-styles.css';
 
 interface VendorCalendarProps {
   vendorId: number;
@@ -31,21 +32,42 @@ export function VendorCalendar({ vendorId, userId, vendorName }: VendorCalendarP
   const monthStart = new Date(date.getFullYear(), date.getMonth(), 1);
   const monthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
+  // Debugging log
+  useEffect(() => {
+    console.log(`VendorCalendar mounted for vendor ID: ${vendorId}`);
+    console.log(`Current date range: ${monthStart.toISOString()} to ${monthEnd.toISOString()}`);
+  }, [vendorId, monthStart, monthEnd]);
+
   // Fetch events for the selected vendor for the current month view
-  const { data: events, isLoading: eventsLoading } = useQuery<CalendarEvent[]>({
+  const { data: events, isLoading: eventsLoading, error: eventsError } = useQuery<CalendarEvent[]>({
     queryKey: [`/api/calendar/availability/${vendorId}`, {
       start: monthStart.toISOString(),
       end: monthEnd.toISOString()
     }],
+    retry: 2,
+    onError: (error) => {
+      console.error('Error fetching calendar events:', error);
+      toast({
+        title: 'Error loading calendar',
+        description: 'Could not load availability information. Please try again later.',
+        variant: 'destructive'
+      });
+    },
+    onSuccess: (data) => {
+      console.log(`Successfully loaded ${data?.length || 0} calendar events`);
+    }
   });
 
   // Get specific day events when a day is selected
-  const { data: dayEvents, isLoading: dayEventsLoading } = useQuery<CalendarEvent[]>({
+  const { data: dayEvents, isLoading: dayEventsLoading, error: dayEventsError } = useQuery<CalendarEvent[]>({
     queryKey: [`/api/calendar/availability/${vendorId}`, {
       start: new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0).toISOString(),
       end: new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59).toISOString()
     }],
     enabled: view === 'booking',
+    onError: (error) => {
+      console.error('Error fetching day events:', error);
+    }
   });
 
   // Create a new calendar event (booking)
