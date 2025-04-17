@@ -45,6 +45,17 @@ export const vendors = pgTable("vendors", {
   websiteUrl: text("website_url"),
   whatsappNumber: text("whatsapp_number"),
   location: text("location"),
+  // Subscription related fields
+  subscriptionTier: text("subscription_tier").default("free"),
+  stripeCustomerId: text("stripe_customer_id"),
+  stripeSubscriptionId: text("stripe_subscription_id"),
+  subscriptionStatus: text("subscription_status").default("inactive"),
+  additionalPhotos: text("additional_photos").array(),
+  cataloguePages: integer("catalogue_pages").default(0),
+  googleMapsLink: text("google_maps_link"),
+  facebookUrl: text("facebook_url"),
+  twitterUrl: text("twitter_url"),
+  youtubeUrl: text("youtube_url"),
 });
 
 export const insertVendorSchema = createInsertSchema(vendors).omit({

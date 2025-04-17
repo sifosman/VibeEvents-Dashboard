@@ -5,6 +5,7 @@ import FeaturedVendors from "../components/home/FeaturedVendors";
 import PlannerFeatures from "../components/home/PlannerFeatures";
 import VendorCategories from "../components/home/VendorCategories";
 import PlannerScreens from "../components/home/PlannerScreens";
+import SubscriptionPlans from "../components/home/SubscriptionPlans";
 import CallToAction from "../components/home/CallToAction";
 import { Helmet } from "react-helmet";
 
@@ -12,8 +13,8 @@ export default function Home() {
   return (
     <>
       <Helmet>
-        <title>WeddingPro - Your Wedding Planning Solution</title>
-        <meta name="description" content="Plan your perfect wedding day with WeddingPro. Find and book the best service providers for your special day." />
+        <title>EventZA - Venues, Vendors, Vibes for Your Perfect Event</title>
+        <meta name="description" content="Plan your perfect event with EventZA. Find and book the best service providers for all your special occasions." />
       </Helmet>
       
       <Hero />
@@ -22,6 +23,7 @@ export default function Home() {
       <PlannerFeatures />
       <VendorCategories />
       <PlannerScreens />
+      <SubscriptionPlans />
       <CallToAction />
     </>
   );

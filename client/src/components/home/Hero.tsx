@@ -18,7 +18,7 @@ export default function Hero() {
       <div className="absolute inset-0 bg-black bg-opacity-40"></div>
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="text-center px-4 max-w-3xl">
-          <h1 className="text-3xl md:text-5xl font-display font-bold text-white mb-6">Plan Your Perfect Event</h1>
+          <h1 className="text-3xl md:text-5xl font-display font-bold text-white mb-6">Venues, Vendors, Vibes</h1>
           <p className="text-white text-lg mb-8">Discover and book the best service providers for all your special occasions</p>
           
           {/* Search Form */}
