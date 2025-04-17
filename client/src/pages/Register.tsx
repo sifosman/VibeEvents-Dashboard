@@ -29,8 +29,8 @@ export default function Register() {
   return (
     <>
       <Helmet>
-        <title>Create Account - WeddingPro</title>
-        <meta name="description" content="Create a WeddingPro account to start planning your perfect wedding day." />
+        <title>Create Account - HowzEvent</title>
+        <meta name="description" content="Create a HowzEvent account to start planning your perfect event." />
       </Helmet>
       
       <div className="bg-neutral min-h-[calc(100vh-64px)] flex items-center">

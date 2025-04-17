@@ -27,8 +27,8 @@ export default function Login() {
   return (
     <>
       <Helmet>
-        <title>Login - WeddingPro</title>
-        <meta name="description" content="Log in to your WeddingPro account to access your wedding planning tools." />
+        <title>Login - HowzEvent</title>
+        <meta name="description" content="Log in to your HowzEvent account to access your event planning tools." />
       </Helmet>
       
       <div className="bg-neutral min-h-[calc(100vh-64px)] flex items-center">
