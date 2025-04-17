@@ -112,15 +112,17 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
             <TabsList className="mb-6">
               <TabsTrigger value="about">About</TabsTrigger>
               <TabsTrigger value="services">Services</TabsTrigger>
-              {vendor.calendarView && (
-                <TabsTrigger value="calendar">Calendar</TabsTrigger>
-              )}
+              <TabsTrigger value="calendar" className={vendor.calendarView ? '' : 'hidden'}>
+                Calendar
+              </TabsTrigger>
               {hasReviewFeature && (
                 <TabsTrigger value="reviews">
                   Reviews ({vendor.reviewCount || 0})
                 </TabsTrigger>
               )}
             </TabsList>
+            {/* Debug info */}
+            <div className="hidden">{`Calendar view enabled: ${vendor.calendarView ? 'Yes' : 'No'}`}</div>
 
             <TabsContent value="about">
               <div>
@@ -213,8 +215,8 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
               </div>
             </TabsContent>
 
-            {vendor.calendarView && (
-              <TabsContent value="calendar">
+            <TabsContent value="calendar">
+              {vendor.calendarView && (
                 <div>
                   <h2 className="font-display text-xl font-semibold mb-4">Schedule with {vendor.name}</h2>
                   <p className="text-muted-foreground mb-6">
@@ -226,8 +228,8 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
                     vendorName={vendor.name}
                   />
                 </div>
-              </TabsContent>
-            )}
+              )}
+            </TabsContent>
 
             {hasReviewFeature && (
               <TabsContent value="reviews">
