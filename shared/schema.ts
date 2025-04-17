@@ -393,9 +393,116 @@ export const insertVendorApplicationSchema = createInsertSchema(vendorApplicatio
   updatedAt: true,
 });
 
+// Reviews table
+export const reviews = pgTable("reviews", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull(),
+  vendorId: integer("vendor_id").notNull(),
+  rating: integer("rating").notNull(), // 1-5 star rating
+  reviewText: text("review_text"),
+  title: text("title"),
+  eventDate: timestamp("event_date"),
+  serviceUsed: text("service_used"),
+  isVerified: boolean("is_verified").default(false), // Admin can verify reviews
+  adminReply: text("admin_reply"), // Vendor can reply to reviews
+  adminReplyDate: timestamp("admin_reply_date"),
+  status: text("status").default("published"), // published, pending, rejected
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertReviewSchema = createInsertSchema(reviews).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  isVerified: true,
+  adminReply: true,
+  adminReplyDate: true,
+});
+
+// Calendar events table
+export const calendarEvents = pgTable("calendar_events", {
+  id: serial("id").primaryKey(),
+  vendorId: integer("vendor_id").notNull(),
+  userId: integer("user_id"), // Optional - if associated with a specific user
+  title: text("title").notNull(),
+  description: text("description"),
+  startDate: timestamp("start_date").notNull(),
+  endDate: timestamp("end_date").notNull(),
+  allDay: boolean("all_day").default(false),
+  location: text("location"),
+  status: text("status").default("confirmed"), // confirmed, tentative, cancelled
+  type: text("type").default("booking"), // booking, block, availability
+  color: text("color"), // For UI display purposes
+  recurrenceRule: text("recurrence_rule"), // For recurring events
+  externalCalendarId: text("external_calendar_id"), // For sync with external calendars
+  externalEventId: text("external_event_id"), // For sync with external calendars
+  notificationsEnabled: boolean("notifications_enabled").default(true),
+  notificationSent: boolean("notification_sent").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertCalendarEventSchema = createInsertSchema(calendarEvents).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  notificationSent: true,
+});
+
 // Type exports for new tables
 export type EventOpportunity = typeof eventOpportunities.$inferSelect;
 export type InsertEventOpportunity = z.infer<typeof insertEventOpportunitySchema>;
 
 export type VendorApplication = typeof vendorApplications.$inferSelect;
 export type InsertVendorApplication = z.infer<typeof insertVendorApplicationSchema>;
+
+export type Review = typeof reviews.$inferSelect;
+export type InsertReview = z.infer<typeof insertReviewSchema>;
+
+export type CalendarEvent = typeof calendarEvents.$inferSelect;
+export type InsertCalendarEvent = z.infer<typeof insertCalendarEventSchema>;
+
+// Messaging system tables
+export const conversations = pgTable("conversations", {
+  id: serial("id").primaryKey(),
+  hostId: integer("host_id").notNull(), // User ID of the event host
+  providerId: integer("provider_id").notNull(), // User ID of the service provider
+  subject: text("subject"),
+  status: text("status").default("active"), // active, archived, deleted
+  lastMessageAt: timestamp("last_message_at").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertConversationSchema = createInsertSchema(conversations).omit({
+  id: true,
+  lastMessageAt: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const messages = pgTable("messages", {
+  id: serial("id").primaryKey(),
+  conversationId: integer("conversation_id").notNull(),
+  senderId: integer("sender_id").notNull(), // User ID of the sender
+  content: text("content").notNull(),
+  attachments: text("attachments").array(), // URLs to attached files
+  isRead: boolean("is_read").default(false),
+  readAt: timestamp("read_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertMessageSchema = createInsertSchema(messages).omit({
+  id: true,
+  isRead: true,
+  readAt: true,
+  createdAt: true,
+});
+
+// Type exports for messaging
+export type Conversation = typeof conversations.$inferSelect;
+export type InsertConversation = z.infer<typeof insertConversationSchema>;
+
+export type Message = typeof messages.$inferSelect;
+export type InsertMessage = z.infer<typeof insertMessageSchema>;

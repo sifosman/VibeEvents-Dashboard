@@ -14,7 +14,11 @@ import {
   insertAdPlacementSchema,
   insertSeoPackageSchema,
   insertEventOpportunitySchema,
-  insertVendorApplicationSchema
+  insertVendorApplicationSchema,
+  insertCalendarEventSchema,
+  insertReviewSchema,
+  insertConversationSchema,
+  insertMessageSchema
 } from "@shared/schema";
 import { z } from "zod";
 import Stripe from "stripe";
@@ -894,6 +898,173 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       res.status(200).json(application);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  // Calendar routes
+  app.get('/api/calendar-events', async (req: Request, res: Response) => {
+    try {
+      const { userId } = req.query;
+      
+      if (!userId) {
+        return res.status(400).json({ message: 'userId is required' });
+      }
+      
+      const events = await storage.getCalendarEvents(parseInt(userId as string));
+      res.status(200).json(events);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.post('/api/calendar-events', async (req: Request, res: Response) => {
+    try {
+      const validatedData = insertCalendarEventSchema.parse(req.body);
+      const event = await storage.createCalendarEvent(validatedData);
+      res.status(201).json(event);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: 'Invalid input data', errors: error.errors });
+      }
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.get('/api/calendar-events/:id', async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const event = await storage.getCalendarEvent(id);
+      
+      if (!event) {
+        return res.status(404).json({ message: 'Calendar event not found' });
+      }
+      
+      res.status(200).json(event);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.patch('/api/calendar-events/:id', async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const validatedData = insertCalendarEventSchema.partial().parse(req.body);
+      const event = await storage.updateCalendarEvent(id, validatedData);
+      res.status(200).json(event);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: 'Invalid input data', errors: error.errors });
+      }
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.delete('/api/calendar-events/:id', async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteCalendarEvent(id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  // Messaging system routes
+  app.get('/api/conversations', async (req: Request, res: Response) => {
+    try {
+      const { userId, role } = req.query;
+      
+      if (!userId || !role) {
+        return res.status(400).json({ message: 'userId and role are required' });
+      }
+      
+      const conversations = await storage.getUserConversations(
+        parseInt(userId as string), 
+        role as 'host' | 'provider'
+      );
+      res.status(200).json(conversations);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.post('/api/conversations', async (req: Request, res: Response) => {
+    try {
+      const validatedData = insertConversationSchema.parse(req.body);
+      const conversation = await storage.createConversation(validatedData);
+      res.status(201).json(conversation);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: 'Invalid input data', errors: error.errors });
+      }
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.get('/api/conversations/:id', async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const conversation = await storage.getConversation(id);
+      
+      if (!conversation) {
+        return res.status(404).json({ message: 'Conversation not found' });
+      }
+      
+      res.status(200).json(conversation);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.patch('/api/conversations/:id/archive', async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const conversation = await storage.updateConversationStatus(id, 'archived');
+      res.status(200).json(conversation);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.get('/api/messages/:conversationId', async (req: Request, res: Response) => {
+    try {
+      const conversationId = parseInt(req.params.conversationId);
+      const messages = await storage.getMessages(conversationId);
+      res.status(200).json(messages);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.post('/api/messages', async (req: Request, res: Response) => {
+    try {
+      const validatedData = insertMessageSchema.parse(req.body);
+      const message = await storage.createMessage(validatedData);
+      
+      // Update the last message timestamp on the conversation
+      await storage.updateConversationLastMessage(validatedData.conversationId);
+      
+      res.status(201).json(message);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: 'Invalid input data', errors: error.errors });
+      }
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.patch('/api/messages/mark-read', async (req: Request, res: Response) => {
+    try {
+      const { conversationId, userId } = req.body;
+      
+      if (!conversationId || !userId) {
+        return res.status(400).json({ message: 'conversationId and userId are required' });
+      }
+      
+      await storage.markMessagesAsRead(parseInt(conversationId), parseInt(userId));
+      res.status(200).json({ success: true });
     } catch (error) {
       res.status(500).json({ message: 'Server error' });
     }
