@@ -43,7 +43,7 @@ export default function PlannerFeatures() {
                 </div>
                 <div>
                   <h3 className="font-display font-medium text-lg mb-1">Timeline Builder</h3>
-                  <p className="text-muted-foreground text-sm">Create a detailed timeline for your wedding day with automated reminders.</p>
+                  <p className="text-muted-foreground text-sm">Create a detailed timeline for your event with automated reminders and progress tracking.</p>
                 </div>
               </div>
             </div>
@@ -62,8 +62,8 @@ export default function PlannerFeatures() {
               <div className="absolute -top-6 -left-6 w-64 h-64 bg-[#6A8C7D] bg-opacity-20 rounded-lg"></div>
               <div className="relative z-10">
                 <img 
-                  src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                  alt="Wedding Planner App" 
+                  src="https://images.unsplash.com/photo-1531058020387-3be344556be6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                  alt="Event Planning Platform" 
                   className="rounded-lg shadow-xl" 
                   width="600" 
                   height="400"

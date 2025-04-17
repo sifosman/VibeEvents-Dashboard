@@ -13,8 +13,8 @@ export default function Home() {
   return (
     <>
       <Helmet>
-        <title>HowzEvent - Venues, Vendors, Vibes for Your Perfect Event</title>
-        <meta name="description" content="Plan your perfect event with HowzEvent. Find and book the best service providers for all your special occasions." />
+        <title>HowzEvent - Venues, Vendors, Vibes for All Your Events</title>
+        <meta name="description" content="Plan any type of event with HowzEvent. Find and book the best service providers for corporate functions, markets, festivals, concerts, sports events and celebrations." />
       </Helmet>
       
       <Hero />

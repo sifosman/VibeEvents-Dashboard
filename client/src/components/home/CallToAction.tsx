@@ -8,8 +8,8 @@ function SimpleCallToAction() {
     <section className="py-16 bg-primary bg-opacity-10">
       <div className="container-custom">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-display font-bold mb-6">Ready to Start Planning Your Perfect Event?</h2>
-          <p className="text-muted-foreground mb-8">Join thousands who've found their perfect event vendors and planned their special occasions with ease.</p>
+          <h2 className="text-3xl md:text-4xl font-display font-bold mb-6">Ready to Plan Your Next Amazing Event?</h2>
+          <p className="text-muted-foreground mb-8">Join thousands who've discovered the best vendors for corporate events, markets, concerts, festivals, sports competitions and celebrations.</p>
           <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
             <Link href="/register">
               <Button className="px-8 py-3 h-auto bg-primary text-white rounded-lg hover:bg-primary/90 font-medium w-full sm:w-auto">
@@ -41,8 +41,8 @@ export default function CallToAction() {
       <section className="py-16 bg-primary bg-opacity-10">
         <div className="container-custom">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-display font-bold mb-6">Ready to Start Planning Your Perfect Event?</h2>
-            <p className="text-muted-foreground mb-8">Join thousands who've found their perfect event vendors and planned their special occasions with ease.</p>
+            <h2 className="text-3xl md:text-4xl font-display font-bold mb-6">Ready to Plan Your Next Amazing Event?</h2>
+            <p className="text-muted-foreground mb-8">Join thousands who've discovered the best vendors for corporate events, markets, concerts, festivals, sports competitions and celebrations.</p>
             <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
               {isAuthenticated ? (
                 <>
