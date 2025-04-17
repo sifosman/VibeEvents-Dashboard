@@ -564,14 +564,6 @@ export default function GiftRegistry() {
           <Card>
             <CardHeader className="pb-3">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
-                <Tabs defaultValue="items" value={activeTab} onValueChange={setActiveTab}>
-                  <TabsList>
-                    <TabsTrigger value="items">All Items</TabsTrigger>
-                    <TabsTrigger value="received">Received Gifts</TabsTrigger>
-                    <TabsTrigger value="thankyou">Thank You Notes</TabsTrigger>
-                  </TabsList>
-                </Tabs>
-                
                 <div className="mt-4 sm:mt-0 relative w-full sm:w-auto">
                   <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                   <Input
@@ -585,7 +577,13 @@ export default function GiftRegistry() {
             </CardHeader>
             
             <CardContent>
-              <TabsContent value="items">
+              <Tabs defaultValue="items" value={activeTab} onValueChange={setActiveTab}>
+                <TabsList className="mb-4">
+                  <TabsTrigger value="items">All Items</TabsTrigger>
+                  <TabsTrigger value="received">Received Gifts</TabsTrigger>
+                  <TabsTrigger value="thankyou">Thank You Notes</TabsTrigger>
+                </TabsList>
+                <TabsContent value="items">
                 <div className="space-y-6">
                   {/* Sort controls */}
                   <div className="flex justify-between items-center text-sm text-muted-foreground border-b pb-2">
@@ -801,8 +799,8 @@ export default function GiftRegistry() {
                   )}
                 </div>
               </TabsContent>
-              
-              <TabsContent value="received">
+                
+                <TabsContent value="received">
                 <div className="space-y-6">
                   <div className="flex justify-between items-center text-sm text-muted-foreground border-b pb-2">
                     <div>
@@ -959,6 +957,7 @@ export default function GiftRegistry() {
                   )}
                 </div>
               </TabsContent>
+            </Tabs>
             </CardContent>
           </Card>
         </div>

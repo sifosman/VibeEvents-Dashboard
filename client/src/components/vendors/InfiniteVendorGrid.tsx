@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useQuery } from '@tanstack/react-query';
-import VendorCard from './VendorCard';
 import { Loader2 } from 'lucide-react';
+import { VendorCard } from './VendorCard';
 
 interface Vendor {
   id: number;
@@ -36,7 +36,7 @@ interface InfiniteVendorGridProps {
   initialVendors?: Vendor[];
 }
 
-const InfiniteVendorGrid: React.FC<InfiniteVendorGridProps> = ({
+export function InfiniteVendorGrid({
   categoryId,
   searchTerm,
   location,
@@ -45,158 +45,134 @@ const InfiniteVendorGrid: React.FC<InfiniteVendorGridProps> = ({
   themed,
   themeTypes,
   servesAlcohol,
-  initialVendors = [],
-}) => {
-  const [vendors, setVendors] = useState<Vendor[]>(initialVendors);
+  initialVendors
+}: InfiniteVendorGridProps) {
   const [page, setPage] = useState(1);
+  const [allVendors, setAllVendors] = useState<Vendor[]>(initialVendors || []);
   const [hasMore, setHasMore] = useState(true);
-  const VENDORS_PER_PAGE = 9; // Load 9 vendors at a time for a 3x3 grid
+  const limit = 20; // vendors per page
   
-  // Setup intersection observer
+  // Create reference to track if this is the initial load
+  const isInitialLoad = useRef(true);
+  
+  // Set up intersection observer for infinite scrolling
   const { ref, inView } = useInView({
     threshold: 0,
-    triggerOnce: false,
-    rootMargin: '300px 0px', // Load more content before user reaches the bottom
+    rootMargin: '100px' // Load more content before user reaches the bottom
   });
-
-  // Construct query parameters for the API request
-  const buildQueryParams = () => {
-    const params = new URLSearchParams();
-    
-    if (categoryId) params.append('categoryId', categoryId.toString());
-    if (searchTerm) params.append('search', searchTerm);
-    if (location) params.append('location', location);
-    if (priceRange && priceRange.length) params.append('priceRange', priceRange.join(','));
-    if (dietary && dietary.length) params.append('dietary', dietary.join(','));
-    if (themed !== undefined) params.append('themed', themed.toString());
-    if (themeTypes && themeTypes.length) params.append('themeTypes', themeTypes.join(','));
-    if (servesAlcohol !== undefined) params.append('servesAlcohol', servesAlcohol.toString());
-    
-    params.append('page', page.toString());
-    params.append('limit', VENDORS_PER_PAGE.toString());
-    
-    return params.toString();
-  };
-
-  // Query to fetch vendors
-  const {
-    data,
-    isLoading,
-    isFetching,
-    isError,
-    error,
-  } = useQuery({
-    queryKey: [
-      '/api/vendors',
-      categoryId,
-      searchTerm,
-      location,
-      priceRange,
-      dietary,
-      themed,
-      themeTypes,
-      servesAlcohol,
+  
+  // Construct the query key with all filter parameters
+  const queryKey = [
+    '/api/vendors',
+    {
       page,
-    ],
-    queryFn: async () => {
-      const queryParams = buildQueryParams();
-      const res = await fetch(`/api/vendors${queryParams ? `?${queryParams}` : ''}`);
-      
-      if (!res.ok) {
-        throw new Error('Failed to fetch vendors');
-      }
-      
-      const data = await res.json();
-      return data;
-    },
-    enabled: hasMore || page === 1, // Only fetch if there are more vendors to load or it's the first page
-  });
-
-  // Handle automatic loading of more vendors when user scrolls near the bottom
-  useEffect(() => {
-    if (inView && !isFetching && hasMore) {
-      setPage(prevPage => prevPage + 1);
+      limit,
+      categoryId,
+      search: searchTerm,
+      location,
+      priceRange: priceRange?.join(','),
+      dietary: dietary?.join(','),
+      themed: themed?.toString(),
+      themeTypes: themeTypes?.join(','),
+      servesAlcohol: servesAlcohol !== undefined ? servesAlcohol.toString() : undefined
     }
-  }, [inView, isFetching, hasMore]);
-
+  ];
+  
+  // Fetch vendors from the API
+  const { data, isLoading, isError, error } = useQuery<Vendor[]>({
+    queryKey,
+    enabled: hasMore || isInitialLoad.current, // Only fetch if there are more vendors to load or it's the initial load
+  });
+  
   // Update vendors list when new data is fetched
   useEffect(() => {
-    if (data && Array.isArray(data)) {
-      if (page === 1) {
-        // First page, replace existing vendors
-        setVendors(data);
-      } else {
-        // Subsequent pages, append to existing vendors
-        setVendors(prevVendors => [...prevVendors, ...data]);
-      }
-      
-      // If we received fewer vendors than the limit, there are no more to load
-      setHasMore(data.length === VENDORS_PER_PAGE);
+    // Skip if no data or loading
+    if (!data) return;
+    
+    // If this is the initial load and we have initialVendors, don't append
+    if (isInitialLoad.current && initialVendors?.length) {
+      isInitialLoad.current = false;
+      return;
     }
-  }, [data, page]);
-
-  // Reset pagination when filters change
+    
+    // If we received fewer items than the limit, we've reached the end
+    if (data.length < limit) {
+      setHasMore(false);
+    }
+    
+    // Append new vendors to the list, avoiding duplicates by ID
+    setAllVendors(prev => {
+      const vendorIds = new Set(prev.map(v => v.id));
+      const newVendors = data.filter(v => !vendorIds.has(v.id));
+      return [...prev, ...newVendors];
+    });
+    
+    isInitialLoad.current = false;
+  }, [data, initialVendors, limit]);
+  
+  // Load more vendors when user scrolls to the bottom
   useEffect(() => {
+    if (inView && !isLoading && hasMore) {
+      setPage(prevPage => prevPage + 1);
+    }
+  }, [inView, isLoading, hasMore]);
+  
+  // Handle filter changes by resetting to page 1
+  useEffect(() => {
+    // Skip the initial render
+    if (isInitialLoad.current) return;
+    
     setPage(1);
-    setVendors([]);
+    setAllVendors([]);
     setHasMore(true);
   }, [categoryId, searchTerm, location, priceRange, dietary, themed, themeTypes, servesAlcohol]);
-
-  if (isError) {
-    return (
-      <div className="h-40 flex items-center justify-center">
-        <div className="text-red-500">
-          Error loading vendors: {error instanceof Error ? error.message : 'Unknown error'}
-        </div>
-      </div>
-    );
-  }
-
-  if (isLoading && page === 1 && vendors.length === 0) {
-    return (
-      <div className="h-40 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
-
-  if (vendors.length === 0 && !isLoading) {
-    return (
-      <div className="h-40 flex flex-col items-center justify-center space-y-4 text-center p-8">
-        <h3 className="font-semibold text-xl">No vendors found</h3>
-        <p className="text-muted-foreground">
-          We couldn't find any vendors matching your criteria. Try adjusting your filters or search terms.
-        </p>
-      </div>
-    );
-  }
-
+  
   return (
-    <div className="space-y-8">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {vendors.map((vendor) => (
+    <div className="w-full">
+      {/* Vendors grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {allVendors.map(vendor => (
           <VendorCard key={vendor.id} vendor={vendor} />
         ))}
       </div>
       
       {/* Loading indicator */}
-      {(isFetching || hasMore) && (
-        <div
-          ref={ref}
-          className="h-24 flex items-center justify-center"
-        >
+      {isLoading && (
+        <div className="w-full flex justify-center my-8">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       )}
       
+      {/* Error message */}
+      {isError && (
+        <div className="w-full flex justify-center my-8 text-destructive">
+          <p>Error loading vendors: {(error as Error)?.message || 'Unknown error'}</p>
+        </div>
+      )}
+      
+      {/* No results message */}
+      {!isLoading && allVendors.length === 0 && (
+        <div className="w-full flex justify-center my-8 text-center">
+          <div>
+            <p className="text-xl font-semibold mb-2">No vendors found</p>
+            <p className="text-muted-foreground">
+              Try adjusting your filters or search terms to find more vendors.
+            </p>
+          </div>
+        </div>
+      )}
+      
+      {/* Loading trigger element - when this comes into view, load more vendors */}
+      {hasMore && <div ref={ref} className="h-10" />}
+      
       {/* End of results message */}
-      {!hasMore && vendors.length > 0 && !isFetching && (
-        <div className="py-8 text-center">
-          <p className="text-muted-foreground">You've reached the end of the results</p>
+      {!hasMore && allVendors.length > 0 && (
+        <div className="w-full flex justify-center my-8 text-center text-muted-foreground">
+          <p>You've seen all available vendors</p>
         </div>
       )}
     </div>
   );
-};
+}
 
 export default InfiniteVendorGrid;

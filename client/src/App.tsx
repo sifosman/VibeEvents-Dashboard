@@ -86,21 +86,27 @@ function AppRouter() {
   }
 }
 
-// Import the geo blocking component
+// Import components
 import GeoBlockedView from "./components/shared/GeoBlockedView";
+import { NavigationProvider } from "./context/NavigationContext";
+import NavigationControls from "./components/navigation/NavigationControls";
 
 function App() {
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Add geo-blocking overlay that will only display for blocked countries */}
-      <GeoBlockedView />
-      <Header />
-      <main className="flex-grow">
-        <AppRouter />
-      </main>
-      <Footer />
-      <Toaster />
-    </div>
+    <NavigationProvider>
+      <div className="flex flex-col min-h-screen">
+        {/* Add geo-blocking overlay that will only display for blocked countries */}
+        <GeoBlockedView />
+        <Header />
+        <main className="flex-grow">
+          <AppRouter />
+          {/* Floating back/history navigation */}
+          <NavigationControls mode="floating" position="bottom-right" />
+        </main>
+        <Footer />
+        <Toaster />
+      </div>
+    </NavigationProvider>
   );
 }
 

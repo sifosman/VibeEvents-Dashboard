@@ -91,15 +91,16 @@ export class DatabaseStorage implements IStorage {
   async searchVendors(
     query: string, 
     categoryId?: number, 
-    dietary?: string, 
-    cuisine?: string,
     filters?: {
       isThemed?: boolean;
       themeTypes?: string[];
       dietaryOptions?: string[];
       cuisineTypes?: string[];
-      priceRange?: string;
+      priceRange?: string | string[];
       location?: string;
+      servesAlcohol?: boolean;
+      limit?: number;
+      offset?: number;
     }
   ): Promise<Vendor[]> {
     const likeQuery = `%${query}%`;
@@ -129,7 +130,7 @@ export class DatabaseStorage implements IStorage {
     // We need to do this in-memory because we're filtering array fields
     
     // Handle legacy dietary parameter for backward compatibility
-    if (dietary) {
+    if (dietary && typeof dietary === 'string') {
       // Convert to lowercase for case-insensitive comparison
       const dietaryLower = dietary.toLowerCase();
       
@@ -137,26 +138,29 @@ export class DatabaseStorage implements IStorage {
         // Special handling for "alcohol-free" which applies to both venues and food vendors
         if (dietaryLower === 'alcohol-free') {
           return vendor.dietaryOptions && 
+                 Array.isArray(vendor.dietaryOptions) &&
                  vendor.dietaryOptions.some(option => 
-                   option.toLowerCase() === 'alcohol-free');
+                   typeof option === 'string' && option.toLowerCase() === 'alcohol-free');
         }
         
         // For other dietary options
         return vendor.dietaryOptions && 
+               Array.isArray(vendor.dietaryOptions) &&
                vendor.dietaryOptions.some(option => 
-                 option.toLowerCase() === dietaryLower);
+                 typeof option === 'string' && option.toLowerCase() === dietaryLower);
       });
     }
     
     // Handle legacy cuisine parameter for backward compatibility
-    if (cuisine) {
+    if (cuisine && typeof cuisine === 'string') {
       // Convert to lowercase for case-insensitive comparison
       const cuisineLower = cuisine.toLowerCase();
       
       results = results.filter(vendor => {
         return vendor.cuisineTypes && 
+               Array.isArray(vendor.cuisineTypes) &&
                vendor.cuisineTypes.some(type => 
-                 type.toLowerCase().includes(cuisineLower));
+                 typeof type === 'string' && type.toLowerCase().includes(cuisineLower));
       });
     }
     
