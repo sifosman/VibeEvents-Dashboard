@@ -569,7 +569,9 @@ export class MemStorage implements IStorage {
         instagramUrl: "https://instagram.com/",
         websiteUrl: "https://example.com/",
         whatsappNumber: "+1234567890",
-        location: "Orlando, FL"
+        location: "Orlando, FL",
+        isThemed: true,
+        themeTypes: ["Fairy Tale", "Princess", "Fantasy", "Enchanted Forest"]
       },
       {
         name: "Luxury Helicopter Tours",
@@ -621,7 +623,9 @@ export class MemStorage implements IStorage {
         instagramUrl: "https://instagram.com/",
         websiteUrl: "https://example.com/",
         whatsappNumber: "+1234567890",
-        location: "New Orleans, LA"
+        location: "New Orleans, LA",
+        isThemed: true,
+        themeTypes: ["Masquerade", "Vintage", "Carnival", "Mardi Gras"]
       }
     ];
 
@@ -703,13 +707,22 @@ export class MemStorage implements IStorage {
       .slice(0, limit);
   }
 
-  async searchVendors(query: string, categoryId?: number): Promise<Vendor[]> {
+  async searchVendors(query: string, categoryId?: number, filters?: {
+    isThemed?: boolean;
+    themeTypes?: string[];
+    dietaryOptions?: string[];
+    cuisineTypes?: string[];
+    priceRange?: string;
+    location?: string;
+  }): Promise<Vendor[]> {
     let results = Array.from(this.vendors.values());
     
+    // Filter by category if specified
     if (categoryId) {
       results = results.filter(vendor => vendor.categoryId === categoryId);
     }
     
+    // Search by text query
     if (query) {
       const lowerQuery = query.toLowerCase();
       results = results.filter(vendor => 
@@ -717,6 +730,56 @@ export class MemStorage implements IStorage {
         vendor.description.toLowerCase().includes(lowerQuery) ||
         vendor.location?.toLowerCase().includes(lowerQuery)
       );
+    }
+    
+    // Apply additional filters if specified
+    if (filters) {
+      // Filter by themed status
+      if (filters.isThemed !== undefined) {
+        results = results.filter(vendor => vendor.isThemed === filters.isThemed);
+      }
+      
+      // Filter by specific theme types
+      if (filters.themeTypes && filters.themeTypes.length > 0) {
+        results = results.filter(vendor => 
+          vendor.themeTypes?.some(theme => 
+            filters.themeTypes?.includes(theme)
+          )
+        );
+      }
+      
+      // Filter by dietary options
+      if (filters.dietaryOptions && filters.dietaryOptions.length > 0) {
+        results = results.filter(vendor => 
+          vendor.dietaryOptions?.some(option => 
+            filters.dietaryOptions?.includes(option)
+          )
+        );
+      }
+      
+      // Filter by cuisine types
+      if (filters.cuisineTypes && filters.cuisineTypes.length > 0) {
+        results = results.filter(vendor => 
+          vendor.cuisineTypes?.some(cuisine => 
+            filters.cuisineTypes?.includes(cuisine)
+          )
+        );
+      }
+      
+      // Filter by price range
+      if (filters.priceRange) {
+        results = results.filter(vendor => 
+          vendor.priceRange === filters.priceRange
+        );
+      }
+      
+      // Filter by location
+      if (filters.location) {
+        const lowerLocation = filters.location.toLowerCase();
+        results = results.filter(vendor => 
+          vendor.location?.toLowerCase().includes(lowerLocation)
+        );
+      }
     }
     
     return results;

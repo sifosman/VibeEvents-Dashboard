@@ -49,6 +49,9 @@ export const vendors = pgTable("vendors", {
   // Dietary options and cuisines
   dietaryOptions: text("dietary_options").array(),  // halaal, kosher, vegan, vegetarian, gluten-free, dairy-free, nut-free, alcohol-free
   cuisineTypes: text("cuisine_types").array(),      // Mediterranean, Indian, Asian, Mexican, Italian, French, American, African, etc.
+  // Themed options
+  isThemed: boolean("is_themed").default(false),    // Flag for themed services/venues
+  themeTypes: text("theme_types").array(),          // Fairy tale, Rustic, Beach, Vintage, Modern, etc.
   // Subscription related fields
   subscriptionTier: text("subscription_tier").default("free"),
   stripeCustomerId: text("stripe_customer_id"),
