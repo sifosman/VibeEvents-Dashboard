@@ -13,10 +13,10 @@ export default function PlannerDashboard() {
   return (
     <>
       <Helmet>
-        <title>Wedding Planner Dashboard - WeddingPro</title>
+        <title>Event Planner Dashboard - HowzEvent</title>
         <meta 
           name="description" 
-          content="Manage your wedding planning with shortlists, tasks, and timeline."
+          content="Manage your event planning with shortlists, tasks, and timeline."
         />
       </Helmet>
       
@@ -24,10 +24,10 @@ export default function PlannerDashboard() {
         <div className="container-custom">
           <div className="mb-8">
             <h1 className="text-3xl font-display font-bold mb-2">
-              {user?.fullName ? `${user.fullName}'s Wedding Plan` : "My Wedding Plan"}
+              {user?.fullName ? `${user.fullName}'s Event Plan` : "My Event Plan"}
             </h1>
             <p className="text-muted-foreground">
-              Keep track of your wedding planning journey in one place
+              Keep track of your event planning journey in one place
             </p>
           </div>
           
@@ -57,34 +57,34 @@ export default function PlannerDashboard() {
           </Tabs>
           
           <div className="mt-12 bg-accent/50 rounded-lg p-6">
-            <h2 className="text-xl font-display font-semibold mb-4">Wedding Planning Tips</h2>
+            <h2 className="text-xl font-display font-semibold mb-4">Event Planning Tips</h2>
             <div className="grid md:grid-cols-3 gap-6">
               <div>
-                <h3 className="font-medium mb-2">12-16 Months Before</h3>
+                <h3 className="font-medium mb-2">6-12 Months Before</h3>
                 <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
                   <li>Set a budget and guest count</li>
                   <li>Choose venue and set date</li>
-                  <li>Start researching major vendors</li>
-                  <li>Create wedding website</li>
+                  <li>Start researching vendors</li>
+                  <li>Create event website</li>
                 </ul>
               </div>
               
               <div>
-                <h3 className="font-medium mb-2">6-8 Months Before</h3>
+                <h3 className="font-medium mb-2">3-6 Months Before</h3>
                 <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
-                  <li>Order wedding attire</li>
+                  <li>Finalize theme and decor</li>
                   <li>Book photographer and videographer</li>
-                  <li>Plan honeymoon</li>
-                  <li>Choose wedding party</li>
+                  <li>Plan entertainment</li>
+                  <li>Assign team responsibilities</li>
                 </ul>
               </div>
               
               <div>
-                <h3 className="font-medium mb-2">2-3 Months Before</h3>
+                <h3 className="font-medium mb-2">1-2 Months Before</h3>
                 <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
                   <li>Send invitations</li>
-                  <li>Finalize menu and cake</li>
-                  <li>Schedule hair and makeup trials</li>
+                  <li>Finalize menu and catering</li>
+                  <li>Confirm all bookings</li>
                   <li>Create day-of timeline</li>
                 </ul>
               </div>

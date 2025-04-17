@@ -38,7 +38,7 @@ export default function Register() {
           <div className="max-w-md mx-auto">
             <h1 className="text-3xl font-display font-bold text-center mb-6">Create Your Account</h1>
             <p className="text-center text-muted-foreground mb-8">
-              Join thousands of couples planning their perfect day
+              Join thousands of event hosts planning their perfect occasions
             </p>
             <AuthForm 
               type="register" 

@@ -66,10 +66,10 @@ export default function VendorDetail() {
   return (
     <>
       <Helmet>
-        <title>{vendor?.name || "Vendor Details"} - WeddingPro</title>
+        <title>{vendor?.name || "Vendor Details"} - HowzEvent</title>
         <meta 
           name="description" 
-          content={vendor?.description || "View details about this wedding service provider."}
+          content={vendor?.description || "View details about this event service provider."}
         />
       </Helmet>
       
