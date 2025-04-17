@@ -1,15 +1,9 @@
-import React, { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useToast } from "@/hooks/use-toast";
-import { useAuth } from "@/context/AuthContext";
-import { apiRequest } from "@/lib/queryClient";
-import { TimelineEvent, insertTimelineEventSchema } from "@shared/schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { formatDate } from "@/lib/utils";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import React, { useState } from 'react';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { Input } from '@/components/ui/input';
 import {
   Dialog,
   DialogContent,
@@ -17,379 +11,473 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Calendar } from "@/components/ui/calendar";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Checkbox } from "@/components/ui/checkbox";
-import { CalendarIcon, Check, Clock, Hourglass, Plus, Trash2 } from "lucide-react";
+  CalendarDays,
+  Check,
+  ChevronDown,
+  Clock,
+  Edit,
+  MoreHorizontal,
+  Plus,
+  Trash2,
+  CalendarIcon
+} from 'lucide-react';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { format } from 'date-fns';
 
-const timelineFormSchema = insertTimelineEventSchema.extend({
-  eventDate: z.date().optional(),
-});
+// Sample event options
+const eventOptions = [
+  { id: 1, name: "Sarah & Michael's Wedding" },
+  { id: 2, name: "Corporate Annual Gala" },
+  { id: 3, name: "Emily's 30th Birthday" },
+];
 
-type TimelineFormValues = z.infer<typeof timelineFormSchema>;
+// Sample timeline data
+const timelineData = [
+  {
+    id: 1,
+    title: '12 Months Before',
+    events: [
+      {
+        id: 101,
+        title: 'Set wedding date and book venue',
+        description: 'Choose your ideal wedding date and secure your dream venue',
+        completed: true,
+        eventDate: new Date('2025-06-15'),
+      },
+      {
+        id: 102,
+        title: 'Hire wedding planner',
+        description: 'Find a professional to help organize your special day',
+        completed: true,
+        eventDate: new Date('2024-06-20'),
+      },
+      {
+        id: 103,
+        title: 'Set budget and guest list',
+        description: 'Determine your overall budget and start creating your guest list',
+        completed: true,
+        eventDate: new Date('2024-06-25'),
+      },
+    ],
+  },
+  {
+    id: 2,
+    title: '9-10 Months Before',
+    events: [
+      {
+        id: 201,
+        title: 'Book photographer and videographer',
+        description: 'Research and secure your preferred photo & video team',
+        completed: true,
+        eventDate: new Date('2024-09-15'),
+      },
+      {
+        id: 202,
+        title: 'Book caterer and decide on menu',
+        description: 'Choose your catering service and plan your menu options',
+        completed: false,
+        eventDate: new Date('2024-09-20'),
+      },
+      {
+        id: 203,
+        title: 'Shop for wedding attire',
+        description: 'Start looking for wedding dress, suits, and accessories',
+        completed: false,
+        eventDate: new Date('2024-09-25'),
+      },
+    ],
+  },
+  {
+    id: 3,
+    title: '6-8 Months Before',
+    events: [
+      {
+        id: 301,
+        title: 'Book florist',
+        description: 'Choose your florist and discuss floral arrangements',
+        completed: false,
+        eventDate: new Date('2024-11-15'),
+      },
+      {
+        id: 302,
+        title: 'Book entertainment',
+        description: 'Hire DJ, band, or other entertainment for the reception',
+        completed: false,
+        eventDate: new Date('2024-11-20'),
+      },
+      {
+        id: 303,
+        title: 'Order wedding cake',
+        description: 'Select your baker and design your wedding cake',
+        completed: false,
+        eventDate: new Date('2024-11-25'),
+      },
+    ],
+  },
+  {
+    id: 4,
+    title: '3-5 Months Before',
+    events: [
+      {
+        id: 401,
+        title: 'Send save-the-dates',
+        description: 'Send out save-the-date cards to your guest list',
+        completed: false,
+        eventDate: new Date('2025-02-15'),
+      },
+      {
+        id: 402,
+        title: 'Finalize wedding attire',
+        description: 'Complete fittings and purchase all wedding attire',
+        completed: false,
+        eventDate: new Date('2025-02-20'),
+      },
+    ],
+  },
+  {
+    id: 5,
+    title: '1-2 Months Before',
+    events: [
+      {
+        id: 501,
+        title: 'Send wedding invitations',
+        description: 'Mail out formal invitations to your guests',
+        completed: false,
+        eventDate: new Date('2025-05-01'),
+      },
+      {
+        id: 502,
+        title: 'Finalize details with vendors',
+        description: 'Confirm all arrangements with your hired vendors',
+        completed: false,
+        eventDate: new Date('2025-05-15'),
+      },
+    ],
+  },
+];
 
 export default function Timeline() {
-  const { user } = useAuth();
   const { toast } = useToast();
-  const queryClient = useQueryClient();
+  const [selectedEventId, setSelectedEventId] = useState<number>(1);
   const [isAddEventOpen, setIsAddEventOpen] = useState(false);
-
-  const { data: events, isLoading } = useQuery<TimelineEvent[]>({
-    queryKey: [user ? `/api/timeline?userId=${user.id}` : null],
-    enabled: !!user,
+  const [isAddTimelineOpen, setIsAddTimelineOpen] = useState(false);
+  const [selectedTimelineId, setSelectedTimelineId] = useState<number | null>(null);
+  const [expandedSections, setExpandedSections] = useState<number[]>([1, 2]);
+  const [newTimelineEvent, setNewTimelineEvent] = useState({
+    title: '',
+    description: '',
+    eventDate: '',
+  });
+  const [newTimeline, setNewTimeline] = useState({
+    title: '',
   });
 
-  const createMutation = useMutation({
-    mutationFn: async (eventData: TimelineFormValues) => {
-      return apiRequest('POST', '/api/timeline', eventData);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [`/api/timeline?userId=${user?.id}`] });
-      toast({
-        title: "Event created",
-        description: "Your event has been added to the timeline.",
-      });
-      setIsAddEventOpen(false);
-    },
-  });
-
-  const updateCompletedMutation = useMutation({
-    mutationFn: async ({ id, completed }: { id: number; completed: boolean }) => {
-      return apiRequest('PATCH', `/api/timeline/${id}/completed`, { completed });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [`/api/timeline?userId=${user?.id}`] });
-      toast({
-        title: "Timeline updated",
-        description: "Your timeline has been updated.",
-      });
-    },
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: async (eventId: number) => {
-      return apiRequest('DELETE', `/api/timeline/${eventId}`);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [`/api/timeline?userId=${user?.id}`] });
-      toast({
-        title: "Event deleted",
-        description: "The event has been removed from your timeline.",
-      });
-    },
-  });
-
-  const form = useForm<TimelineFormValues>({
-    resolver: zodResolver(timelineFormSchema),
-    defaultValues: {
-      userId: user?.id,
-      title: "",
-      description: "",
-      eventDate: undefined,
-      completed: false,
-    },
-  });
-
-  const onSubmit = (data: TimelineFormValues) => {
-    createMutation.mutate(data);
-  };
-
-  const handleToggleComplete = (event: TimelineEvent) => {
-    updateCompletedMutation.mutate({ id: event.id, completed: !event.completed });
-  };
-
-  const handleDelete = (eventId: number) => {
-    if (confirm("Are you sure you want to delete this timeline event?")) {
-      deleteMutation.mutate(eventId);
+  // Toggle section expansion
+  const toggleSection = (sectionId: number) => {
+    if (expandedSections.includes(sectionId)) {
+      setExpandedSections(expandedSections.filter(id => id !== sectionId));
+    } else {
+      setExpandedSections([...expandedSections, sectionId]);
     }
   };
 
-  // Helper to determine if date is in past, present or future
-  const getTimePosition = (date?: Date | string | null): 'past' | 'present' | 'future' => {
-    if (!date) return 'future';
-    
-    const eventDate = new Date(date);
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    
-    if (eventDate < today) return 'past';
-    if (eventDate.getTime() === today.getTime()) return 'present';
-    return 'future';
+  // Handle toggling event completion
+  const handleToggleCompletion = (eventId: number, completed: boolean) => {
+    toast({
+      title: completed ? "Event marked as completed" : "Event marked as incomplete",
+      description: "Your timeline has been updated.",
+    });
   };
 
-  // Sort events chronologically
-  const sortedEvents = events?.slice().sort((a, b) => {
-    if (!a.eventDate) return 1;
-    if (!b.eventDate) return -1;
-    return new Date(a.eventDate).getTime() - new Date(b.eventDate).getTime();
-  });
+  // Handle adding a new timeline event
+  const handleAddTimelineEvent = () => {
+    if (!selectedTimelineId) return;
+    
+    const timelineName = timelineData.find(t => t.id === selectedTimelineId)?.title || '';
+    
+    toast({
+      title: "Event added",
+      description: `"${newTimelineEvent.title}" has been added to ${timelineName}.`,
+    });
+    
+    setIsAddEventOpen(false);
+    setNewTimelineEvent({
+      title: '',
+      description: '',
+      eventDate: '',
+    });
+  };
 
-  if (isLoading) {
-    return (
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Wedding Timeline</CardTitle>
-          <div className="animate-pulse w-20 h-8 bg-gray-200 rounded"></div>
-        </CardHeader>
-        <CardContent>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-4 w-0.5 bg-gray-200"></div>
-            
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="relative mb-6 animate-pulse">
-                <div className="flex items-start">
-                  <div className="flex flex-col items-center">
-                    <div className="flex z-10 justify-center items-center bg-gray-200 w-8 h-8 rounded-full"></div>
-                    <div className="ml-4 mt-1 w-16 h-4 bg-gray-100 rounded"></div>
-                  </div>
-                  <div className="ml-4 mt-1">
-                    <div className="h-5 bg-gray-200 rounded w-40 mb-2"></div>
-                    <div className="h-4 bg-gray-100 rounded w-64"></div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
+  // Handle adding a new timeline section
+  const handleAddTimeline = () => {
+    toast({
+      title: "Timeline section added",
+      description: `"${newTimeline.title}" section has been added to your timeline.`,
+    });
+    
+    setIsAddTimelineOpen(false);
+    setNewTimeline({
+      title: '',
+    });
+  };
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>Wedding Timeline</CardTitle>
-        <Dialog open={isAddEventOpen} onOpenChange={setIsAddEventOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-primary text-white hover:bg-primary/90">
-              <Plus className="h-4 w-4 mr-1" />
-              Add Event
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Add Timeline Event</DialogTitle>
-              <DialogDescription>
-                Create a new milestone for your event planning journey.
-              </DialogDescription>
-            </DialogHeader>
-            
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Event Title</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter event title" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Description</FormLabel>
-                      <FormControl>
-                        <Textarea 
-                          placeholder="Enter event details" 
-                          className="resize-none" 
-                          {...field} 
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="eventDate"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                      <FormLabel>Event Date</FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant={"outline"}
-                              className={
-                                "w-full pl-3 text-left font-normal"
-                              }
-                            >
-                              {field.value ? (
-                                formatDate(field.value)
-                              ) : (
-                                <span>Pick a date</span>
-                              )}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={field.onChange}
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="completed"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel>
-                          Mark as Completed
-                        </FormLabel>
-                        <FormDescription>
-                          Check this if the event has already happened
-                        </FormDescription>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="userId"
-                  render={({ field }) => (
-                    <input type="hidden" {...field} value={user?.id} />
-                  )}
-                />
-                
-                <DialogFooter>
-                  <Button 
-                    type="submit" 
-                    className="bg-primary text-white hover:bg-primary/90"
-                    disabled={createMutation.isPending}
-                  >
-                    {createMutation.isPending ? "Creating..." : "Create Event"}
-                  </Button>
-                </DialogFooter>
-              </form>
-            </Form>
-          </DialogContent>
-        </Dialog>
-      </CardHeader>
-      <CardContent>
-        {!sortedEvents || sortedEvents.length === 0 ? (
-          <div className="text-center py-10">
-            <h3 className="text-lg font-medium mb-2">No timeline events yet</h3>
-            <p className="text-muted-foreground mb-6">Build your event journey with important milestones</p>
-            <Button 
-              className="bg-primary text-white hover:bg-primary/90"
-              onClick={() => setIsAddEventOpen(true)}
-            >
-              <Plus className="h-4 w-4 mr-1" />
-              Add Your First Event
-            </Button>
+    <div className="space-y-6">
+      <Card>
+        <CardHeader className="pb-3">
+          <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
+            <div>
+              <CardTitle>Event Timeline</CardTitle>
+              <CardDescription>
+                Organize and track your event planning milestones
+              </CardDescription>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Select value={selectedEventId.toString()} onValueChange={(value) => setSelectedEventId(Number(value))}>
+                <SelectTrigger className="w-[240px]">
+                  <SelectValue placeholder="Select event" />
+                </SelectTrigger>
+                <SelectContent>
+                  {eventOptions.map(event => (
+                    <SelectItem key={event.id} value={event.id.toString()}>
+                      {event.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button variant="outline" onClick={() => setIsAddTimelineOpen(true)}>
+                <Plus className="h-4 w-4 mr-2" />
+                Add Section
+              </Button>
+            </div>
           </div>
-        ) : (
-          <div className="relative">
-            <div className="absolute inset-y-0 left-4 w-0.5 bg-gray-200" aria-hidden="true"></div>
-            
-            {sortedEvents.map((event, index) => {
-              const timePosition = getTimePosition(event.eventDate);
-              let icon;
-              let bgColor;
-              
-              if (event.completed) {
-                icon = <Check className="h-4 w-4 text-white" />;
-                bgColor = "bg-primary";
-              } else {
-                if (timePosition === 'present') {
-                  icon = <Hourglass className="h-4 w-4 text-white" />;
-                  bgColor = "bg-[#6A8C7D]";
-                } else if (timePosition === 'future') {
-                  icon = <span className="text-white text-xs">{index + 1}</span>;
-                  bgColor = "bg-gray-300";
-                } else {
-                  icon = <Clock className="h-4 w-4 text-white" />;
-                  bgColor = "bg-gray-400";
-                }
-              }
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-8">
+            {timelineData.map((timeline) => {
+              const isExpanded = expandedSections.includes(timeline.id);
+              const completedEvents = timeline.events.filter(e => e.completed).length;
+              const progress = Math.round((completedEvents / timeline.events.length) * 100);
               
               return (
-                <div key={event.id} className="relative mb-6 group">
-                  <div className="flex items-start">
-                    <div className="flex flex-col items-center">
-                      <div className={`flex z-10 justify-center items-center ${bgColor} w-8 h-8 rounded-full`}>
-                        {icon}
+                <div key={timeline.id} className="space-y-2">
+                  <div 
+                    className="flex items-center justify-between cursor-pointer hover:bg-muted/50 p-2 rounded"
+                    onClick={() => toggleSection(timeline.id)}
+                  >
+                    <div className="flex items-center">
+                      <ChevronDown 
+                        className={`h-5 w-5 mr-2 transition-transform ${isExpanded ? 'transform rotate-0' : 'transform -rotate-90'}`} 
+                      />
+                      <h3 className="text-lg font-medium">{timeline.title}</h3>
+                      
+                      <div className="ml-2 px-2 py-0.5 bg-muted rounded text-xs">
+                        {completedEvents} of {timeline.events.length}
                       </div>
-                      <div className="ml-4 mt-1">
-                        <span className="text-xs text-muted-foreground">
-                          {event.eventDate ? formatDate(event.eventDate) : 'No date set'}
-                        </span>
+                      
+                      <div className="ml-2 w-24 h-2 bg-muted rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-primary"
+                          style={{ width: `${progress}%` }}
+                        />
                       </div>
                     </div>
-                    <div className="ml-4 mt-1 relative">
-                      <h4 className="font-medium flex items-center">
-                        {event.title}
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          className="h-6 w-6 text-destructive opacity-0 group-hover:opacity-100 transition-opacity ml-2" 
-                          onClick={() => handleDelete(event.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </h4>
-                      <p className="text-sm text-muted-foreground">{event.description}</p>
-                      
-                      <div className="mt-2">
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="text-xs h-7" 
-                          onClick={() => handleToggleComplete(event)}
-                        >
-                          {event.completed ? "Mark as Incomplete" : "Mark as Complete"}
-                        </Button>
-                      </div>
+                    
+                    <div className="flex items-center">
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedTimelineId(timeline.id);
+                          setIsAddEventOpen(true);
+                        }}
+                      >
+                        <Plus className="h-4 w-4 mr-1" />
+                        Add Event
+                      </Button>
                     </div>
                   </div>
+                  
+                  {isExpanded && (
+                    <div className="pl-10 space-y-4">
+                      {timeline.events.map((event) => (
+                        <div key={event.id} className="border rounded-lg overflow-hidden">
+                          <div className={`p-4 ${event.completed ? 'bg-muted/50' : 'bg-card'}`}>
+                            <div className="flex items-start justify-between">
+                              <div className="flex items-start">
+                                <div className="mr-3 mt-1">
+                                  <Checkbox 
+                                    id={`event-${event.id}`}
+                                    checked={event.completed}
+                                    onCheckedChange={(checked) => {
+                                      handleToggleCompletion(event.id, checked as boolean);
+                                    }}
+                                  />
+                                </div>
+                                <div>
+                                  <label 
+                                    htmlFor={`event-${event.id}`}
+                                    className={`font-medium ${event.completed ? 'line-through text-muted-foreground' : ''}`}
+                                  >
+                                    {event.title}
+                                  </label>
+                                  {event.description && (
+                                    <p className="text-sm text-muted-foreground mt-1">
+                                      {event.description}
+                                    </p>
+                                  )}
+                                  <div className="flex items-center mt-2">
+                                    <CalendarDays className="h-3 w-3 mr-1 text-muted-foreground" />
+                                    <span className="text-xs text-muted-foreground">
+                                      {format(event.eventDate, 'MMMM d, yyyy')}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button variant="ghost" size="sm">
+                                    <MoreHorizontal className="h-4 w-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                  <DropdownMenuItem>
+                                    <Edit className="h-4 w-4 mr-2" />
+                                    Edit
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem 
+                                    onClick={() => handleToggleCompletion(event.id, !event.completed)}
+                                  >
+                                    <Check className="h-4 w-4 mr-2" />
+                                    Mark as {event.completed ? 'Incomplete' : 'Complete'}
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem className="text-destructive">
+                                    <Trash2 className="h-4 w-4 mr-2" />
+                                    Delete
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                      
+                      {timeline.events.length === 0 && (
+                        <div className="text-center py-6 text-muted-foreground">
+                          <Clock className="h-8 w-8 mx-auto mb-2 text-muted-foreground/70" />
+                          <p>No events in this timeframe</p>
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            className="mt-2"
+                            onClick={() => {
+                              setSelectedTimelineId(timeline.id);
+                              setIsAddEventOpen(true);
+                            }}
+                          >
+                            <Plus className="h-4 w-4 mr-1" />
+                            Add Event
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  
+                  {timeline.id < timelineData.length && <Separator className="my-4" />}
                 </div>
               );
             })}
           </div>
-        )}
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+      
+      {/* Add Timeline Event Dialog */}
+      <Dialog open={isAddEventOpen} onOpenChange={setIsAddEventOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Add Timeline Event</DialogTitle>
+            <DialogDescription>
+              Add a new milestone or task to your timeline.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="event-title">Event Title</Label>
+              <Input
+                id="event-title"
+                value={newTimelineEvent.title}
+                onChange={(e) => setNewTimelineEvent({...newTimelineEvent, title: e.target.value})}
+                placeholder="e.g., Book photographer, Send invitations"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="event-description">Description (Optional)</Label>
+              <Textarea
+                id="event-description"
+                value={newTimelineEvent.description}
+                onChange={(e) => setNewTimelineEvent({...newTimelineEvent, description: e.target.value})}
+                placeholder="Add details about this event"
+                className="min-h-[80px]"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="event-date">Due Date</Label>
+              <div className="flex">
+                <Input
+                  id="event-date"
+                  type="date"
+                  value={newTimelineEvent.eventDate}
+                  onChange={(e) => setNewTimelineEvent({...newTimelineEvent, eventDate: e.target.value})}
+                />
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="submit" onClick={handleAddTimelineEvent}>Add Event</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Add Timeline Section Dialog */}
+      <Dialog open={isAddTimelineOpen} onOpenChange={setIsAddTimelineOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Add Timeline Section</DialogTitle>
+            <DialogDescription>
+              Create a new section for your timeline.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="timeline-title">Section Title</Label>
+              <Input
+                id="timeline-title"
+                value={newTimeline.title}
+                onChange={(e) => setNewTimeline({...newTimeline, title: e.target.value})}
+                placeholder="e.g., 6 Months Before, Week of Event"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="submit" onClick={handleAddTimeline}>Add Section</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 }

@@ -460,6 +460,183 @@ export type InsertAppAnalytics = z.infer<typeof insertAppAnalyticsSchema>;
 export type UserEvent = typeof userEvents.$inferSelect;
 export type InsertUserEvent = z.infer<typeof insertUserEventSchema>;
 
+// Budget planner tables
+export const budgets = pgTable("budgets", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull(),
+  name: text("name").notNull(),
+  totalBudget: doublePrecision("total_budget").notNull(),
+  currency: text("currency").notNull().default("ZAR"),
+  eventType: text("event_type").notNull(),
+  eventDate: timestamp("event_date"),
+  status: text("status").notNull().default("active"),
+  isTemplate: boolean("is_template").default(false),
+  guestCount: integer("guest_count"),
+  venueType: text("venue_type"),
+  notes: text("notes"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertBudgetSchema = createInsertSchema(budgets).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const budgetCategories = pgTable("budget_categories", {
+  id: serial("id").primaryKey(),
+  budgetId: integer("budget_id").notNull(),
+  name: text("name").notNull(),
+  allocatedAmount: doublePrecision("allocated_amount").notNull().default(0),
+  percentOfTotal: doublePrecision("percent_of_total"),
+  isCustom: boolean("is_custom").default(false),
+  order: integer("order").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertBudgetCategorySchema = createInsertSchema(budgetCategories).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const budgetItems = pgTable("budget_items", {
+  id: serial("id").primaryKey(),
+  categoryId: integer("category_id").notNull(),
+  name: text("name").notNull(),
+  estimatedCost: doublePrecision("estimated_cost").notNull().default(0),
+  actualCost: doublePrecision("actual_cost"),
+  paymentStatus: text("payment_status").default("pending"), // pending, partial, paid
+  paymentDate: timestamp("payment_date"),
+  notes: text("notes"),
+  vendor: text("vendor"),
+  vendorId: integer("vendor_id"), // Optional link to platform vendor
+  order: integer("order").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertBudgetItemSchema = createInsertSchema(budgetItems).omit({
+  id: true,
+  createdAt: true,
+});
+
+// Event Planning Tool tables
+export const eventPlans = pgTable("event_plans", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull(),
+  name: text("name").notNull(),
+  eventType: text("event_type").notNull(),
+  eventDate: timestamp("event_date"),
+  location: text("location"),
+  guestCount: integer("guest_count"),
+  theme: text("theme"),
+  color: text("color"),
+  description: text("description"),
+  isTemplate: boolean("is_template").default(false),
+  status: text("status").notNull().default("planning"), // planning, in-progress, completed
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertEventPlanSchema = createInsertSchema(eventPlans).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const planningChecklists = pgTable("planning_checklists", {
+  id: serial("id").primaryKey(),
+  eventPlanId: integer("event_plan_id").notNull(),
+  name: text("name").notNull(),
+  timeframe: text("timeframe"), // e.g., "12 months before", "1 week before"
+  dueDate: timestamp("due_date"),
+  order: integer("order").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertPlanningChecklistSchema = createInsertSchema(planningChecklists).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const checklistItems = pgTable("checklist_items", {
+  id: serial("id").primaryKey(),
+  checklistId: integer("checklist_id").notNull(),
+  task: text("task").notNull(),
+  isCompleted: boolean("is_completed").default(false),
+  completedDate: timestamp("completed_date"),
+  assignedTo: text("assigned_to"),
+  notes: text("notes"),
+  priority: text("priority").default("medium"), // low, medium, high
+  order: integer("order").default(0),
+  categoryId: integer("category_id"), // Optional link to service category
+  vendorId: integer("vendor_id"), // Optional link to assigned vendor
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertChecklistItemSchema = createInsertSchema(checklistItems).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const guestLists = pgTable("guest_lists", {
+  id: serial("id").primaryKey(),
+  eventPlanId: integer("event_plan_id").notNull(),
+  name: text("name").notNull().default("Main Guest List"), 
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertGuestListSchema = createInsertSchema(guestLists).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const guests = pgTable("guests", {
+  id: serial("id").primaryKey(),
+  guestListId: integer("guest_list_id").notNull(),
+  name: text("name").notNull(),
+  email: text("email"),
+  phone: text("phone"),
+  group: text("group"), // e.g., "Family", "Friends", "Colleagues"
+  invitationStatus: text("invitation_status").default("not-sent"), // not-sent, sent, accepted, declined
+  mealPreference: text("meal_preference"),
+  plusOnes: integer("plus_ones").default(0),
+  notes: text("notes"),
+  address: text("address"),
+  tableAssignment: text("table_assignment"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertGuestSchema = createInsertSchema(guests).omit({
+  id: true,
+  createdAt: true,
+});
+
+// Type exports for budget and planning tables
+export type Budget = typeof budgets.$inferSelect;
+export type InsertBudget = z.infer<typeof insertBudgetSchema>;
+
+export type BudgetCategory = typeof budgetCategories.$inferSelect;
+export type InsertBudgetCategory = z.infer<typeof insertBudgetCategorySchema>;
+
+export type BudgetItem = typeof budgetItems.$inferSelect;
+export type InsertBudgetItem = z.infer<typeof insertBudgetItemSchema>;
+
+export type EventPlan = typeof eventPlans.$inferSelect;
+export type InsertEventPlan = z.infer<typeof insertEventPlanSchema>;
+
+export type PlanningChecklist = typeof planningChecklists.$inferSelect;
+export type InsertPlanningChecklist = z.infer<typeof insertPlanningChecklistSchema>;
+
+export type ChecklistItem = typeof checklistItems.$inferSelect;
+export type InsertChecklistItem = z.infer<typeof insertChecklistItemSchema>;
+
+export type GuestList = typeof guestLists.$inferSelect;
+export type InsertGuestList = z.infer<typeof insertGuestListSchema>;
+
+export type Guest = typeof guests.$inferSelect;
+export type InsertGuest = z.infer<typeof insertGuestSchema>;
+
 // Event opportunities table - for event planners to post events seeking vendors
 export const eventOpportunities = pgTable("event_opportunities", {
   id: serial("id").primaryKey(),
