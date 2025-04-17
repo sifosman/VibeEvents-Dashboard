@@ -87,7 +87,7 @@ export default function VendorListing() {
       <Helmet>
         <title>
           {selectedCategory 
-            ? `${selectedCategory.name} - WeddingPro` 
+            ? `${selectedCategory.name} - HowzEvent` 
             : "Browse Vendors - WeddingPro"}
         </title>
         <meta 
