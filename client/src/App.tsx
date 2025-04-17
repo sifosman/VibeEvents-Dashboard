@@ -86,9 +86,14 @@ function AppRouter() {
   }
 }
 
+// Import the geo blocking component
+import GeoBlockedView from "./components/shared/GeoBlockedView";
+
 function App() {
   return (
     <div className="flex flex-col min-h-screen">
+      {/* Add geo-blocking overlay that will only display for blocked countries */}
+      <GeoBlockedView />
       <Header />
       <main className="flex-grow">
         <AppRouter />

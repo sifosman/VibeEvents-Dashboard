@@ -1,78 +1,117 @@
-import React from "react";
-import { Link } from "wouter";
-import { Vendor, Category } from "@shared/schema";
-import { Card, CardContent } from "@/components/ui/card";
-import { Globe, Instagram, MessageSquare } from "lucide-react";
-import StarRating from "../ui/star-rating";
-import { LikeButton } from "./ShortlistButton";
+import React from 'react';
+import { Link } from 'wouter';
+import { StarIcon } from 'lucide-react';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+
+interface Vendor {
+  id: number;
+  name: string;
+  description: string;
+  imageUrl: string;
+  logoUrl?: string;
+  categoryId: number;
+  priceRange: string;
+  rating: number;
+  reviewCount: number;
+  featured?: boolean;
+  location?: string;
+  isThemed?: boolean;
+  themeTypes?: string[];
+  venueCapacity?: number;
+  dietaryOptions?: string[];
+  cuisineTypes?: string[];
+  servesAlcohol?: boolean;
+}
 
 interface VendorCardProps {
   vendor: Vendor;
-  category?: Category;
 }
 
-export function VendorCard({ vendor, category }: VendorCardProps) {
+export function VendorCard({ vendor }: VendorCardProps) {
+  // Truncate description to fit card
+  const truncateDescription = (text: string, maxLength = 120) => {
+    if (text.length <= maxLength) return text;
+    return `${text.slice(0, maxLength).trim()}...`;
+  };
+
   return (
-    <Card className="overflow-hidden group hover:shadow-lg transition h-full">
-      <div 
-        className="relative h-48 bg-cover bg-center" 
-        style={{ backgroundImage: `url('${vendor.imageUrl}')` }}
-      >
-        <LikeButton vendorId={vendor.id} className="absolute top-4 right-4" size="sm" />
-      </div>
-      <CardContent className="p-4">
-        <h3 className="font-display font-medium text-lg mb-1 group-hover:text-primary transition">
-          {vendor.name}
-        </h3>
-        <div className="flex justify-between items-center mb-2">
-          <StarRating rating={vendor.rating} reviewCount={vendor.reviewCount} size="sm" />
-          <span className="category-badge">
-            {category?.name || "Vendor"}
-          </span>
-        </div>
-        <p className="text-xs text-muted-foreground mb-3 line-clamp-2">{vendor.description}</p>
+    <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
+      <div className="relative pb-[56.25%] overflow-hidden">
+        <img 
+          src={vendor.imageUrl} 
+          alt={vendor.name}
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-in-out transform hover:scale-105"
+        />
         
-        <div className="flex justify-between items-center">
-          <div className="flex space-x-3">
-            {vendor.instagramUrl && (
-              <a 
-                href={vendor.instagramUrl} 
-                className="text-foreground hover:text-primary transition" 
-                title="Visit Instagram" 
-                target="_blank" 
-                rel="noopener noreferrer"
-              >
-                <Instagram size={16} />
-              </a>
-            )}
-            {vendor.websiteUrl && (
-              <a 
-                href={vendor.websiteUrl} 
-                className="text-foreground hover:text-primary transition" 
-                title="Visit Website" 
-                target="_blank" 
-                rel="noopener noreferrer"
-              >
-                <Globe size={16} />
-              </a>
-            )}
-            {vendor.whatsappNumber && (
-              <a 
-                href={`https://wa.me/${vendor.whatsappNumber.replace(/[^0-9]/g, '')}`} 
-                className="text-foreground hover:text-primary transition" 
-                title="Contact via WhatsApp" 
-                target="_blank" 
-                rel="noopener noreferrer"
-              >
-                <MessageSquare size={16} />
-              </a>
-            )}
+        {vendor.logoUrl && (
+          <div className="absolute bottom-3 right-3 bg-white rounded-full p-1 shadow-md">
+            <img 
+              src={vendor.logoUrl} 
+              alt={`${vendor.name} logo`} 
+              className="h-10 w-10 object-contain rounded-full"
+            />
           </div>
-          <Link href={`/vendors/${vendor.id}`} className="text-primary text-sm font-medium hover:underline">
-            View Details
-          </Link>
+        )}
+        
+        {vendor.featured && (
+          <Badge 
+            variant="secondary" 
+            className="absolute top-3 left-3 bg-primary text-primary-foreground"
+          >
+            Featured
+          </Badge>
+        )}
+      </div>
+      
+      <CardContent className="flex-grow p-5">
+        <div className="flex items-start justify-between mb-2">
+          <h3 className="font-semibold text-lg tracking-tight">{vendor.name}</h3>
+          <div className="flex items-center bg-primary/10 px-2 py-1 rounded text-sm">
+            <StarIcon className="h-3.5 w-3.5 mr-1 text-primary" />
+            <span className="font-medium">{vendor.rating.toFixed(1)}</span>
+            <span className="text-muted-foreground text-xs ml-1">({vendor.reviewCount})</span>
+          </div>
+        </div>
+        
+        <p className="text-muted-foreground text-sm mb-3">{truncateDescription(vendor.description)}</p>
+        
+        <div className="flex flex-wrap gap-1 mt-3">
+          {vendor.priceRange && (
+            <Badge variant="outline" className="text-xs">
+              {vendor.priceRange}
+            </Badge>
+          )}
+          
+          {vendor.location && (
+            <Badge variant="outline" className="text-xs">
+              {vendor.location}
+            </Badge>
+          )}
+          
+          {vendor.isThemed && (
+            <Badge variant="outline" className="text-xs bg-primary/5">
+              Themed
+            </Badge>
+          )}
+          
+          {!vendor.servesAlcohol && (
+            <Badge variant="outline" className="text-xs bg-primary/5">
+              Alcohol-free
+            </Badge>
+          )}
         </div>
       </CardContent>
+      
+      <CardFooter className="p-4 pt-0">
+        <Link href={`/vendors/${vendor.id}`}>
+          <a className="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50 transition-colors">
+            View Details
+          </a>
+        </Link>
+      </CardFooter>
     </Card>
   );
 }
+
+export default VendorCard;
