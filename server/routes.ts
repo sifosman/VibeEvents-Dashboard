@@ -119,64 +119,87 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/vendors', async (req: Request, res: Response) => {
     try {
       const { 
-        category, 
+        categoryId, 
         search, 
         dietary, 
         cuisine, 
-        isThemed, 
-        themeType, 
+        themed, 
+        themeTypes, 
         priceRange, 
-        location 
+        location,
+        servesAlcohol,
+        page = '1',
+        limit = '20'
       } = req.query;
+      
+      // Parse pagination parameters
+      const currentPage = parseInt(page as string) || 1;
+      const pageSize = parseInt(limit as string) || 20;
+      const offset = (currentPage - 1) * pageSize;
       
       let vendors;
       
-      if (search || isThemed) {
-        const categoryId = category ? parseInt(category as string) : undefined;
-        const searchQuery = search ? (search as string) : '';
+      // Build complex filters object for search
+      const filters: any = {};
+      
+      // Set pagination parameters
+      filters.limit = pageSize;
+      filters.offset = offset;
+      
+      // Convert category ID if present
+      const category = categoryId ? parseInt(categoryId as string) : undefined;
+      
+      // Add themed filters if present
+      if (themed === 'true') {
+        filters.isThemed = true;
         
-        // Build complex filters object
-        const filters: any = {};
-        
-        // Add themed filters if present
-        if (isThemed === 'true') {
-          filters.isThemed = true;
-          
-          // Add specific theme types if provided
-          if (themeType) {
-            filters.themeTypes = Array.isArray(themeType) 
-              ? themeType as string[] 
-              : [themeType as string];
-          }
+        // Add specific theme types if provided
+        if (themeTypes) {
+          filters.themeTypes = Array.isArray(themeTypes) 
+            ? themeTypes as string[] 
+            : (themeTypes as string).split(',');
         }
-        
-        // Add price range if provided
-        if (priceRange) {
-          filters.priceRange = priceRange as string;
-        }
-        
-        // Add location if provided
-        if (location) {
-          filters.location = location as string;
-        }
-        
-        vendors = await storage.searchVendors(
-          searchQuery, 
-          categoryId,
-          dietary as string | undefined,
-          cuisine as string | undefined,
-          Object.keys(filters).length > 0 ? filters : undefined
-        );
-      } else if (category) {
-        vendors = await storage.getVendorsByCategory(parseInt(category as string));
-      } else {
-        vendors = await storage.getVendors();
       }
+      
+      // Add dietary filters if present
+      if (dietary) {
+        filters.dietaryOptions = Array.isArray(dietary) 
+          ? dietary as string[] 
+          : (dietary as string).split(',');
+      }
+      
+      // Add cuisine filters if present
+      if (cuisine) {
+        filters.cuisineTypes = Array.isArray(cuisine) 
+          ? cuisine as string[] 
+          : (cuisine as string).split(',');
+      }
+      
+      // Add price range filter if present
+      if (priceRange) {
+        filters.priceRange = Array.isArray(priceRange) 
+          ? priceRange as string[] 
+          : (priceRange as string).split(',');
+      }
+      
+      // Add location filter if present
+      if (location) {
+        filters.location = location as string;
+      }
+      
+      // Add alcohol filter if present
+      if (servesAlcohol !== undefined) {
+        filters.servesAlcohol = servesAlcohol === 'true';
+      }
+      
+      // Use search function even without search term to utilize its filtering capabilities
+      const searchQuery = search ? (search as string) : '';
+      vendors = await storage.searchVendors(searchQuery, category, filters);
       
       res.status(200).json(vendors);
     } catch (error) {
       console.error('Error fetching vendors:', error);
-      res.status(500).json({ message: 'Server error' });
+      res.status(500).json({ message: 'Server error', error: (error as Error).message });
     }
   });
 
