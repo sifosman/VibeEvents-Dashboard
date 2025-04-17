@@ -91,6 +91,8 @@ export class DatabaseStorage implements IStorage {
   async searchVendors(
     query: string, 
     categoryId?: number, 
+    dietary?: string,
+    cuisine?: string,
     filters?: {
       isThemed?: boolean;
       themeTypes?: string[];
