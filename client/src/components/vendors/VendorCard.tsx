@@ -104,10 +104,8 @@ export function VendorCard({ vendor }: VendorCardProps) {
       </CardContent>
       
       <CardFooter className="p-4 pt-0">
-        <Link href={`/vendors/${vendor.id}`}>
-          <a className="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50 transition-colors">
-            View Details
-          </a>
+        <Link href={`/vendors/${vendor.id}`} className="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50 transition-colors">
+          View Details
         </Link>
       </CardFooter>
     </Card>

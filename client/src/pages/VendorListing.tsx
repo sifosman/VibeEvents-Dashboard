@@ -129,11 +129,13 @@ export default function VendorListing() {
         <div className="container-custom">
           <div className="mb-8">
             <div className="flex items-center mb-2">
-              <Button variant="ghost" asChild className="p-0 mr-3 hover:bg-transparent">
-                <a href="javascript:history.back()">
-                  <ArrowLeft className="h-4 w-4 mr-1" />
-                  Back
-                </a>
+              <Button 
+                variant="ghost" 
+                className="p-0 mr-3 hover:bg-transparent"
+                onClick={() => window.history.back()}
+              >
+                <ArrowLeft className="h-4 w-4 mr-1" />
+                Back
               </Button>
               <h1 className="text-3xl font-display font-bold">
                 {selectedCategory 
