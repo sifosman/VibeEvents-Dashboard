@@ -212,9 +212,13 @@ export function VendorCalendar({ vendorId, userId, vendorName }: VendorCalendarP
               </div>
             ) : (
               <Calendar
-                onChange={setDate}
+                onChange={(value) => {
+                  if (value instanceof Date) {
+                    setDate(value);
+                    setView('booking');
+                  }
+                }}
                 value={date}
-                onClickDay={() => setView('booking')}
                 tileClassName={getTileClassName}
                 className="w-full border-none"
               />

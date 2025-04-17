@@ -112,6 +112,9 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
             <TabsList className="mb-6">
               <TabsTrigger value="about">About</TabsTrigger>
               <TabsTrigger value="services">Services</TabsTrigger>
+              {vendor.calendarView && (
+                <TabsTrigger value="calendar">Calendar</TabsTrigger>
+              )}
               {hasReviewFeature && (
                 <TabsTrigger value="reviews">
                   Reviews ({vendor.reviewCount || 0})
@@ -151,7 +154,16 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
                       <p className="text-muted-foreground mb-2">Contact for availability details</p>
                       <p className="text-sm">Popular dates book quickly - reach out early!</p>
                       {vendor.calendarView && (
-                        <Button className="mt-4 w-full" variant="outline">View Calendar</Button>
+                        <Button 
+                          className="mt-4 w-full" 
+                          variant="outline" 
+                          onClick={() => {
+                            const calendarTab = document.querySelector('[data-value="calendar"]') as HTMLElement;
+                            if (calendarTab) calendarTab.click();
+                          }}
+                        >
+                          View Calendar
+                        </Button>
                       )}
                     </CardContent>
                   </Card>
@@ -200,6 +212,22 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
                 </div>
               </div>
             </TabsContent>
+
+            {vendor.calendarView && (
+              <TabsContent value="calendar">
+                <div>
+                  <h2 className="font-display text-xl font-semibold mb-4">Schedule with {vendor.name}</h2>
+                  <p className="text-muted-foreground mb-6">
+                    Check availability and book a consultation or service directly through our online calendar.
+                  </p>
+                  <VendorCalendar 
+                    vendorId={vendorId} 
+                    userId={userId} 
+                    vendorName={vendor.name}
+                  />
+                </div>
+              </TabsContent>
+            )}
 
             {hasReviewFeature && (
               <TabsContent value="reviews">
