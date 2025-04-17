@@ -194,7 +194,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Use search function even without search term to utilize its filtering capabilities
       const searchQuery = search ? (search as string) : '';
-      vendors = await storage.searchVendors(searchQuery, category, filters);
+      vendors = await storage.searchVendors(searchQuery, category, undefined, undefined, filters);
       
       res.status(200).json(vendors);
     } catch (error) {
