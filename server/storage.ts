@@ -13,7 +13,8 @@ import {
   seoPackages, type SeoPackage, type InsertSeoPackage,
   calendarEvents, type CalendarEvent, type InsertCalendarEvent,
   conversations, type Conversation, type InsertConversation,
-  messages, type Message, type InsertMessage
+  messages, type Message, type InsertMessage,
+  reviews, type Review, type InsertReview
 } from "@shared/schema";
 
 // Interface for storage operations
@@ -105,6 +106,13 @@ export interface IStorage {
   getMessages(conversationId: number): Promise<Message[]>;
   createMessage(message: InsertMessage): Promise<Message>;
   markMessagesAsRead(conversationId: number, userId: number): Promise<void>;
+  
+  // Review operations
+  getReviewsByVendor(vendorId: number): Promise<Review[]>;
+  getReview(id: number): Promise<Review | undefined>;
+  createReview(review: InsertReview): Promise<Review>;
+  updateReviewReply(id: number, adminReply: string): Promise<Review>;
+  updateVendorRatings(vendorId: number): Promise<void>;
 }
 
 export class MemStorage implements IStorage {
@@ -123,6 +131,7 @@ export class MemStorage implements IStorage {
   private calendarEvents: Map<number, CalendarEvent>;
   private conversations: Map<number, Conversation>;
   private messages: Map<number, Message>;
+  private reviews: Map<number, Review>;
   
   private userIdCounter: number;
   private categoryIdCounter: number;
@@ -139,6 +148,7 @@ export class MemStorage implements IStorage {
   private calendarEventIdCounter: number;
   private conversationIdCounter: number;
   private messageIdCounter: number;
+  private reviewIdCounter: number;
 
   constructor() {
     this.users = new Map();
@@ -156,6 +166,7 @@ export class MemStorage implements IStorage {
     this.calendarEvents = new Map();
     this.conversations = new Map();
     this.messages = new Map();
+    this.reviews = new Map();
     
     this.userIdCounter = 1;
     this.categoryIdCounter = 1;
@@ -172,6 +183,7 @@ export class MemStorage implements IStorage {
     this.calendarEventIdCounter = 1;
     this.conversationIdCounter = 1;
     this.messageIdCounter = 1;
+    this.reviewIdCounter = 1;
     
     // Initialize with sample data
     this.initializeData();
