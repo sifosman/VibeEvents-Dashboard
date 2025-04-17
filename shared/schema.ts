@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp, doublePrecision } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, doublePrecision, json } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -341,3 +341,61 @@ export type InsertAdPlacement = z.infer<typeof insertAdPlacementSchema>;
 
 export type SeoPackage = typeof seoPackages.$inferSelect;
 export type InsertSeoPackage = z.infer<typeof insertSeoPackageSchema>;
+
+// Event opportunities table - for event planners to post events seeking vendors
+export const eventOpportunities = pgTable("event_opportunities", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  eventType: text("event_type").notNull(),
+  eventDate: timestamp("event_date").notNull(),
+  location: text("location").notNull(),
+  budget: text("budget"),
+  attendeeCount: integer("attendee_count"),
+  categoriesNeeded: text("categories_needed").array(),
+  requirementsDetails: text("requirements_details"),
+  applicationDeadline: timestamp("application_deadline"),
+  isPublic: boolean("is_public").notNull().default(true),
+  status: text("status").notNull().default("open"),
+  imageUrl: text("image_url"),
+  additionalInfo: json("additional_info"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertEventOpportunitySchema = createInsertSchema(eventOpportunities).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+// Vendor applications table - for vendors to apply to event opportunities
+export const vendorApplications = pgTable("vendor_applications", {
+  id: serial("id").primaryKey(),
+  opportunityId: integer("opportunity_id").notNull(),
+  vendorId: integer("vendor_id").notNull(),
+  proposedService: text("proposed_service").notNull(),
+  priceQuote: text("price_quote"),
+  message: text("message"),
+  availability: boolean("availability").notNull().default(true),
+  portfolioLinks: text("portfolio_links").array(),
+  additionalInfo: json("additional_info"),
+  status: text("status").notNull().default("pending"), // pending, accepted, rejected, withdrawn
+  notificationSent: boolean("notification_sent").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertVendorApplicationSchema = createInsertSchema(vendorApplications).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+// Type exports for new tables
+export type EventOpportunity = typeof eventOpportunities.$inferSelect;
+export type InsertEventOpportunity = z.infer<typeof insertEventOpportunitySchema>;
+
+export type VendorApplication = typeof vendorApplications.$inferSelect;
+export type InsertVendorApplication = z.infer<typeof insertVendorApplicationSchema>;

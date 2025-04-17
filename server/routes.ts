@@ -1,6 +1,7 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { notifyVendorsAboutEvent } from "./services/whatsapp";
 import { 
   insertUserSchema, 
   insertShortlistSchema, 
@@ -11,7 +12,9 @@ import {
   insertAdCampaignSchema,
   insertAdAssetSchema,
   insertAdPlacementSchema,
-  insertSeoPackageSchema
+  insertSeoPackageSchema,
+  insertEventOpportunitySchema,
+  insertVendorApplicationSchema
 } from "@shared/schema";
 import { z } from "zod";
 import Stripe from "stripe";
@@ -721,6 +724,178 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ received: true });
     } catch (error: any) {
       res.status(400).json({ message: `Webhook error: ${error.message}` });
+    }
+  });
+
+  // Event opportunities routes
+  app.get('/api/event-opportunities', async (req: Request, res: Response) => {
+    try {
+      const { userId, status, categoryId } = req.query;
+      
+      // TODO: Implement getEventOpportunities in storage
+      const opportunities = []; // await storage.getEventOpportunities(userId ? parseInt(userId as string) : undefined);
+      res.status(200).json(opportunities);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.get('/api/event-opportunities/:id', async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      
+      // TODO: Implement getEventOpportunity in storage
+      const opportunity = null; // await storage.getEventOpportunity(id);
+      
+      if (!opportunity) {
+        return res.status(404).json({ message: 'Event opportunity not found' });
+      }
+      
+      res.status(200).json(opportunity);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.post('/api/event-opportunities', async (req: Request, res: Response) => {
+    try {
+      const validatedData = insertEventOpportunitySchema.parse(req.body);
+      
+      // TODO: Implement createEventOpportunity in storage
+      const opportunity = validatedData; // await storage.createEventOpportunity(validatedData);
+      
+      // Send WhatsApp notifications to relevant vendors
+      try {
+        // This would be where we get vendors with WhatsApp numbers who should be notified
+        const vendorsToNotify = []; // await storage.getVendorsForEventNotification(opportunity);
+        
+        if (vendorsToNotify.length > 0) {
+          const eventDate = opportunity.eventDate 
+            ? new Date(opportunity.eventDate).toLocaleDateString() 
+            : 'TBD';
+          
+          // Get event planner name
+          const eventPlanner = null; // await storage.getUser(opportunity.userId);
+          const plannerName = eventPlanner?.fullName || 'An event planner';
+          
+          // Create application URL
+          const eventUrl = `https://www.howzeventz.co.za/events/${opportunity.id}/apply`;
+          
+          // Send notifications (this will be skipped until we have Twilio credentials)
+          await notifyVendorsAboutEvent(
+            vendorsToNotify.map(v => v.whatsappNumber).filter(Boolean) as string[],
+            opportunity.title,
+            eventDate,
+            opportunity.location,
+            plannerName,
+            eventUrl
+          );
+          
+          // Mark opportunity as having notifications sent
+          // await storage.updateEventNotificationStatus(opportunity.id, true);
+        }
+      } catch (whatsappError) {
+        // Log WhatsApp error but don't fail the event creation
+        console.error('Error sending WhatsApp notifications:', whatsappError);
+      }
+      
+      res.status(201).json(opportunity);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: 'Invalid input data', errors: error.errors });
+      }
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.patch('/api/event-opportunities/:id/status', async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { status } = req.body;
+      
+      if (!status) {
+        return res.status(400).json({ message: 'Status is required' });
+      }
+      
+      // TODO: Implement updateEventOpportunityStatus in storage
+      const opportunity = null; // await storage.updateEventOpportunityStatus(id, status);
+      
+      if (!opportunity) {
+        return res.status(404).json({ message: 'Event opportunity not found' });
+      }
+      
+      res.status(200).json(opportunity);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.delete('/api/event-opportunities/:id', async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      
+      // TODO: Implement deleteEventOpportunity in storage
+      // await storage.deleteEventOpportunity(id);
+      
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  // Vendor applications routes
+  app.get('/api/vendor-applications', async (req: Request, res: Response) => {
+    try {
+      const { opportunityId, vendorId, status } = req.query;
+      
+      // TODO: Implement getVendorApplications in storage
+      const applications = []; // await storage.getVendorApplications({
+      //   opportunityId: opportunityId ? parseInt(opportunityId as string) : undefined,
+      //   vendorId: vendorId ? parseInt(vendorId as string) : undefined,
+      //   status: status as string
+      // });
+      
+      res.status(200).json(applications);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.post('/api/vendor-applications', async (req: Request, res: Response) => {
+    try {
+      const validatedData = insertVendorApplicationSchema.parse(req.body);
+      
+      // TODO: Implement createVendorApplication in storage
+      const application = validatedData; // await storage.createVendorApplication(validatedData);
+      
+      res.status(201).json(application);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: 'Invalid input data', errors: error.errors });
+      }
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
+  app.patch('/api/vendor-applications/:id/status', async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { status } = req.body;
+      
+      if (!status) {
+        return res.status(400).json({ message: 'Status is required' });
+      }
+      
+      // TODO: Implement updateVendorApplicationStatus in storage
+      const application = null; // await storage.updateVendorApplicationStatus(id, status);
+      
+      if (!application) {
+        return res.status(404).json({ message: 'Vendor application not found' });
+      }
+      
+      res.status(200).json(application);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error' });
     }
   });
 
