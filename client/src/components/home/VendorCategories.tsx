@@ -36,7 +36,7 @@ export default function VendorCategories() {
           <div className="flex flex-wrap">
             <Button
               className={`px-6 py-3 rounded-none ${
-                activeCategory === null ? 'bg-primary text-white' : 'bg-transparent hover:bg-accent hover:text-primary'
+                activeCategory === null ? 'bg-primary/90 text-white' : 'bg-transparent text-foreground hover:bg-accent hover:text-primary'
               }`}
               onClick={() => setActiveCategory(null)}
             >
@@ -47,7 +47,7 @@ export default function VendorCategories() {
               <Button
                 key={category.id}
                 className={`px-6 py-3 rounded-none ${
-                  activeCategory === category.id ? 'bg-primary text-white' : 'bg-transparent hover:bg-accent hover:text-primary'
+                  activeCategory === category.id ? 'bg-primary/90 text-white' : 'bg-transparent text-foreground hover:bg-accent hover:text-primary'
                 }`}
                 onClick={() => setActiveCategory(category.id)}
               >
@@ -58,8 +58,8 @@ export default function VendorCategories() {
         </div>
         
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {[...Array(8)].map((_, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(3)].map((_, index) => (
               <div key={index} className="rounded-lg shadow-md overflow-hidden animate-pulse">
                 <div className="flex flex-row">
                   {/* Left side - Image placeholder */}
@@ -88,8 +88,8 @@ export default function VendorCategories() {
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {vendors?.slice(0, 8).map((vendor) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {vendors?.slice(0, 3).map((vendor) => (
               <div key={vendor.id}>
                 <VendorCard vendor={vendor} />
               </div>

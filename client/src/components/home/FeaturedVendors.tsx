@@ -40,7 +40,7 @@ export default function FeaturedVendors() {
         </div>
         
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[...Array(3)].map((_, index) => (
               <div key={index} className="rounded-lg shadow-md overflow-hidden animate-pulse">
                 <div className="flex flex-row">
@@ -70,8 +70,8 @@ export default function FeaturedVendors() {
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {vendors?.map((vendor) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {vendors?.slice(0, 3).map((vendor) => (
               <div key={vendor.id}>
                 <VendorCard vendor={{...vendor, featured: true}} />
               </div>
