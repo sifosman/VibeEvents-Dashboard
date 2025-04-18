@@ -124,20 +124,12 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
               <TabsTrigger value="about">About</TabsTrigger>
               <TabsTrigger value="services">Services</TabsTrigger>
               <TabsTrigger value="catalog">Catalog</TabsTrigger>
-              {vendor.calendarView && (
-                <TabsTrigger value="calendar">Calendar</TabsTrigger>
-              )}
               {hasReviewFeature && (
                 <TabsTrigger value="reviews">
                   Reviews ({vendor.reviewCount || 0})
                 </TabsTrigger>
               )}
             </TabsList>
-            
-            {/* Debug info for development */}
-            <div className="text-xs text-gray-400 mb-2">
-              {`Calendar view: ${vendor.calendarView ? 'Enabled' : 'Disabled'}`}
-            </div>
 
             <TabsContent value="about">
               <div>
@@ -174,13 +166,11 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
                         className="mt-4 w-full" 
                         variant="outline" 
                         onClick={() => {
-                          const calendarTab = vendor.calendarView 
-                            ? document.querySelector('[data-value="calendar"]') as HTMLElement
-                            : document.querySelector('[data-value="catalog"]') as HTMLElement;
-                          if (calendarTab) calendarTab.click();
+                          const catalogTab = document.querySelector('[data-value="catalog"]') as HTMLElement;
+                          if (catalogTab) catalogTab.click();
                         }}
                       >
-                        {vendor.calendarView ? "View Calendar" : "View Catalog"}
+                        View Catalog
                       </Button>
                     </CardContent>
                   </Card>
@@ -232,22 +222,6 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
 
             <TabsContent value="catalog">
               <VendorCatalog vendorId={vendorId} />
-            </TabsContent>
-
-            <TabsContent value="calendar">
-              {vendor.calendarView && (
-                <div>
-                  <h2 className="font-display text-xl font-semibold mb-4">Schedule with {vendor.name}</h2>
-                  <p className="text-muted-foreground mb-6">
-                    Check availability and book a consultation or service directly through our online calendar.
-                  </p>
-                  <VendorCalendar 
-                    vendorId={vendorId} 
-                    userId={userId} 
-                    vendorName={vendor.name}
-                  />
-                </div>
-              )}
             </TabsContent>
 
             {hasReviewFeature && (
