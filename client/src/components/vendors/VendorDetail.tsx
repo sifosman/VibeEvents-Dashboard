@@ -16,6 +16,7 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Reviews from "./Reviews";
 import VendorCalendar from "../calendar/VendorCalendar";
+import VendorCatalog from "./VendorCatalog";
 import "../calendar/calendar-styles.css";
 
 interface VendorDetailProps {
@@ -112,6 +113,7 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
             <TabsList className="mb-6">
               <TabsTrigger value="about">About</TabsTrigger>
               <TabsTrigger value="services">Services</TabsTrigger>
+              <TabsTrigger value="catalog">Catalog</TabsTrigger>
               {vendor.calendarView && (
                 <TabsTrigger value="calendar">Calendar</TabsTrigger>
               )}
@@ -158,18 +160,18 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
                     <CardContent>
                       <p className="text-muted-foreground mb-2">Contact for availability details</p>
                       <p className="text-sm">Popular dates book quickly - reach out early!</p>
-                      {vendor.calendarView && (
-                        <Button 
-                          className="mt-4 w-full" 
-                          variant="outline" 
-                          onClick={() => {
-                            const calendarTab = document.querySelector('[data-value="calendar"]') as HTMLElement;
-                            if (calendarTab) calendarTab.click();
-                          }}
-                        >
-                          View Calendar
-                        </Button>
-                      )}
+                      <Button 
+                        className="mt-4 w-full" 
+                        variant="outline" 
+                        onClick={() => {
+                          const calendarTab = vendor.calendarView 
+                            ? document.querySelector('[data-value="calendar"]') as HTMLElement
+                            : document.querySelector('[data-value="catalog"]') as HTMLElement;
+                          if (calendarTab) calendarTab.click();
+                        }}
+                      >
+                        {vendor.calendarView ? "View Calendar" : "View Catalog"}
+                      </Button>
                     </CardContent>
                   </Card>
                 </div>
@@ -216,6 +218,10 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
                   </p>
                 </div>
               </div>
+            </TabsContent>
+
+            <TabsContent value="catalog">
+              <VendorCatalog vendorId={vendorId} />
             </TabsContent>
 
             <TabsContent value="calendar">
