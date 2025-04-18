@@ -34,6 +34,7 @@ export default function VendorListing() {
     town: "",
   });
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [sortBy, setSortBy] = useState("popular"); // Default sort option
 
   // Parse URL params on initial load
   useEffect(() => {
@@ -115,7 +116,7 @@ export default function VendorListing() {
         <title>
           {selectedCategory 
             ? `${selectedCategory.name} - HowzEvent` 
-            : "Browse Vendors - WeddingPro"}
+            : "Browse Vendors - HowzEventz"}
         </title>
         <meta 
           name="description" 
@@ -187,7 +188,7 @@ export default function VendorListing() {
           {/* Vendor Listings */}
           <div>
             {isLoading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
                 {[...Array(10)].map((_, index) => (
                   <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse">
                     <div className="h-32 bg-gray-200"></div>
@@ -214,7 +215,7 @@ export default function VendorListing() {
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
                   {vendors.map((vendor) => (
                     <VendorCard 
                       key={vendor.id} 
