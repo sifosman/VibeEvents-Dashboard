@@ -1,8 +1,32 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Heart, Menu } from "lucide-react";
+import { 
+  Heart, 
+  Menu, 
+  ChevronDown, 
+  Globe, 
+  Users, 
+  Building, 
+  Sparkles, 
+  HelpCircle, 
+  Info, 
+  MessageCircle 
+} from "lucide-react";
 import SouthAfricanBadge from "../shared/SouthAfricanBadge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  DropdownMenuGroup,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuPortal
+} from "@/components/ui/dropdown-menu";
 
 // Simple header that doesn't require auth
 function SimpleHeader() {
@@ -14,11 +38,122 @@ function SimpleHeader() {
     { name: "Browse Vendors", href: "/vendors" },
   ];
 
+  // Footer navigation links moved to header dropdown
+  const eventHostsLinks = [
+    { name: "How It Works", href: "#", icon: <Info className="h-4 w-4 mr-2" /> },
+    { name: "Browse Vendors", href: "/vendors", icon: <Building className="h-4 w-4 mr-2" /> },
+    { name: "Event Planner Tools", href: "/planner", icon: <Sparkles className="h-4 w-4 mr-2" /> },
+    { name: "Event Inspiration", href: "#", icon: <Globe className="h-4 w-4 mr-2" /> },
+    { name: "Success Stories", href: "#", icon: <Users className="h-4 w-4 mr-2" /> },
+  ];
+
+  const vendorLinks = [
+    { name: "Join as Vendor", href: "#", icon: <Building className="h-4 w-4 mr-2" /> },
+    { name: "Vendor Benefits", href: "#", icon: <Sparkles className="h-4 w-4 mr-2" /> },
+    { name: "Vendor Dashboard", href: "#", icon: <Globe className="h-4 w-4 mr-2" /> },
+    { name: "Success Stories", href: "#", icon: <Users className="h-4 w-4 mr-2" /> },
+    { name: "Advertising Options", href: "#", icon: <MessageCircle className="h-4 w-4 mr-2" /> },
+  ];
+
+  const supportLinks = [
+    { name: "Contact Us", href: "#", icon: <MessageCircle className="h-4 w-4 mr-2" /> },
+    { name: "FAQs", href: "#", icon: <HelpCircle className="h-4 w-4 mr-2" /> },
+    { name: "Terms of Service", href: "#", icon: <Info className="h-4 w-4 mr-2" /> },
+    { name: "Privacy Policy", href: "#", icon: <Info className="h-4 w-4 mr-2" /> },
+    { name: "About Us", href: "#", icon: <Users className="h-4 w-4 mr-2" /> },
+  ];
+
   return (
     <header className="bg-white shadow-sm">
       <div className="container-custom">
         <div className="flex justify-between items-center py-3">
           <div className="flex items-center">
+            {/* Top-left dropdown navigation menu */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="text-primary flex items-center mr-2 p-1">
+                  <Menu className="h-5 w-5 mr-1" />
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-64">
+                <DropdownMenuLabel>Site Navigation</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                
+                {/* Main Navigation */}
+                <DropdownMenuGroup>
+                  {navLinks.map((link) => (
+                    <Link key={link.name} href={link.href}>
+                      <DropdownMenuItem className="cursor-pointer">
+                        {link.name}
+                      </DropdownMenuItem>
+                    </Link>
+                  ))}
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                
+                {/* For Event Hosts Section */}
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>
+                    <Users className="h-4 w-4 mr-2" />
+                    <span>For Event Hosts</span>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent>
+                      {eventHostsLinks.map((link) => (
+                        <Link key={link.name} href={link.href}>
+                          <DropdownMenuItem className="cursor-pointer">
+                            {link.icon}
+                            {link.name}
+                          </DropdownMenuItem>
+                        </Link>
+                      ))}
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
+                
+                {/* For Vendors Section */}
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>
+                    <Building className="h-4 w-4 mr-2" />
+                    <span>For Vendors</span>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent>
+                      {vendorLinks.map((link) => (
+                        <Link key={link.name} href={link.href}>
+                          <DropdownMenuItem className="cursor-pointer">
+                            {link.icon}
+                            {link.name}
+                          </DropdownMenuItem>
+                        </Link>
+                      ))}
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
+                
+                {/* Support Section */}
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>
+                    <HelpCircle className="h-4 w-4 mr-2" />
+                    <span>Support</span>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent>
+                      {supportLinks.map((link) => (
+                        <Link key={link.name} href={link.href}>
+                          <DropdownMenuItem className="cursor-pointer">
+                            {link.icon}
+                            {link.name}
+                          </DropdownMenuItem>
+                        </Link>
+                      ))}
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            
             <Link href="/" className="flex items-center">
               <Heart className="text-primary mr-2" />
               <h1 className="text-primary font-display font-bold text-2xl">HowzEvent</h1>
@@ -66,7 +201,7 @@ function SimpleHeader() {
         </div>
       </div>
       
-      {/* Mobile Menu */}
+      {/* Mobile Menu with expanded navigation */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-white px-4 py-3 shadow-inner">
           <nav className="flex flex-col space-y-3">
@@ -82,6 +217,59 @@ function SimpleHeader() {
                 {link.name}
               </Link>
             ))}
+            
+            {/* Mobile dropdown sections */}
+            <div className="py-2">
+              <h4 className="font-display font-bold text-md mb-2">For Event Hosts</h4>
+              <div className="pl-2 flex flex-col space-y-2">
+                {eventHostsLinks.map((link) => (
+                  <Link 
+                    key={link.name} 
+                    href={link.href}
+                    className="text-muted-foreground hover:text-primary transition flex items-center"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {link.icon}
+                    {link.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
+            
+            <div className="py-2">
+              <h4 className="font-display font-bold text-md mb-2">For Vendors</h4>
+              <div className="pl-2 flex flex-col space-y-2">
+                {vendorLinks.map((link) => (
+                  <Link 
+                    key={link.name} 
+                    href={link.href}
+                    className="text-muted-foreground hover:text-primary transition flex items-center"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {link.icon}
+                    {link.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
+            
+            <div className="py-2">
+              <h4 className="font-display font-bold text-md mb-2">Support</h4>
+              <div className="pl-2 flex flex-col space-y-2">
+                {supportLinks.map((link) => (
+                  <Link 
+                    key={link.name} 
+                    href={link.href}
+                    className="text-muted-foreground hover:text-primary transition flex items-center"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {link.icon}
+                    {link.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
+            
             <hr className="border-gray-200" />
             <div className="flex flex-col space-y-2 pt-2">
               <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
@@ -120,6 +308,32 @@ export default function Header() {
       { name: "Gift Registry", href: "/gift-registry" },
       { name: "Help", href: "/help" },
     ];
+    
+    // Footer navigation links moved to header dropdown
+    const eventHostsLinks = [
+      { name: "How It Works", href: "#", icon: <Info className="h-4 w-4 mr-2" /> },
+      { name: "Browse Vendors", href: "/vendors", icon: <Building className="h-4 w-4 mr-2" /> },
+      { name: "Event Planner Tools", href: "/planner", icon: <Sparkles className="h-4 w-4 mr-2" /> },
+      { name: "Event Inspiration", href: "#", icon: <Globe className="h-4 w-4 mr-2" /> },
+      { name: "Success Stories", href: "#", icon: <Users className="h-4 w-4 mr-2" /> },
+      { name: "Vendor Tracking", href: "/vendor-tracking", icon: <Building className="h-4 w-4 mr-2" /> },
+    ];
+
+    const vendorLinks = [
+      { name: "Join as Vendor", href: "#", icon: <Building className="h-4 w-4 mr-2" /> },
+      { name: "Vendor Benefits", href: "#", icon: <Sparkles className="h-4 w-4 mr-2" /> },
+      { name: "Vendor Dashboard", href: "#", icon: <Globe className="h-4 w-4 mr-2" /> },
+      { name: "Success Stories", href: "#", icon: <Users className="h-4 w-4 mr-2" /> },
+      { name: "Advertising Options", href: "#", icon: <MessageCircle className="h-4 w-4 mr-2" /> },
+    ];
+
+    const supportLinks = [
+      { name: "Contact Us", href: "#", icon: <MessageCircle className="h-4 w-4 mr-2" /> },
+      { name: "FAQs", href: "#", icon: <HelpCircle className="h-4 w-4 mr-2" /> },
+      { name: "Terms of Service", href: "/terms", icon: <Info className="h-4 w-4 mr-2" /> },
+      { name: "Privacy Policy", href: "#", icon: <Info className="h-4 w-4 mr-2" /> },
+      { name: "About Us", href: "#", icon: <Users className="h-4 w-4 mr-2" /> },
+    ];
 
     const toggleMobileMenu = () => {
       setMobileMenuOpen(!mobileMenuOpen);
@@ -130,6 +344,92 @@ export default function Header() {
         <div className="container-custom">
           <div className="flex justify-between items-center py-3">
             <div className="flex items-center">
+              {/* Top-left dropdown navigation menu */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="text-primary flex items-center mr-2 p-1">
+                    <Menu className="h-5 w-5 mr-1" />
+                    <ChevronDown className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-64">
+                  <DropdownMenuLabel>Site Navigation</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  
+                  {/* Main Navigation */}
+                  <DropdownMenuGroup>
+                    {navLinks.map((link) => (
+                      <Link key={link.name} href={link.href}>
+                        <DropdownMenuItem className="cursor-pointer">
+                          {link.name}
+                        </DropdownMenuItem>
+                      </Link>
+                    ))}
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                  
+                  {/* For Event Hosts Section */}
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>
+                      <Users className="h-4 w-4 mr-2" />
+                      <span>For Event Hosts</span>
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuPortal>
+                      <DropdownMenuSubContent>
+                        {eventHostsLinks.map((link) => (
+                          <Link key={link.name} href={link.href}>
+                            <DropdownMenuItem className="cursor-pointer">
+                              {link.icon}
+                              {link.name}
+                            </DropdownMenuItem>
+                          </Link>
+                        ))}
+                      </DropdownMenuSubContent>
+                    </DropdownMenuPortal>
+                  </DropdownMenuSub>
+                  
+                  {/* For Vendors Section */}
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>
+                      <Building className="h-4 w-4 mr-2" />
+                      <span>For Vendors</span>
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuPortal>
+                      <DropdownMenuSubContent>
+                        {vendorLinks.map((link) => (
+                          <Link key={link.name} href={link.href}>
+                            <DropdownMenuItem className="cursor-pointer">
+                              {link.icon}
+                              {link.name}
+                            </DropdownMenuItem>
+                          </Link>
+                        ))}
+                      </DropdownMenuSubContent>
+                    </DropdownMenuPortal>
+                  </DropdownMenuSub>
+                  
+                  {/* Support Section */}
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>
+                      <HelpCircle className="h-4 w-4 mr-2" />
+                      <span>Support</span>
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuPortal>
+                      <DropdownMenuSubContent>
+                        {supportLinks.map((link) => (
+                          <Link key={link.name} href={link.href}>
+                            <DropdownMenuItem className="cursor-pointer">
+                              {link.icon}
+                              {link.name}
+                            </DropdownMenuItem>
+                          </Link>
+                        ))}
+                      </DropdownMenuSubContent>
+                    </DropdownMenuPortal>
+                  </DropdownMenuSub>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              
               <Link href="/" className="flex items-center">
                 <Heart className="text-primary mr-2" />
                 <h1 className="text-primary font-display font-bold text-2xl">HowzEvent</h1>
@@ -186,7 +486,7 @@ export default function Header() {
           </div>
         </div>
         
-        {/* Mobile Menu */}
+        {/* Mobile Menu with expanded navigation */}
         {mobileMenuOpen && (
           <div className="md:hidden bg-white px-4 py-3 shadow-inner">
             <nav className="flex flex-col space-y-3">
@@ -202,6 +502,59 @@ export default function Header() {
                   {link.name}
                 </Link>
               ))}
+              
+              {/* Mobile dropdown sections */}
+              <div className="py-2">
+                <h4 className="font-display font-bold text-md mb-2">For Event Hosts</h4>
+                <div className="pl-2 flex flex-col space-y-2">
+                  {eventHostsLinks.map((link) => (
+                    <Link 
+                      key={link.name} 
+                      href={link.href}
+                      className="text-muted-foreground hover:text-primary transition flex items-center"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {link.icon}
+                      {link.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+              
+              <div className="py-2">
+                <h4 className="font-display font-bold text-md mb-2">For Vendors</h4>
+                <div className="pl-2 flex flex-col space-y-2">
+                  {vendorLinks.map((link) => (
+                    <Link 
+                      key={link.name} 
+                      href={link.href}
+                      className="text-muted-foreground hover:text-primary transition flex items-center"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {link.icon}
+                      {link.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+              
+              <div className="py-2">
+                <h4 className="font-display font-bold text-md mb-2">Support</h4>
+                <div className="pl-2 flex flex-col space-y-2">
+                  {supportLinks.map((link) => (
+                    <Link 
+                      key={link.name} 
+                      href={link.href}
+                      className="text-muted-foreground hover:text-primary transition flex items-center"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {link.icon}
+                      {link.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+              
               <hr className="border-gray-200" />
               <div className="flex flex-col space-y-2 pt-2">
                 {isAuthenticated ? (
