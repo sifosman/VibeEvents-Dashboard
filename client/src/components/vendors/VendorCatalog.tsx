@@ -10,6 +10,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { ImageViewer } from "../ui/image-viewer";
 import { Loader2 } from "lucide-react";
 
 interface VendorCatalogProps {
@@ -113,21 +114,27 @@ export default function VendorCatalog({ vendorId }: VendorCatalogProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {filteredItems.map(item => (
             <Card key={item.id} className="overflow-hidden">
-              <div className="h-48 relative">
-                <img 
-                  src={item.imageUrl} 
-                  alt={item.title} 
-                  className="h-full w-full object-cover"
-                />
-                {item.featured && (
-                  <Badge 
-                    variant="secondary" 
-                    className="absolute top-3 left-3 bg-primary text-primary-foreground"
-                  >
-                    Featured
-                  </Badge>
-                )}
-              </div>
+              <ImageViewer 
+                src={item.imageUrl} 
+                alt={item.title}
+                className="h-48 relative"
+              >
+                <div className="h-full w-full relative">
+                  <img 
+                    src={item.imageUrl} 
+                    alt={item.title} 
+                    className="h-full w-full object-cover"
+                  />
+                  {item.featured && (
+                    <Badge 
+                      variant="secondary" 
+                      className="absolute top-3 left-3 bg-primary text-primary-foreground"
+                    >
+                      Featured
+                    </Badge>
+                  )}
+                </div>
+              </ImageViewer>
               <CardHeader className="pb-2">
                 <CardTitle className="text-lg">{item.title}</CardTitle>
                 {item.price && (

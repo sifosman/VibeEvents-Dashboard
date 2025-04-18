@@ -17,6 +17,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Reviews from "./Reviews";
 import VendorCalendar from "../calendar/VendorCalendar";
 import VendorCatalog from "./VendorCatalog";
+import { ImageViewer } from "../ui/image-viewer";
 import "../calendar/calendar-styles.css";
 
 interface VendorDetailProps {
@@ -60,12 +61,21 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
 
   return (
     <div className="space-y-8">
-      <div className="relative h-64 md:h-96 bg-cover bg-center rounded-lg overflow-hidden" style={{ backgroundImage: `url('${vendor.imageUrl}')` }}>
-        <div className="absolute inset-0 bg-black bg-opacity-20"></div>
-        <div className="absolute top-4 right-4">
-          <LikeButton vendorId={vendor.id} className="bg-white bg-opacity-90 hover:bg-opacity-100" />
+      <ImageViewer 
+        src={vendor.imageUrl} 
+        alt={`${vendor.name} Banner Image`}
+        className="relative h-64 md:h-96 rounded-lg overflow-hidden"
+      >
+        <div 
+          className="w-full h-full bg-cover bg-center" 
+          style={{ backgroundImage: `url('${vendor.imageUrl}')` }}
+        >
+          <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+          <div className="absolute top-4 right-4">
+            <LikeButton vendorId={vendor.id} className="bg-white bg-opacity-90 hover:bg-opacity-100" />
+          </div>
         </div>
-      </div>
+      </ImageViewer>
 
       <div className="flex flex-col md:flex-row gap-8">
         <div className="md:w-2/3">
