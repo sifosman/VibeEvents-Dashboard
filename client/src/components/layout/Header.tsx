@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { 
@@ -11,9 +11,11 @@ import {
   Sparkles, 
   HelpCircle, 
   Info, 
-  MessageCircle 
+  MessageCircle,
+  Filter
 } from "lucide-react";
 import SouthAfricanBadge from "../shared/SouthAfricanBadge";
+import { EventTypeSelector } from "@/components/ui/event-type-selector";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,6 +34,7 @@ import {
 function SimpleHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [location] = useLocation();
+  const [selectedEventType, setSelectedEventType] = useState<string>("");
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -174,6 +177,16 @@ function SimpleHeader() {
                 {link.name}
               </Link>
             ))}
+            
+            {/* Event Type Selector */}
+            <div className="flex items-center">
+              <EventTypeSelector 
+                value={selectedEventType}
+                onChange={setSelectedEventType}
+                className="w-[180px] border-none shadow-sm"
+                buttonVariant="ghost"
+              />
+            </div>
           </nav>
           
           <div className="flex items-center space-x-4">
@@ -297,6 +310,7 @@ export default function Header() {
     
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [location] = useLocation();
+    const [selectedEventType, setSelectedEventType] = useState<string>("");
     
     // If we get here, AuthContext is available
     const { user, isAuthenticated, logout } = useAuth();
