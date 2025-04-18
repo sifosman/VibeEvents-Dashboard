@@ -75,9 +75,7 @@ function AppRouter() {
         <Route path="/vendors/tracking">
           <ProtectedRoute component={VendorTracking} />
         </Route>
-        <Route path="/vendor/profile">
-          <ProtectedRoute component={VendorProfileManagement} />
-        </Route>
+        <Route path="/vendor/profile" component={VendorProfileManagement} />
         
         <Route component={NotFound} />
       </Switch>

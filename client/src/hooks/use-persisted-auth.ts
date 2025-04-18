@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from './use-auth';
+import { useAuth } from '../context/AuthContext';
 import { User } from '@shared/schema';
 
 // Type for session storage

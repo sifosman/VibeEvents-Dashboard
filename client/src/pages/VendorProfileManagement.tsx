@@ -15,8 +15,20 @@ import { Separator } from "@/components/ui/separator";
 import { SubscriptionBadge } from "@/components/vendors/SubscriptionBadge";
 
 export default function VendorProfileManagement() {
+  // Temporary implementation that doesn't require auth
   const { data: vendor, isLoading } = useQuery<Vendor>({
-    queryKey: ['/api/vendors/me'],
+    queryKey: ['/api/vendors/5'], // Just use a specific vendor ID for demo
+    queryFn: async () => {
+      try {
+        // Get a sample vendor instead of the authenticated vendor
+        const res = await fetch('/api/vendors/5');
+        if (!res.ok) return null;
+        return await res.json();
+      } catch (err) {
+        console.error("Error fetching vendor:", err);
+        return null;
+      }
+    }
   });
 
   const { toast } = useToast();
@@ -71,18 +83,20 @@ export default function VendorProfileManagement() {
     }
   }, [vendor]);
 
-  // Update basic info mutation
+  // Temporary read-only implementation (just for demo)
   const updateBasicInfoMutation = useMutation({
     mutationFn: async (data: Partial<Vendor>) => {
-      const res = await apiRequest("PATCH", "/api/vendors/me", data);
-      return res.json();
+      toast({
+        title: "Demo Mode",
+        description: "This is a read-only demo. Updating is disabled.",
+      });
+      return vendor;
     },
     onSuccess: () => {
       toast({
-        title: "Profile updated",
-        description: "Your profile information has been updated successfully.",
+        title: "Profile updated (demo)",
+        description: "This is a read-only demo. No changes were saved.",
       });
-      queryClient.invalidateQueries({ queryKey: ['/api/vendors/me'] });
     },
     onError: (error: Error) => {
       toast({
@@ -93,26 +107,21 @@ export default function VendorProfileManagement() {
     },
   });
 
-  // Upload profile image mutation
+  // Temporary read-only implementation (just for demo)
   const uploadProfileImageMutation = useMutation({
     mutationFn: async (file: File) => {
-      const formData = new FormData();
-      formData.append("profileImage", file);
-      
-      const res = await apiRequest("POST", "/api/vendors/me/profile-image", formData, {
-        headers: {
-          // Don't set Content-Type header, it will be set automatically with boundary
-        }
+      toast({
+        title: "Demo Mode",
+        description: "This is a read-only demo. Image upload is disabled.",
       });
-      return res.json();
+      return vendor;
     },
     onSuccess: () => {
       toast({
-        title: "Profile image updated",
-        description: "Your profile image has been uploaded successfully.",
+        title: "Image updated (demo)",
+        description: "This is a read-only demo. No changes were saved.",
       });
       setProfileImage(null);
-      queryClient.invalidateQueries({ queryKey: ['/api/vendors/me'] });
     },
     onError: (error: Error) => {
       toast({
@@ -123,22 +132,21 @@ export default function VendorProfileManagement() {
     },
   });
 
-  // Upload logo image mutation
+  // Temporary read-only implementation (just for demo)
   const uploadLogoMutation = useMutation({
     mutationFn: async (file: File) => {
-      const formData = new FormData();
-      formData.append("logoImage", file);
-      
-      const res = await apiRequest("POST", "/api/vendors/me/logo", formData);
-      return res.json();
+      toast({
+        title: "Demo Mode",
+        description: "This is a read-only demo. Logo upload is disabled.",
+      });
+      return vendor;
     },
     onSuccess: () => {
       toast({
-        title: "Logo updated",
-        description: "Your logo has been uploaded successfully.",
+        title: "Logo updated (demo)",
+        description: "This is a read-only demo. No changes were saved.",
       });
       setLogoImage(null);
-      queryClient.invalidateQueries({ queryKey: ['/api/vendors/me'] });
     },
     onError: (error: Error) => {
       toast({
@@ -149,24 +157,21 @@ export default function VendorProfileManagement() {
     },
   });
 
-  // Upload catalog images mutation
+  // Temporary read-only implementation (just for demo)
   const uploadCatalogMutation = useMutation({
     mutationFn: async (files: File[]) => {
-      const formData = new FormData();
-      files.forEach((file, index) => {
-        formData.append(`catalogImage_${index}`, file);
+      toast({
+        title: "Demo Mode",
+        description: "This is a read-only demo. Catalog upload is disabled.",
       });
-      
-      const res = await apiRequest("POST", "/api/vendors/me/catalog", formData);
-      return res.json();
+      return vendor;
     },
     onSuccess: () => {
       toast({
-        title: "Catalog updated",
-        description: "Your catalog images have been uploaded successfully.",
+        title: "Catalog updated (demo)",
+        description: "This is a read-only demo. No changes were saved.",
       });
       setCatalogImages([]);
-      queryClient.invalidateQueries({ queryKey: ['/api/vendors/me'] });
     },
     onError: (error: Error) => {
       toast({
@@ -177,24 +182,21 @@ export default function VendorProfileManagement() {
     },
   });
 
-  // Upload additional images mutation
+  // Temporary read-only implementation (just for demo)
   const uploadAdditionalImagesMutation = useMutation({
     mutationFn: async (files: File[]) => {
-      const formData = new FormData();
-      files.forEach((file, index) => {
-        formData.append(`additionalImage_${index}`, file);
+      toast({
+        title: "Demo Mode",
+        description: "This is a read-only demo. Image upload is disabled.",
       });
-      
-      const res = await apiRequest("POST", "/api/vendors/me/additional-images", formData);
-      return res.json();
+      return vendor;
     },
     onSuccess: () => {
       toast({
-        title: "Images updated",
-        description: "Your additional images have been uploaded successfully.",
+        title: "Images updated (demo)",
+        description: "This is a read-only demo. No changes were saved.",
       });
       setAdditionalImages([]);
-      queryClient.invalidateQueries({ queryKey: ['/api/vendors/me'] });
     },
     onError: (error: Error) => {
       toast({
@@ -361,6 +363,25 @@ export default function VendorProfileManagement() {
 
   return (
     <div className="container-custom py-10">
+      {/* Demo notification banner */}
+      <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+        <div className="flex items-start">
+          <div className="flex-shrink-0">
+            <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+          </div>
+          <div className="ml-3">
+            <p className="text-sm text-yellow-700 font-medium">
+              Demo Mode: This is a read-only demonstration. No changes will be saved.
+            </p>
+            <p className="mt-1 text-xs text-yellow-500">
+              Authentication system is currently under development. All form submissions will show success messages but won't modify any data.
+            </p>
+          </div>
+        </div>
+      </div>
+      
       <div className="mb-8">
         <h1 className="text-3xl font-display font-bold mb-2">
           Manage Your Vendor Profile
