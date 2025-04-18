@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ShortlistButton } from "../vendors/ShortlistButton";
 import StarRating from "../ui/star-rating";
 import { MessageSquare } from "lucide-react";
+import { VendorCard } from "../vendors/VendorCard";
 
 export default function FeaturedVendors() {
   const { data: vendors, isLoading } = useQuery<Vendor[]>({
