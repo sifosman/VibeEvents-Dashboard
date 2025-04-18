@@ -30,8 +30,8 @@ export default function VendorDetail() {
 
   // Fetch the category details if vendor is loaded
   const { data: category } = useQuery<Category>({
-    queryKey: vendor ? ['/api/categories', vendor.categoryId.toString()] : ['no-category'],
-    enabled: !!vendor,
+    queryKey: vendor ? ['/api/categories', String(vendor.categoryId)] : ['no-category'],
+    enabled: !!vendor && !!vendor.categoryId,
   });
 
   if (isLoading) {

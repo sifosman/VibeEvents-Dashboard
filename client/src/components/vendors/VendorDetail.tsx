@@ -24,12 +24,13 @@ interface VendorDetailProps {
 
 export function VendorDetail({ vendorId }: VendorDetailProps) {
   const { data: vendor, isLoading: vendorLoading } = useQuery<Vendor>({
-    queryKey: [`/api/vendors/${vendorId}`],
+    queryKey: ['/api/vendors', String(vendorId)],
+    enabled: vendorId > 0,
   });
 
   const { data: category, isLoading: categoryLoading } = useQuery<Category>({
-    queryKey: [vendor ? `/api/categories/${vendor.categoryId}` : null],
-    enabled: !!vendor,
+    queryKey: vendor ? ['/api/categories', String(vendor.categoryId)] : ['no-category'],
+    enabled: !!vendor && !!vendor.categoryId,
   });
 
   // Temporary hard-coded user ID for demos (will be replaced with actual auth)
