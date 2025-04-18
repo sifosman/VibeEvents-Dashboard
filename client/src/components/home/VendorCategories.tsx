@@ -3,8 +3,7 @@ import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Category, Vendor } from "@shared/schema";
 import { Button } from "@/components/ui/button";
-import { ShortlistButton } from "../vendors/ShortlistButton";
-import StarRating from "../ui/star-rating";
+import { VendorCard } from "../vendors/VendorCard";
 
 export default function VendorCategories() {
   const [activeCategory, setActiveCategory] = useState<number | null>(null);
@@ -61,16 +60,29 @@ export default function VendorCategories() {
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {[...Array(8)].map((_, index) => (
-              <div key={index} className="bg-neutral rounded-lg shadow-md overflow-hidden animate-pulse">
-                <div className="h-48 bg-gray-200"></div>
-                <div className="p-4">
-                  <div className="h-5 bg-gray-300 rounded w-3/4 mb-2"></div>
-                  <div className="flex justify-between items-center mb-2">
-                    <div className="h-4 bg-gray-200 rounded w-1/4"></div>
-                    <div className="h-4 bg-gray-200 rounded w-1/6"></div>
+              <div key={index} className="rounded-lg shadow-md overflow-hidden animate-pulse">
+                <div className="flex flex-row">
+                  {/* Left side - Image placeholder */}
+                  <div className="w-1/3 bg-gray-200 h-40"></div>
+                  
+                  {/* Right side - Content placeholder */}
+                  <div className="p-3 w-2/3">
+                    <div className="flex justify-between">
+                      <div className="h-5 bg-gray-300 rounded w-1/2 mb-2"></div>
+                      <div className="h-4 w-12 bg-gray-200 rounded"></div>
+                    </div>
+                    <div className="h-4 bg-gray-100 rounded w-full my-2"></div>
+                    <div className="h-4 bg-gray-100 rounded w-3/4 mb-2"></div>
+                    <div className="flex gap-1 mt-2">
+                      <div className="h-4 w-16 bg-gray-200 rounded"></div>
+                      <div className="h-4 w-16 bg-gray-200 rounded"></div>
+                    </div>
                   </div>
-                  <div className="h-4 bg-gray-100 rounded w-full mb-3"></div>
-                  <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+                </div>
+                
+                {/* Footer placeholder */}
+                <div className="p-3 pt-1">
+                  <div className="h-8 bg-gray-200 rounded w-full"></div>
                 </div>
               </div>
             ))}
@@ -78,26 +90,8 @@ export default function VendorCategories() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {vendors?.slice(0, 8).map((vendor) => (
-              <div key={vendor.id} className="bg-neutral rounded-lg shadow-md overflow-hidden group hover:shadow-lg transition">
-                <div 
-                  className="relative h-48 bg-cover bg-center" 
-                  style={{ backgroundImage: `url('${vendor.imageUrl}')` }}
-                >
-                  <ShortlistButton vendorId={vendor.id} className="absolute top-4 right-4" size="sm" />
-                </div>
-                <div className="p-4">
-                  <h3 className="font-display font-medium text-lg mb-1 group-hover:text-primary transition">{vendor.name}</h3>
-                  <div className="flex justify-between items-center mb-2">
-                    <StarRating rating={vendor.rating} reviewCount={vendor.reviewCount} size="sm" />
-                    <span className="category-badge">
-                      {categories?.find(c => c.id === vendor.categoryId)?.name || "Vendor"}
-                    </span>
-                  </div>
-                  <p className="text-xs text-muted-foreground mb-3">{vendor.description}</p>
-                  <Link href={`/vendors/${vendor.id}`} className="text-primary text-sm font-medium hover:underline">
-                    View Details
-                  </Link>
-                </div>
+              <div key={vendor.id}>
+                <VendorCard vendor={vendor} />
               </div>
             ))}
           </div>
