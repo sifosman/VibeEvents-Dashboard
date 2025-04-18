@@ -43,6 +43,7 @@ export default function VendorListing() {
     const searchParam = params.get("search") || "";
     const categoryParam = params.get("category") || "";
     const priceRangeParam = params.get("priceRange") || "";
+    const eventTypeParam = params.get("eventType") || "";
     const isThemedParam = params.get("isThemed") === "true";
     const themeTypeParam = params.get("themeType") || "";
     const dietaryParam = params.get("dietary") || "";
@@ -57,6 +58,7 @@ export default function VendorListing() {
       search: searchParam,
       category: categoryParam,
       priceRange: priceRangeParam,
+      eventType: eventTypeParam,
       isThemed: isThemedParam,
       themeType: themeTypeParam,
       dietary: dietaryParam,
@@ -236,6 +238,7 @@ export default function VendorListing() {
                     search: "", 
                     category: "", 
                     priceRange: "",
+                    eventType: "",
                     isThemed: false,
                     themeType: "",
                     dietary: "",

@@ -155,33 +155,33 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Filter Vendors</CardTitle>
+    <Card className="overflow-hidden">
+      <CardHeader className="py-3 px-4">
+        <CardTitle className="text-base">Filter Vendors</CardTitle>
       </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="search">Search</Label>
+      <CardContent className="p-4 pt-0">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-1">
+            <Label htmlFor="search" className="text-sm">Search</Label>
             <div className="relative">
               <Input
                 id="search"
                 placeholder="Search vendors..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-9"
+                className="pl-9 h-8"
               />
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             </div>
           </div>
 
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="categories">
-              <AccordionTrigger>Categories</AccordionTrigger>
-              <AccordionContent>
-                <div className="space-y-2">
+          <Accordion type="single" collapsible className="w-full space-y-1">
+            <AccordionItem value="categories" className="border-b-0">
+              <AccordionTrigger className="py-2">Categories</AccordionTrigger>
+              <AccordionContent className="pt-1 pb-2">
+                <div>
                   <Select value={category} onValueChange={setCategory}>
-                    <SelectTrigger>
+                    <SelectTrigger className="h-8">
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent>
@@ -197,12 +197,12 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="price">
-              <AccordionTrigger>Price Range</AccordionTrigger>
-              <AccordionContent>
-                <div className="space-y-2">
+            <AccordionItem value="price" className="border-b-0">
+              <AccordionTrigger className="py-2">Price Range</AccordionTrigger>
+              <AccordionContent className="pt-1 pb-2">
+                <div>
                   <Select value={priceRange} onValueChange={setPriceRange}>
-                    <SelectTrigger>
+                    <SelectTrigger className="h-8">
                       <SelectValue placeholder="Select price range" />
                     </SelectTrigger>
                     <SelectContent>
@@ -217,19 +217,19 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
               </AccordionContent>
             </AccordionItem>
             
-            <AccordionItem value="eventType">
-              <AccordionTrigger>Event Type</AccordionTrigger>
-              <AccordionContent>
-                <div className="space-y-2">
+            <AccordionItem value="eventType" className="border-b-0">
+              <AccordionTrigger className="py-2">Event Type</AccordionTrigger>
+              <AccordionContent className="pt-1 pb-2">
+                <div>
                   <Select value={eventType} onValueChange={setEventType}>
-                    <SelectTrigger>
+                    <SelectTrigger className="h-8">
                       <SelectValue placeholder="Select event type" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="">Any Event Type</SelectItem>
                       {eventTypes.map((type) => (
-                        <SelectItem key={type.value} value={type.value}>
-                          {type.label}
+                        <SelectItem key={type.id} value={type.id}>
+                          {type.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -238,11 +238,11 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
               </AccordionContent>
             </AccordionItem>
             
-            <AccordionItem value="themed">
-              <AccordionTrigger>Themed Services</AccordionTrigger>
-              <AccordionContent>
-                <div className="space-y-4">
-                  <div className="flex items-center">
+            <AccordionItem value="themed" className="border-b-0">
+              <AccordionTrigger className="py-2">Themed Services</AccordionTrigger>
+              <AccordionContent className="pt-1 pb-2">
+                <div className="space-y-2">
+                  <div className="flex items-center mb-1">
                     <input
                       type="checkbox"
                       id="isThemed"
@@ -250,16 +250,16 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
                       onChange={(e) => setIsThemed(e.target.checked)}
                       className="h-4 w-4 rounded border-gray-300 focus:ring-primary"
                     />
-                    <label htmlFor="isThemed" className="ml-2 text-sm">
+                    <label htmlFor="isThemed" className="ml-2 text-xs">
                       Show themed vendors only
                     </label>
                   </div>
                   
                   {isThemed && (
-                    <div className="ml-2 pt-2 border-t border-gray-200">
-                      <Label htmlFor="themeType" className="mb-2 block text-sm">Theme Type</Label>
+                    <div className="ml-1 pt-1 border-t border-gray-200">
+                      <Label htmlFor="themeType" className="text-xs block mt-1 mb-1">Theme Type</Label>
                       <Select value={themeType} onValueChange={setThemeType}>
-                        <SelectTrigger>
+                        <SelectTrigger className="h-8">
                           <SelectValue placeholder="Select a theme" />
                         </SelectTrigger>
                         <SelectContent>
@@ -277,12 +277,12 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
               </AccordionContent>
             </AccordionItem>
             
-            <AccordionItem value="dietary">
-              <AccordionTrigger>Dietary Options</AccordionTrigger>
-              <AccordionContent>
-                <div className="space-y-2">
+            <AccordionItem value="dietary" className="border-b-0">
+              <AccordionTrigger className="py-2">Dietary Options</AccordionTrigger>
+              <AccordionContent className="pt-1 pb-2">
+                <div>
                   <Select value={dietary} onValueChange={setDietary}>
-                    <SelectTrigger>
+                    <SelectTrigger className="h-8">
                       <SelectValue placeholder="Select dietary requirement" />
                     </SelectTrigger>
                     <SelectContent>
@@ -298,12 +298,12 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
               </AccordionContent>
             </AccordionItem>
             
-            <AccordionItem value="cuisine">
-              <AccordionTrigger>Cuisine Types</AccordionTrigger>
-              <AccordionContent>
-                <div className="space-y-2">
+            <AccordionItem value="cuisine" className="border-b-0">
+              <AccordionTrigger className="py-2">Cuisine Types</AccordionTrigger>
+              <AccordionContent className="pt-1 pb-2">
+                <div>
                   <Select value={cuisine} onValueChange={setCuisine}>
-                    <SelectTrigger>
+                    <SelectTrigger className="h-8">
                       <SelectValue placeholder="Select cuisine type" />
                     </SelectTrigger>
                     <SelectContent>
@@ -319,14 +319,14 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
               </AccordionContent>
             </AccordionItem>
             
-            <AccordionItem value="location">
-              <AccordionTrigger>Location</AccordionTrigger>
-              <AccordionContent>
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="country" className="text-sm">Country</Label>
+            <AccordionItem value="location" className="border-b-0">
+              <AccordionTrigger className="py-2">Location</AccordionTrigger>
+              <AccordionContent className="pt-1 pb-2">
+                <div className="space-y-2">
+                  <div>
+                    <Label htmlFor="country" className="text-xs mb-1 block">Country</Label>
                     <Select value={country} onValueChange={setCountry}>
-                      <SelectTrigger id="country">
+                      <SelectTrigger id="country" className="h-8">
                         <SelectValue placeholder="Select country" />
                       </SelectTrigger>
                       <SelectContent>
@@ -344,10 +344,10 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
                   </div>
                   
                   {country && (
-                    <div className="space-y-2">
-                      <Label htmlFor="region" className="text-sm">Region</Label>
+                    <div>
+                      <Label htmlFor="region" className="text-xs mb-1 block">Region</Label>
                       <Select value={region} onValueChange={setRegion}>
-                        <SelectTrigger id="region">
+                        <SelectTrigger id="region" className="h-8">
                           <SelectValue placeholder="Select region" />
                         </SelectTrigger>
                         <SelectContent>
@@ -371,10 +371,10 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
                   )}
                   
                   {region && (
-                    <div className="space-y-2">
-                      <Label htmlFor="province" className="text-sm">Province</Label>
+                    <div>
+                      <Label htmlFor="province" className="text-xs mb-1 block">Province</Label>
                       <Select value={province} onValueChange={setProvince}>
-                        <SelectTrigger id="province">
+                        <SelectTrigger id="province" className="h-8">
                           <SelectValue placeholder="Select province" />
                         </SelectTrigger>
                         <SelectContent>
@@ -388,10 +388,10 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
                   )}
                   
                   {province && (
-                    <div className="space-y-2">
-                      <Label htmlFor="area" className="text-sm">Area</Label>
+                    <div>
+                      <Label htmlFor="area" className="text-xs mb-1 block">Area</Label>
                       <Select value={area} onValueChange={setArea}>
-                        <SelectTrigger id="area">
+                        <SelectTrigger id="area" className="h-8">
                           <SelectValue placeholder="Select area" />
                         </SelectTrigger>
                         <SelectContent>
@@ -405,10 +405,10 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
                   )}
                   
                   {area && (
-                    <div className="space-y-2">
-                      <Label htmlFor="town" className="text-sm">Town</Label>
+                    <div>
+                      <Label htmlFor="town" className="text-xs mb-1 block">Town</Label>
                       <Select value={town} onValueChange={setTown}>
-                        <SelectTrigger id="town">
+                        <SelectTrigger id="town" className="h-8">
                           <SelectValue placeholder="Select town" />
                         </SelectTrigger>
                         <SelectContent>
@@ -425,17 +425,20 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
             </AccordionItem>
           </Accordion>
 
-          <div className="flex flex-col space-y-2">
-            <Button type="submit" className="bg-primary text-white hover:bg-primary/90">
-              Apply Filters
+          <div className="flex gap-2 mt-2">
+            <Button 
+              type="submit" 
+              className="flex-1 bg-primary text-white hover:bg-primary/90 h-8 text-sm"
+            >
+              Apply
             </Button>
             <Button 
               type="button" 
               onClick={handleReset} 
               variant="outline" 
-              className="border-primary text-primary hover:bg-accent"
+              className="flex-1 border-primary text-primary hover:bg-accent h-8 text-sm"
             >
-              Reset Filters
+              Reset
             </Button>
           </div>
         </form>
