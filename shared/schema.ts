@@ -109,13 +109,17 @@ export const shortlists = pgTable("shortlists", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").notNull(),
   vendorId: integer("vendor_id").notNull(),
+  cost: doublePrecision("cost"),
   notes: text("notes"),
+  status: text("status").default("considering"), // considering, booked, confirmed, completed
   createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 export const insertShortlistSchema = createInsertSchema(shortlists).omit({
   id: true,
   createdAt: true,
+  updatedAt: true,
 });
 
 // Tasks table
