@@ -2,6 +2,23 @@ import { pgTable, text, serial, integer, boolean, timestamp, doublePrecision, js
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+// Define catalog item type
+export const catalogItemSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string().optional(),
+  imageUrl: z.string(),
+  price: z.string(),
+  category: z.string().optional(),
+  inStock: z.boolean().default(true),
+  featured: z.boolean().default(false),
+  sortOrder: z.number().default(0),
+  createdAt: z.date().default(() => new Date()),
+  updatedAt: z.date().default(() => new Date()),
+});
+
+export type CatalogItem = z.infer<typeof catalogItemSchema>;
+
 // Users table
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
@@ -58,7 +75,7 @@ export const vendors = pgTable("vendors", {
   stripeSubscriptionId: text("stripe_subscription_id"),
   subscriptionStatus: text("subscription_status").default("inactive"),
   additionalPhotos: text("additional_photos").array(),
-  cataloguePages: integer("catalogue_pages").default(0),
+  catalogItems: json("catalog_items").default([]),
   wordCount: integer("word_count").default(40),
   onlineQuotes: boolean("online_quotes").default(false),
   calendarView: boolean("calendar_view").default(false),

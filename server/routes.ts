@@ -1,6 +1,9 @@
-import type { Express, Request, Response } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
 import { notifyVendorsAboutEvent } from "./services/whatsapp";
 import { 
   insertUserSchema, 
@@ -1352,6 +1355,279 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(200).json({ success: true });
     } catch (error) {
       res.status(500).json({ message: 'Server error' });
+    }
+  });
+  
+  // Vendor Profile Management Routes
+  app.get('/api/vendors/me', async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated?.()) {
+        return res.status(401).json({ message: 'You must be logged in to access your vendor profile' });
+      }
+      
+      // Get the vendor profile for the authenticated user
+      // This assumes that the vendor ID matches the user ID
+      const vendor = await storage.getVendor(req.user.id);
+      
+      if (!vendor) {
+        return res.status(404).json({ message: 'Vendor profile not found' });
+      }
+      
+      res.json(vendor);
+    } catch (error) {
+      console.error('Error getting vendor profile:', error);
+      res.status(500).json({ message: 'Server error', details: (error as Error).message });
+    }
+  });
+  
+  app.patch('/api/vendors/me', async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated?.()) {
+        return res.status(401).json({ message: 'You must be logged in to update your vendor profile' });
+      }
+      
+      const vendor = await storage.getVendor(req.user.id);
+      
+      if (!vendor) {
+        return res.status(404).json({ message: 'Vendor profile not found' });
+      }
+      
+      // Validate allowed fields based on subscription tier
+      // For example, check word count limits
+      if (req.body.description) {
+        const wordCount = req.body.description.split(/\s+/).length;
+        let maxWords = 300; // Default for free tier
+        
+        if (vendor.subscriptionTier === 'pro') {
+          maxWords = 1000;
+        } else if (vendor.subscriptionTier === 'premium') {
+          maxWords = 3000;
+        }
+        
+        if (wordCount > maxWords) {
+          return res.status(400).json({ 
+            message: `Description exceeds word limit. Your subscription allows ${maxWords} words maximum.` 
+          });
+        }
+      }
+      
+      // Update the vendor profile
+      const updatedVendor = await storage.updateVendor(req.user.id, req.body);
+      
+      res.json(updatedVendor);
+    } catch (error) {
+      console.error('Error updating vendor profile:', error);
+      res.status(500).json({ message: 'Server error', details: (error as Error).message });
+    }
+  });
+  
+  // File upload middleware
+  const upload = multer({
+    storage: multer.diskStorage({
+      destination: (req, file, cb) => {
+        const uploadDir = path.resolve(process.cwd(), 'uploads');
+        // Create the directory if it doesn't exist
+        if (!fs.existsSync(uploadDir)) {
+          fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        cb(null, uploadDir);
+      },
+      filename: (req, file, cb) => {
+        // Create a unique filename
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const ext = path.extname(file.originalname);
+        cb(null, file.fieldname + '-' + uniqueSuffix + ext);
+      }
+    }),
+    limits: {
+      fileSize: 5 * 1024 * 1024, // 5MB file size limit
+    },
+    fileFilter: (req, file, cb) => {
+      // Accept only images
+      if (file.mimetype.startsWith('image/')) {
+        cb(null, true);
+      } else {
+        cb(new Error('Only image files are allowed') as any);
+      }
+    }
+  });
+  
+  // Upload profile image
+  app.post('/api/vendors/me/profile-image', upload.single('profileImage'), async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated?.()) {
+        return res.status(401).json({ message: 'You must be logged in to upload a profile image' });
+      }
+      
+      const vendor = await storage.getVendor(req.user.id);
+      
+      if (!vendor) {
+        return res.status(404).json({ message: 'Vendor profile not found' });
+      }
+      
+      if (!req.file) {
+        return res.status(400).json({ message: 'No image file uploaded' });
+      }
+      
+      // Get the file path
+      const filePath = req.file.path;
+      
+      // For a real production app, you would upload this to a cloud storage service
+      // For this example, we'll use a relative path to access the file
+      const imageUrl = `/uploads/${path.basename(filePath)}`;
+      
+      // Update the vendor's profile image
+      const updatedVendor = await storage.updateVendor(req.user.id, { imageUrl });
+      
+      res.json(updatedVendor);
+    } catch (error) {
+      console.error('Error uploading profile image:', error);
+      res.status(500).json({ message: 'Failed to upload profile image', details: (error as Error).message });
+    }
+  });
+  
+  // Upload logo
+  app.post('/api/vendors/me/logo', upload.single('logoImage'), async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated?.()) {
+        return res.status(401).json({ message: 'You must be logged in to upload a logo' });
+      }
+      
+      const vendor = await storage.getVendor(req.user.id);
+      
+      if (!vendor) {
+        return res.status(404).json({ message: 'Vendor profile not found' });
+      }
+      
+      // Check subscription tier - only Pro and Premium can upload logos
+      if (vendor.subscriptionTier === 'free') {
+        return res.status(403).json({ 
+          message: 'Logo upload is only available for Pro and Premium subscribers.'
+        });
+      }
+      
+      if (!req.file) {
+        return res.status(400).json({ message: 'No image file uploaded' });
+      }
+      
+      // Get the file path
+      const filePath = req.file.path;
+      
+      // For a real production app, you would upload this to a cloud storage service
+      // For this example, we'll use a relative path to access the file
+      const logoUrl = `/uploads/${path.basename(filePath)}`;
+      
+      // Update the vendor's logo
+      const updatedVendor = await storage.updateVendor(req.user.id, { logoUrl });
+      
+      res.json(updatedVendor);
+    } catch (error) {
+      console.error('Error uploading logo:', error);
+      res.status(500).json({ message: 'Failed to upload logo', details: (error as Error).message });
+    }
+  });
+  
+  // Upload catalog images
+  app.post('/api/vendors/me/catalog', upload.array('catalogImage', 50), async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated?.()) {
+        return res.status(401).json({ message: 'You must be logged in to upload catalog images' });
+      }
+      
+      const vendor = await storage.getVendor(req.user.id);
+      
+      if (!vendor) {
+        return res.status(404).json({ message: 'Vendor profile not found' });
+      }
+      
+      // Check subscription limits
+      let maxPages = 5; // Default for free tier
+      
+      if (vendor.subscriptionTier === 'pro') {
+        maxPages = 20;
+      } else if (vendor.subscriptionTier === 'premium') {
+        maxPages = 50;
+      }
+      
+      if (!req.files || !Array.isArray(req.files) || req.files.length === 0) {
+        return res.status(400).json({ message: 'No image files uploaded' });
+      }
+      
+      if (req.files.length > maxPages) {
+        return res.status(400).json({ 
+          message: `Your subscription tier allows a maximum of ${maxPages} catalog pages.`
+        });
+      }
+      
+      // Get the file paths
+      const catalogImages = Array.isArray(req.files) 
+        ? req.files.map(file => `/uploads/${path.basename(file.path)}`) 
+        : [];
+      
+      // For now, we'll just update the cataloguePages count
+      // In a real app, you'd store and manage the catalog images
+      const updatedVendor = await storage.updateVendor(req.user.id, { 
+        cataloguePages: catalogImages.length 
+      });
+      
+      res.json(updatedVendor);
+    } catch (error) {
+      console.error('Error uploading catalog images:', error);
+      res.status(500).json({ message: 'Failed to upload catalog images', details: (error as Error).message });
+    }
+  });
+  
+  // Upload additional images
+  app.post('/api/vendors/me/additional-images', upload.array('additionalImage', 100), async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated?.()) {
+        return res.status(401).json({ message: 'You must be logged in to upload additional images' });
+      }
+      
+      const vendor = await storage.getVendor(req.user.id);
+      
+      if (!vendor) {
+        return res.status(404).json({ message: 'Vendor profile not found' });
+      }
+      
+      // Check subscription limits
+      let maxPhotos = 10; // Default for free tier
+      
+      if (vendor.subscriptionTier === 'pro') {
+        maxPhotos = 30;
+      } else if (vendor.subscriptionTier === 'premium') {
+        maxPhotos = 100;
+      }
+      
+      if (!req.files || !Array.isArray(req.files) || req.files.length === 0) {
+        return res.status(400).json({ message: 'No image files uploaded' });
+      }
+      
+      // Calculate total images (existing + new)
+      const existingPhotos = vendor.additionalPhotos ? vendor.additionalPhotos.length : 0;
+      const totalPhotos = existingPhotos + req.files.length;
+      
+      if (totalPhotos > maxPhotos) {
+        return res.status(400).json({ 
+          message: `Your subscription allows ${maxPhotos} photos maximum. You already have ${existingPhotos}.`
+        });
+      }
+      
+      // Get the file paths
+      const newPhotos = Array.isArray(req.files) 
+        ? req.files.map(file => `/uploads/${path.basename(file.path)}`) 
+        : [];
+      
+      // Combine with existing photos
+      const additionalPhotos = [...(vendor.additionalPhotos || []), ...newPhotos];
+      
+      // Update the vendor's additional photos
+      const updatedVendor = await storage.updateVendor(req.user.id, { additionalPhotos });
+      
+      res.json(updatedVendor);
+    } catch (error) {
+      console.error('Error uploading additional images:', error);
+      res.status(500).json({ message: 'Failed to upload additional images', details: (error as Error).message });
     }
   });
 

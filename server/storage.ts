@@ -37,10 +37,18 @@ export interface IStorage {
   getVendor(id: number): Promise<Vendor | undefined>;
   createVendor(vendor: InsertVendor): Promise<Vendor>;
   getFeaturedVendors(limit?: number): Promise<Vendor[]>;
-  searchVendors(query: string, categoryId?: number): Promise<Vendor[]>;
+  searchVendors(query: string, categoryId?: number, sortField?: string, sortDirection?: string, filters?: any): Promise<Vendor[]>;
+  updateVendor(id: number, updates: Partial<Vendor>): Promise<Vendor>;
   updateVendorStripeCustomerId(id: number, customerId: string): Promise<Vendor>;
   updateVendorSubscription(id: number, subscriptionId: string, subscriptionTier: string): Promise<Vendor>;
   updateVendorSubscriptionStatus(subscriptionId: string, status: string): Promise<Vendor | undefined>;
+  
+  // Review operations
+  getReviewsByVendor(vendorId: number): Promise<Review[]>;
+  getReview(id: number): Promise<Review | undefined>;
+  createReview(review: InsertReview): Promise<Review>;
+  updateReviewReply(id: number, adminReply: string): Promise<Review>;
+  updateVendorRatings(vendorId: number): Promise<void>;
 
   // Shortlist operations
   getShortlists(userId: number): Promise<(Shortlist & { vendor: Vendor })[]>;
