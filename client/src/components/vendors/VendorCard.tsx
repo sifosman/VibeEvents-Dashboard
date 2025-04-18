@@ -5,23 +5,12 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ImageViewer } from '../ui/image-viewer';
 
-interface Vendor {
-  id: number;
-  name: string;
-  description: string;
-  imageUrl: string;
-  logoUrl?: string;
-  categoryId: number;
-  priceRange: string;
-  rating: number;
-  reviewCount: number;
+import { Vendor as SchemaVendor } from '@shared/schema';
+
+// Extended vendor interface with additional display properties
+interface Vendor extends SchemaVendor {
   featured?: boolean;
-  location?: string;
-  isThemed?: boolean;
-  themeTypes?: string[];
   venueCapacity?: number;
-  dietaryOptions?: string[];
-  cuisineTypes?: string[];
   servesAlcohol?: boolean;
 }
 
@@ -41,20 +30,14 @@ export function VendorCard({ vendor }: VendorCardProps) {
       <div className="flex flex-row">
         {/* Left side - Image */}
         <div className="relative w-1/3 overflow-hidden">
-          <ImageViewer
-            src={vendor.imageUrl}
-            alt={vendor.name}
-            className="h-full w-full"
-          >
-            <div className="h-full w-full">
-              <img 
-                src={vendor.imageUrl} 
-                alt={vendor.name}
-                className="h-full w-full object-cover transition-transform duration-500 ease-in-out transform hover:scale-105"
-                style={{ minHeight: "100%" }}
-              />
-            </div>
-          </ImageViewer>
+          <div className="h-full w-full">
+            <ImageViewer
+              imageUrl={vendor.imageUrl}
+              alt={vendor.name}
+              className="h-full w-full object-cover transition-transform duration-500 ease-in-out transform hover:scale-105"
+              fallbackUrl="https://placehold.co/300x200?text=No+Image"
+            />
+          </div>
           
           {vendor.featured && (
             <Badge 
@@ -79,10 +62,11 @@ export function VendorCard({ vendor }: VendorCardProps) {
           
           {vendor.logoUrl && (
             <div className="float-right ml-2 mb-1 bg-white rounded-full p-0.5 shadow-sm">
-              <img 
-                src={vendor.logoUrl} 
-                alt={`${vendor.name} logo`} 
+              <ImageViewer
+                imageUrl={vendor.logoUrl}
+                alt={`${vendor.name} logo`}
                 className="h-8 w-8 object-contain rounded-full"
+                fallbackUrl="https://placehold.co/100x100?text=Logo"
               />
             </div>
           )}

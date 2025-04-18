@@ -37,14 +37,15 @@ export function VendorCatalog({
   
   // Use either provided catalog items or fetch from vendor data
   const catalogItemsFromVendor = vendor?.catalogItems || [];
-  const catalogItems = initialItems || catalogItemsFromVendor;
+  const catalogItems = initialItems || (Array.isArray(catalogItemsFromVendor) ? catalogItemsFromVendor : []);
   // State for catalog items and editing
-  const [items, setItems] = useState<CatalogItem[]>(catalogItems);
+  const [items, setItems] = useState<CatalogItem[]>(catalogItems || []);
   
   // Update items when vendor data or initialItems change
   useEffect(() => {
-    const updatedCatalogItems = initialItems || catalogItemsFromVendor;
-    setItems(updatedCatalogItems);
+    const updatedCatalogItems = initialItems || 
+      (Array.isArray(catalogItemsFromVendor) ? catalogItemsFromVendor : []);
+    setItems(updatedCatalogItems || []);
   }, [initialItems, vendor]);
   const [editingItem, setEditingItem] = useState<CatalogItem | null>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
