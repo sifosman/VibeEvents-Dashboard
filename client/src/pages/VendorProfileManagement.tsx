@@ -60,6 +60,22 @@ export default function VendorProfileManagement() {
     dietaryOptions: [] as string[],
     cuisineTypes: [] as string[],
     servesAlcohol: true, // Demo property
+    // Additional tags for filtering
+    wheelchairAccessible: false,
+    petFriendly: false,
+    outdoorSeating: false,
+    familyFriendly: false,
+    ecoFriendly: false,
+    budget: false,
+    luxury: false,
+    // Dietary options
+    vegan: false,
+    vegetarian: false,
+    glutenFree: false,
+    halal: false,
+    kosher: false,
+    dairyFree: false,
+    nutFree: false
   });
   
   // Demo properties
@@ -105,6 +121,25 @@ export default function VendorProfileManagement() {
         }
       }
       
+      // For demo, create some sample tag data
+      const demoTags = {
+        wheelchairAccessible: Math.random() > 0.5,
+        petFriendly: Math.random() > 0.5,
+        outdoorSeating: Math.random() > 0.5,
+        familyFriendly: Math.random() > 0.7, // More likely to be family friendly
+        ecoFriendly: Math.random() > 0.6,
+        budget: Math.random() > 0.5,
+        luxury: Math.random() > 0.7,
+        // Dietary options - only likely if it's a food/catering vendor
+        vegan: vendor.categoryId === 3 && Math.random() > 0.4,
+        vegetarian: vendor.categoryId === 3 && Math.random() > 0.3,
+        glutenFree: vendor.categoryId === 3 && Math.random() > 0.5,
+        halal: vendor.categoryId === 3 && Math.random() > 0.6,
+        kosher: vendor.categoryId === 3 && Math.random() > 0.7,
+        dairyFree: vendor.categoryId === 3 && Math.random() > 0.5,
+        nutFree: vendor.categoryId === 3 && Math.random() > 0.5
+      };
+      
       setVendorInfo({
         name: vendor.name || "",
         description: vendor.description || "",
@@ -122,7 +157,9 @@ export default function VendorProfileManagement() {
         themeTypes: vendor.themeTypes || [],
         dietaryOptions: vendor.dietaryOptions || [],
         cuisineTypes: vendor.cuisineTypes || [],
-        servesAlcohol: true, // Demo property
+        servesAlcohol: vendor.servesAlcohol !== undefined ? vendor.servesAlcohol : true,
+        // Add the tag properties
+        ...demoTags
       });
     }
   }, [vendor]);
@@ -603,22 +640,175 @@ export default function VendorProfileManagement() {
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-2">
-                  <Switch 
-                    id="isThemed"
-                    checked={vendorInfo.isThemed}
-                    onCheckedChange={(checked) => setVendorInfo({...vendorInfo, isThemed: checked})}
-                  />
-                  <Label htmlFor="isThemed">This is a themed service/venue</Label>
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <Switch 
-                    id="servesAlcohol"
-                    checked={vendorInfo.servesAlcohol}
-                    onCheckedChange={(checked) => setVendorInfo({...vendorInfo, servesAlcohol: checked})}
-                  />
-                  <Label htmlFor="servesAlcohol">Alcohol is served/available</Label>
+                {/* Tags Selection Section */}
+                <div className="space-y-4 border-t border-gray-200 pt-4 mt-4">
+                  <div className="flex justify-between items-center">
+                    <h3 className="font-medium">Profile Tags</h3>
+                    <span className="text-xs text-muted-foreground">
+                      Select all that apply to your business
+                    </span>
+                  </div>
+                  
+                  <div className="bg-gray-50 p-4 rounded-md mb-2">
+                    <p className="text-sm text-muted-foreground mb-2">
+                      Tags help customers find your business when using filters and search. Choose all tags that apply to your services.
+                    </p>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    {/* Service Type Tags */}
+                    <div className="flex items-center space-x-2 border p-2 rounded-md">
+                      <Switch 
+                        id="isThemed"
+                        checked={vendorInfo.isThemed}
+                        onCheckedChange={(checked) => setVendorInfo({...vendorInfo, isThemed: checked})}
+                      />
+                      <Label htmlFor="isThemed" className="text-sm">Themed Service/Venue</Label>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2 border p-2 rounded-md">
+                      <Switch 
+                        id="servesAlcohol"
+                        checked={vendorInfo.servesAlcohol}
+                        onCheckedChange={(checked) => setVendorInfo({...vendorInfo, servesAlcohol: checked})}
+                      />
+                      <Label htmlFor="servesAlcohol" className="text-sm">Alcohol Available</Label>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2 border p-2 rounded-md">
+                      <Switch 
+                        id="wheelchairAccessible"
+                        checked={vendorInfo.wheelchairAccessible || false}
+                        onCheckedChange={(checked) => setVendorInfo({...vendorInfo, wheelchairAccessible: checked})}
+                      />
+                      <Label htmlFor="wheelchairAccessible" className="text-sm">Wheelchair Accessible</Label>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2 border p-2 rounded-md">
+                      <Switch 
+                        id="petFriendly"
+                        checked={vendorInfo.petFriendly || false}
+                        onCheckedChange={(checked) => setVendorInfo({...vendorInfo, petFriendly: checked})}
+                      />
+                      <Label htmlFor="petFriendly" className="text-sm">Pet Friendly</Label>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2 border p-2 rounded-md">
+                      <Switch 
+                        id="outdoorSeating"
+                        checked={vendorInfo.outdoorSeating || false}
+                        onCheckedChange={(checked) => setVendorInfo({...vendorInfo, outdoorSeating: checked})}
+                      />
+                      <Label htmlFor="outdoorSeating" className="text-sm">Outdoor Seating</Label>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2 border p-2 rounded-md">
+                      <Switch 
+                        id="familyFriendly"
+                        checked={vendorInfo.familyFriendly || false}
+                        onCheckedChange={(checked) => setVendorInfo({...vendorInfo, familyFriendly: checked})}
+                      />
+                      <Label htmlFor="familyFriendly" className="text-sm">Family Friendly</Label>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2 border p-2 rounded-md">
+                      <Switch 
+                        id="ecoFriendly"
+                        checked={vendorInfo.ecoFriendly || false}
+                        onCheckedChange={(checked) => setVendorInfo({...vendorInfo, ecoFriendly: checked})}
+                      />
+                      <Label htmlFor="ecoFriendly" className="text-sm">Eco-Friendly</Label>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2 border p-2 rounded-md">
+                      <Switch 
+                        id="budget"
+                        checked={vendorInfo.budget || false}
+                        onCheckedChange={(checked) => setVendorInfo({...vendorInfo, budget: checked})}
+                      />
+                      <Label htmlFor="budget" className="text-sm">Budget-Friendly</Label>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2 border p-2 rounded-md">
+                      <Switch 
+                        id="luxury"
+                        checked={vendorInfo.luxury || false}
+                        onCheckedChange={(checked) => setVendorInfo({...vendorInfo, luxury: checked})}
+                      />
+                      <Label htmlFor="luxury" className="text-sm">Luxury</Label>
+                    </div>
+                  </div>
+                  
+                  {/* Dietary Options Section - Only shown for food vendors */}
+                  {vendor.categoryId === 3 && (
+                    <div className="mt-4">
+                      <h4 className="font-medium mb-2">Dietary Options</h4>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                        <div className="flex items-center space-x-2 border p-2 rounded-md">
+                          <Switch 
+                            id="vegan"
+                            checked={vendorInfo.vegan || false}
+                            onCheckedChange={(checked) => setVendorInfo({...vendorInfo, vegan: checked})}
+                          />
+                          <Label htmlFor="vegan" className="text-sm">Vegan Options</Label>
+                        </div>
+                        
+                        <div className="flex items-center space-x-2 border p-2 rounded-md">
+                          <Switch 
+                            id="vegetarian"
+                            checked={vendorInfo.vegetarian || false}
+                            onCheckedChange={(checked) => setVendorInfo({...vendorInfo, vegetarian: checked})}
+                          />
+                          <Label htmlFor="vegetarian" className="text-sm">Vegetarian Options</Label>
+                        </div>
+                        
+                        <div className="flex items-center space-x-2 border p-2 rounded-md">
+                          <Switch 
+                            id="glutenFree"
+                            checked={vendorInfo.glutenFree || false}
+                            onCheckedChange={(checked) => setVendorInfo({...vendorInfo, glutenFree: checked})}
+                          />
+                          <Label htmlFor="glutenFree" className="text-sm">Gluten-Free Options</Label>
+                        </div>
+                        
+                        <div className="flex items-center space-x-2 border p-2 rounded-md">
+                          <Switch 
+                            id="halal"
+                            checked={vendorInfo.halal || false}
+                            onCheckedChange={(checked) => setVendorInfo({...vendorInfo, halal: checked})}
+                          />
+                          <Label htmlFor="halal" className="text-sm">Halal</Label>
+                        </div>
+                        
+                        <div className="flex items-center space-x-2 border p-2 rounded-md">
+                          <Switch 
+                            id="kosher"
+                            checked={vendorInfo.kosher || false}
+                            onCheckedChange={(checked) => setVendorInfo({...vendorInfo, kosher: checked})}
+                          />
+                          <Label htmlFor="kosher" className="text-sm">Kosher</Label>
+                        </div>
+                        
+                        <div className="flex items-center space-x-2 border p-2 rounded-md">
+                          <Switch 
+                            id="dairyFree"
+                            checked={vendorInfo.dairyFree || false}
+                            onCheckedChange={(checked) => setVendorInfo({...vendorInfo, dairyFree: checked})}
+                          />
+                          <Label htmlFor="dairyFree" className="text-sm">Dairy-Free Options</Label>
+                        </div>
+                        
+                        <div className="flex items-center space-x-2 border p-2 rounded-md">
+                          <Switch 
+                            id="nutFree"
+                            checked={vendorInfo.nutFree || false}
+                            onCheckedChange={(checked) => setVendorInfo({...vendorInfo, nutFree: checked})}
+                          />
+                          <Label htmlFor="nutFree" className="text-sm">Nut-Free Options</Label>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <Button 
