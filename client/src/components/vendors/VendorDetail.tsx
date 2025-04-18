@@ -15,10 +15,8 @@ import { LikeButton } from "./ShortlistButton";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Reviews from "./Reviews";
-import VendorCalendar from "../calendar/VendorCalendar";
-import VendorCatalog from "./VendorCatalog";
+import { VendorCatalog } from "./VendorCatalog";
 import { ImageViewer } from "../ui/image-viewer";
-import "../calendar/calendar-styles.css";
 
 interface VendorDetailProps {
   vendorId: number;
@@ -61,21 +59,17 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
 
   return (
     <div className="space-y-8">
-      <ImageViewer 
-        src={vendor.imageUrl} 
-        alt={`${vendor.name} Banner Image`}
-        className="relative h-64 md:h-96 rounded-lg overflow-hidden"
-      >
-        <div 
-          className="w-full h-full bg-cover bg-center" 
-          style={{ backgroundImage: `url('${vendor.imageUrl}')` }}
-        >
-          <div className="absolute inset-0 bg-black bg-opacity-20"></div>
-          <div className="absolute top-4 right-4">
-            <LikeButton vendorId={vendor.id} className="bg-white bg-opacity-90 hover:bg-opacity-100" />
-          </div>
+      <div className="relative h-64 md:h-96 rounded-lg overflow-hidden">
+        <ImageViewer 
+          imageUrl={vendor.imageUrl} 
+          alt={`${vendor.name} Banner Image`}
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+        <div className="absolute top-4 right-4">
+          <LikeButton vendorId={vendor.id} className="bg-white bg-opacity-90 hover:bg-opacity-100" />
         </div>
-      </ImageViewer>
+      </div>
 
       <div className="flex flex-col md:flex-row gap-8">
         <div className="md:w-2/3">

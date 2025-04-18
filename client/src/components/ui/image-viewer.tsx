@@ -1,61 +1,57 @@
-import React, { useState } from "react";
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogTitle, 
-  DialogHeader, 
-  DialogFooter,
-  DialogClose 
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { X, ZoomIn } from "lucide-react";
+import { useState } from 'react';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { cn } from '@/lib/utils';
+import { X } from 'lucide-react';
 
-interface ImageViewerProps {
-  src: string;
-  alt?: string;
+export interface ImageViewerProps {
+  imageUrl: string;
+  alt: string;
   className?: string;
-  children?: React.ReactNode;
+  fullClassName?: string;
+  fallbackUrl?: string;
 }
 
-export function ImageViewer({ src, alt = "Image", className, children }: ImageViewerProps) {
+export function ImageViewer({
+  imageUrl,
+  alt,
+  className,
+  fullClassName = "max-w-full max-h-[80vh] object-contain",
+  fallbackUrl = "https://placehold.co/600x400?text=Image+Not+Available"
+}: ImageViewerProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [hasError, setHasError] = useState(false);
+
+  // Handle image load error
+  const handleError = () => {
+    setHasError(true);
+  };
 
   return (
     <>
-      <div 
-        className={`relative group cursor-pointer ${className}`}
+      <img
+        src={hasError ? fallbackUrl : imageUrl}
+        alt={alt}
+        className={cn("cursor-zoom-in", className)}
         onClick={() => setIsOpen(true)}
-      >
-        {children || (
-          <img src={src} alt={alt} className="w-full h-full object-cover" />
-        )}
-        <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-30 transition-opacity flex items-center justify-center">
-          <ZoomIn className="text-white opacity-0 group-hover:opacity-100 h-8 w-8" />
-        </div>
-      </div>
+        onError={handleError}
+      />
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-4xl w-[90vw] p-1 md:p-2">
-          <DialogHeader className="p-2">
-            <DialogTitle className="text-lg">{alt}</DialogTitle>
-            <DialogClose className="absolute right-2 top-2">
-              <X className="h-5 w-5" />
-            </DialogClose>
-          </DialogHeader>
-          
-          <div className="overflow-auto max-h-[70vh] flex items-center justify-center">
-            <img 
-              src={src} 
-              alt={alt} 
-              className="max-w-full max-h-[70vh] object-contain" 
+        <DialogContent className="max-w-[90vw] sm:max-w-[80vw] md:max-w-[1200px] p-0 bg-black/90 border-none">
+          <button
+            onClick={() => setIsOpen(false)}
+            className="absolute right-4 top-4 z-10 rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
+          >
+            <X className="h-5 w-5" />
+          </button>
+          <div className="flex items-center justify-center w-full h-full p-4">
+            <img
+              src={hasError ? fallbackUrl : imageUrl}
+              alt={alt}
+              className={cn(fullClassName)}
+              onError={handleError}
             />
           </div>
-          
-          <DialogFooter className="p-2">
-            <DialogClose asChild>
-              <Button variant="secondary" size="sm">Close</Button>
-            </DialogClose>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
     </>

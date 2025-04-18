@@ -1527,11 +1527,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // Upload catalog images
-  app.post('/api/vendors/me/catalog', upload.array('catalogImage', 50), async (req: Request, res: Response) => {
+  // Create or update catalog items
+  app.post('/api/vendors/me/catalog', upload.single('itemImage'), async (req: Request, res: Response) => {
     try {
       if (!req.isAuthenticated?.()) {
-        return res.status(401).json({ message: 'You must be logged in to upload catalog images' });
+        return res.status(401).json({ message: 'You must be logged in to manage catalog items' });
       }
       
       const vendor = await storage.getVendor(req.user.id);
@@ -1540,40 +1540,127 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: 'Vendor profile not found' });
       }
       
+      // Parse the catalog item data from the request
+      const { 
+        itemId, 
+        name, 
+        price, 
+        description, 
+        category, 
+        inStock, 
+        featured 
+      } = req.body;
+      
       // Check subscription limits
-      let maxPages = 5; // Default for free tier
+      let maxItems = 10; // Default for free tier
       
       if (vendor.subscriptionTier === 'pro') {
-        maxPages = 20;
+        maxItems = 25;
       } else if (vendor.subscriptionTier === 'premium') {
-        maxPages = 50;
+        maxItems = 100;
       }
       
-      if (!req.files || !Array.isArray(req.files) || req.files.length === 0) {
-        return res.status(400).json({ message: 'No image files uploaded' });
-      }
+      // Get current catalog items
+      const currentItems = vendor.catalogItems || [];
       
-      if (req.files.length > maxPages) {
+      // Check if we're adding a new item and if we're at the limit
+      if (!itemId && currentItems.length >= maxItems) {
         return res.status(400).json({ 
-          message: `Your subscription tier allows a maximum of ${maxPages} catalog pages.`
+          message: `Your subscription allows a maximum of ${maxItems} catalog items.`
         });
       }
       
-      // Get the file paths
-      const catalogImages = Array.isArray(req.files) 
-        ? req.files.map(file => `/uploads/${path.basename(file.path)}`) 
-        : [];
+      let imageUrl = '';
       
-      // For now, we'll just update the cataloguePages count
-      // In a real app, you'd store and manage the catalog images
+      // If a file was uploaded, process it
+      if (req.file) {
+        imageUrl = `/uploads/${path.basename(req.file.path)}`;
+      } else if (req.body.imageUrl) {
+        // Use existing image URL if provided and no new file uploaded
+        imageUrl = req.body.imageUrl;
+      }
+      
+      let updatedItems = [...currentItems];
+      
+      if (itemId) {
+        // Update existing item
+        updatedItems = updatedItems.map(item => 
+          item.id === itemId ? {
+            ...item,
+            name: name || item.name,
+            price: price || item.price,
+            description: description !== undefined ? description : item.description,
+            category: category !== undefined ? category : item.category,
+            inStock: inStock !== undefined ? (inStock === 'true' || inStock === true) : item.inStock,
+            featured: featured !== undefined ? (featured === 'true' || featured === true) : item.featured,
+            imageUrl: imageUrl || item.imageUrl,
+            updatedAt: new Date()
+          } : item
+        );
+      } else {
+        // Add new item
+        const newItem = {
+          id: `item_${Date.now()}`,
+          name,
+          description: description || '',
+          imageUrl,
+          price,
+          category: category || 'General',
+          inStock: inStock !== undefined ? (inStock === 'true' || inStock === true) : true,
+          featured: featured !== undefined ? (featured === 'true' || featured === true) : false,
+          sortOrder: currentItems.length,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        };
+        
+        updatedItems.push(newItem);
+      }
+      
+      // Update the vendor with the new catalog items
       const updatedVendor = await storage.updateVendor(req.user.id, { 
-        cataloguePages: catalogImages.length 
+        catalogItems: updatedItems 
       });
       
       res.json(updatedVendor);
     } catch (error) {
-      console.error('Error uploading catalog images:', error);
-      res.status(500).json({ message: 'Failed to upload catalog images', details: (error as Error).message });
+      console.error('Error managing catalog item:', error);
+      res.status(500).json({ message: 'Failed to manage catalog item', details: (error as Error).message });
+    }
+  });
+  
+  // Delete catalog item
+  app.delete('/api/vendors/me/catalog/:itemId', async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated?.()) {
+        return res.status(401).json({ message: 'You must be logged in to delete catalog items' });
+      }
+      
+      const vendor = await storage.getVendor(req.user.id);
+      
+      if (!vendor) {
+        return res.status(404).json({ message: 'Vendor profile not found' });
+      }
+      
+      const itemId = req.params.itemId;
+      const currentItems = vendor.catalogItems || [];
+      
+      // Filter out the item to delete
+      const updatedItems = currentItems.filter(item => item.id !== itemId);
+      
+      // If the items are the same length, the item wasn't found
+      if (updatedItems.length === currentItems.length) {
+        return res.status(404).json({ message: 'Catalog item not found' });
+      }
+      
+      // Update the vendor with the new catalog items
+      const updatedVendor = await storage.updateVendor(req.user.id, { 
+        catalogItems: updatedItems 
+      });
+      
+      res.json(updatedVendor);
+    } catch (error) {
+      console.error('Error deleting catalog item:', error);
+      res.status(500).json({ message: 'Failed to delete catalog item', details: (error as Error).message });
     }
   });
   
