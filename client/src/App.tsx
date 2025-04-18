@@ -90,6 +90,7 @@ function AppRouter() {
 import GeoBlockedView from "./components/shared/GeoBlockedView";
 import { NavigationProvider } from "./context/NavigationContext";
 import NavigationControls from "./components/navigation/NavigationControls";
+import { ScrollRestoration } from "./components/ui/scroll-restoration";
 
 function App() {
   return (
@@ -105,6 +106,8 @@ function App() {
         </main>
         <Footer />
         <Toaster />
+        {/* Automatically scroll to top on page transitions */}
+        <ScrollRestoration />
       </div>
     </NavigationProvider>
   );

@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "wouter";
+import { useParams, Link } from "wouter";
 import { Helmet } from "react-helmet";
 import { Vendor, Category } from "@shared/schema";
 import { VendorDetail as VendorDetailComponent } from "@/components/vendors/VendorDetail";
@@ -13,14 +13,19 @@ export default function VendorDetail() {
   const params = useParams<{ id: string }>();
   const vendorId = parseInt(params.id);
 
+  // Ensure we scroll to the top when the component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Fetch the vendor details
   const { data: vendor, isLoading, error } = useQuery<Vendor>({
-    queryKey: [`/api/vendors/${vendorId}`],
+    queryKey: ['/api/vendors', vendorId.toString()],
   });
 
   // Fetch the category details if vendor is loaded
   const { data: category } = useQuery<Category>({
-    queryKey: [vendor ? `/api/categories/${vendor.categoryId}` : null],
+    queryKey: vendor ? ['/api/categories', vendor.categoryId.toString()] : ['no-category'],
     enabled: !!vendor,
   });
 
@@ -54,7 +59,7 @@ export default function VendorDetail() {
                 We couldn't find the vendor you're looking for.
               </p>
               <Button asChild className="bg-primary text-white hover:bg-primary/90">
-                <a href="/vendors">Browse All Vendors</a>
+                <Link href="/vendors">Browse All Vendors</Link>
               </Button>
             </CardContent>
           </Card>
@@ -77,10 +82,10 @@ export default function VendorDetail() {
         <div className="container-custom">
           <div className="flex items-center mb-8">
             <Button variant="ghost" asChild className="p-0 mr-3 hover:bg-transparent">
-              <a href="/vendors">
+              <Link href="/vendors">
                 <ArrowLeft className="h-4 w-4 mr-1" />
                 Back to {category?.name || "Vendors"}
-              </a>
+              </Link>
             </Button>
           </div>
           
