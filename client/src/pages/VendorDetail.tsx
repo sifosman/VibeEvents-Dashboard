@@ -11,16 +11,21 @@ import { ArrowLeft } from "lucide-react";
 export default function VendorDetail() {
   // Get the vendor ID from the URL
   const params = useParams<{ id: string }>();
-  const vendorId = parseInt(params.id);
+  const vendorId = params.id ? parseInt(params.id) : 0;
 
-  // Ensure we scroll to the top when the component mounts
+  // Ensure we position at the top immediately when the component mounts
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'auto' // Using 'auto' for immediate positioning without animation
+    });
   }, []);
 
   // Fetch the vendor details
   const { data: vendor, isLoading, error } = useQuery<Vendor>({
-    queryKey: ['/api/vendors', vendorId.toString()],
+    queryKey: ['/api/vendors', String(vendorId)],
+    enabled: vendorId > 0,
   });
 
   // Fetch the category details if vendor is loaded
