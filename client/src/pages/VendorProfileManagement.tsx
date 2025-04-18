@@ -41,7 +41,7 @@ export default function VendorProfileManagement() {
   const [additionalImages, setAdditionalImages] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
 
-  // For form inputs
+  // For form inputs - defaults for the demo
   const [vendorInfo, setVendorInfo] = useState({
     name: "",
     description: "",
@@ -57,12 +57,19 @@ export default function VendorProfileManagement() {
     themeTypes: [] as string[],
     dietaryOptions: [] as string[],
     cuisineTypes: [] as string[],
-    servesAlcohol: true,
+    servesAlcohol: true, // Demo property
   });
+  
+  // Demo properties
+  const [cataloguePages, setCataloguePages] = useState(0);
 
   // Load vendor data when it becomes available
   React.useEffect(() => {
     if (vendor) {
+      // Set Demo cataloguePages for display
+      const catalogItems = vendor.catalogItems || [];
+      setCataloguePages(catalogItems.length);
+      
       setVendorInfo({
         name: vendor.name || "",
         description: vendor.description || "",
@@ -78,7 +85,7 @@ export default function VendorProfileManagement() {
         themeTypes: vendor.themeTypes || [],
         dietaryOptions: vendor.dietaryOptions || [],
         cuisineTypes: vendor.cuisineTypes || [],
-        servesAlcohol: vendor.servesAlcohol !== false, // default to true if undefined
+        servesAlcohol: true, // Demo property
       });
     }
   }, [vendor]);
@@ -268,45 +275,42 @@ export default function VendorProfileManagement() {
   const getMaxCataloguePages = (): number => {
     if (!vendor) return 0;
     
-    switch (vendor.subscriptionTier) {
-      case 'free':
-        return 5; // Basic tier - 5 pages
-      case 'pro':
-        return 20; // Pro tier - 20 pages
-      case 'premium':
-        return 50; // Premium tier - 50 pages
-      default:
-        return 0;
+    // Demo data - subscription tier based limits
+    const tier = (vendor.subscriptionTier || "").toLowerCase();
+    if (tier.includes('premium')) {
+      return 50; // Premium tier - 50 pages
+    } else if (tier.includes('pro')) {
+      return 20; // Pro tier - 20 pages
+    } else {
+      return 5; // Basic tier - 5 pages
     }
   };
 
   const getMaxAdditionalPhotos = (): number => {
     if (!vendor) return 0;
     
-    switch (vendor.subscriptionTier) {
-      case 'free':
-        return 10; // Basic tier - 10 photos
-      case 'pro':
-        return 30; // Pro tier - 30 photos
-      case 'premium':
-        return 100; // Premium tier - 100 photos
-      default:
-        return 0;
+    // Demo data - subscription tier based limits
+    const tier = (vendor.subscriptionTier || "").toLowerCase();
+    if (tier.includes('premium')) {
+      return 100; // Premium tier - 100 photos
+    } else if (tier.includes('pro')) {
+      return 30; // Pro tier - 30 photos
+    } else {
+      return 10; // Basic tier - 10 photos
     }
   };
 
   const getMaxWordCount = (): number => {
     if (!vendor) return 0;
     
-    switch (vendor.subscriptionTier) {
-      case 'free':
-        return 300; // Basic tier - 300 words
-      case 'pro':
-        return 1000; // Pro tier - 1000 words
-      case 'premium':
-        return 3000; // Premium tier - 3000 words
-      default:
-        return 0;
+    // Demo data - subscription tier based limits 
+    const tier = (vendor.subscriptionTier || "").toLowerCase();
+    if (tier.includes('premium')) {
+      return 3000; // Premium tier - 3000 words
+    } else if (tier.includes('pro')) {
+      return 1000; // Pro tier - 1000 words
+    } else {
+      return 300; // Basic tier - 300 words
     }
   };
 
@@ -390,7 +394,7 @@ export default function VendorProfileManagement() {
           <p className="text-muted-foreground">
             Update your profile information, catalog, and images
           </p>
-          <SubscriptionBadge tier={vendor.subscriptionTier} />
+          <SubscriptionBadge tier={vendor.subscriptionTier || 'free'} />
         </div>
       </div>
 
@@ -554,9 +558,9 @@ export default function VendorProfileManagement() {
                   )}
                 </div>
 
-                {vendor.cataloguePages > 0 ? (
+                {cataloguePages > 0 ? (
                   <div className="space-y-4">
-                    <h3 className="font-medium text-lg">Current Catalog ({vendor.cataloguePages} pages)</h3>
+                    <h3 className="font-medium text-lg">Current Catalog ({cataloguePages} pages)</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                       {/* This would show existing catalog pages */}
                       <div className="text-center p-4 bg-neutral rounded-lg">
