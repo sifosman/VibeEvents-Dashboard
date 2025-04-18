@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Heart, Menu } from "lucide-react";
+import SouthAfricanBadge from "../shared/SouthAfricanBadge";
 
 // Simple header that doesn't require auth
 function SimpleHeader() {
@@ -22,6 +23,7 @@ function SimpleHeader() {
               <Heart className="text-primary mr-2" />
               <h1 className="text-primary font-display font-bold text-2xl">HowzEvent</h1>
             </Link>
+            <SouthAfricanBadge className="ml-2" />
           </div>
           
           {/* Desktop Navigation */}
@@ -132,6 +134,7 @@ export default function Header() {
                 <Heart className="text-primary mr-2" />
                 <h1 className="text-primary font-display font-bold text-2xl">HowzEvent</h1>
               </Link>
+              <SouthAfricanBadge className="ml-2" />
             </div>
             
             {/* Desktop Navigation */}

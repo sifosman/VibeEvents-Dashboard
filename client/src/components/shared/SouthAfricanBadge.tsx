@@ -3,33 +3,32 @@ import React from "react";
 export default function SouthAfricanBadge({ className = "" }: { className?: string }) {
   return (
     <div className={`flex items-center ${className}`}>
-      <div className="bg-white p-2 rounded-lg shadow-md flex items-center space-x-2">
-        {/* South African Flag as SVG */}
+      <div className="bg-white p-1 rounded-lg shadow-md flex items-center space-x-2">
+        {/* South African Flag as SVG - corrected layout */}
         <svg 
-          width="40" 
-          height="24" 
-          viewBox="0 0 300 180" 
+          width="32" 
+          height="20" 
+          viewBox="0 0 600 400" 
           className="rounded-sm"
         >
-          {/* Black triangle */}
-          <path d="M0,0 L300,90 L0,180 Z" fill="black" />
+          {/* Main green background */}
+          <rect width="600" height="400" fill="#007A4D" />
           
-          {/* Yellow stripe */}
-          <path d="M0,30 L240,90 L0,150 Z" fill="#FFB81C" />
+          {/* White Y shape */}
+          <path d="M0,400 L200,200 L0,0 L0,400" fill="white" />
+          <path d="M600,400 L400,200 L600,0 L600,400" fill="white" />
           
-          {/* Green background */}
-          <rect x="0" y="0" width="300" height="60" fill="#007C59" />
-          <rect x="0" y="120" width="300" height="60" fill="#007C59" />
+          {/* Y shape black borders */}
+          <path d="M0,0 L200,200 L0,400 M600,0 L400,200 L600,400" stroke="black" strokeWidth="66.67" fill="none" />
           
-          {/* White bands */}
-          <rect x="0" y="60" width="300" height="15" fill="white" />
-          <rect x="0" y="105" width="300" height="15" fill="white" />
+          {/* Yellow Y shape */}
+          <path d="M0,0 L200,200 L0,400 M600,0 L400,200 L600,400" stroke="#FFB612" strokeWidth="44.44" fill="none" />
           
-          {/* Red top and bottom */}
-          <rect x="0" y="75" width="300" height="30" fill="#DE3831" />
+          {/* Red horizontal parts */}
+          <path d="M300,200 L0,200 M300,200 L600,200" stroke="#DE3831" strokeWidth="66.67" fill="none" />
           
           {/* Blue triangle */}
-          <path d="M0,0 L100,90 L0,180 Z" fill="#002395" />
+          <path d="M0,0 L200,200 L400,200 L600,0 Z" fill="#002395" />
         </svg>
         
         <div className="text-xs font-semibold">

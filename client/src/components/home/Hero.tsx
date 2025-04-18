@@ -17,10 +17,6 @@ export default function Hero() {
   return (
     <section className="relative h-[500px] bg-cover bg-center" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80')` }}>
       <div className="absolute inset-0 bg-black bg-opacity-40"></div>
-      {/* South African Badge - positioned top right */}
-      <div className="absolute top-4 right-4 z-10">
-        <SouthAfricanBadge />
-      </div>
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="text-center px-4 max-w-3xl">
           <h1 className="text-3xl md:text-5xl font-display font-bold text-white mb-6">Venues, Vendors, Vibes</h1>
