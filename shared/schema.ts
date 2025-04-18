@@ -917,3 +917,29 @@ export type InsertBlogComment = z.infer<typeof insertBlogCommentSchema>;
 
 export type Notice = typeof notices.$inferSelect;
 export type InsertNotice = z.infer<typeof insertNoticeSchema>;
+
+// Event template presets for the one-click event template generator
+export const eventTemplatePresets = pgTable("event_template_presets", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+  eventType: text("event_type").notNull(), // wedding, corporate, birthday, etc.
+  estimatedBudget: doublePrecision("estimated_budget"),
+  estimatedGuestCount: integer("estimated_guest_count"),
+  duration: integer("duration").notNull(), // in hours
+  timelineTasks: json("timeline_tasks").notNull().default([]), // Array of timeline tasks
+  vendorCategories: json("vendor_categories").notNull().default([]), // Recommended vendor categories
+  checklistItems: json("checklist_items").notNull().default([]), // Array of checklist items
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertEventTemplatePresetSchema = createInsertSchema(eventTemplatePresets).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+// Type exports for event template presets
+export type EventTemplatePreset = typeof eventTemplatePresets.$inferSelect;
+export type InsertEventTemplatePreset = z.infer<typeof insertEventTemplatePresetSchema>;
