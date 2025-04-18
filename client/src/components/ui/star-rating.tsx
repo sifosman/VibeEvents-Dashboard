@@ -2,7 +2,7 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 interface StarRatingProps {
-  rating: number;
+  rating?: number;
   totalStars?: number;
   size?: "sm" | "md" | "lg";
   showText?: boolean;
@@ -19,8 +19,9 @@ export function StarRating({
   className,
 }: StarRatingProps) {
   // Calculate full stars, half stars, and empty stars
-  const fullStars = Math.floor(rating);
-  const hasHalfStar = rating % 1 >= 0.5;
+  const actualRating = rating || 0;
+  const fullStars = Math.floor(actualRating);
+  const hasHalfStar = actualRating % 1 >= 0.5;
   const emptyStars = totalStars - fullStars - (hasHalfStar ? 1 : 0);
 
   // Set icon size based on the size prop
@@ -59,7 +60,7 @@ export function StarRating({
       {/* Optional text display */}
       {showText && (
         <span className="text-muted-foreground text-subtitle ml-2">
-          {rating.toFixed(1)} out of {totalStars}
+          {actualRating.toFixed(1)} out of {totalStars}
         </span>
       )}
     </div>
