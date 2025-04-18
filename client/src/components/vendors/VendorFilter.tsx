@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
+import { eventTypes } from "@/lib/eventTypes";
 import {
   Select,
   SelectContent,
@@ -26,6 +27,7 @@ interface VendorFilterProps {
     search?: string;
     category?: string;
     priceRange?: string;
+    eventType?: string;
     isThemed?: boolean;
     themeType?: string;
     dietary?: string;
@@ -40,6 +42,7 @@ interface VendorFilterProps {
     search?: string;
     category?: string;
     priceRange?: string;
+    eventType?: string;
     isThemed?: boolean;
     themeType?: string;
     dietary?: string;
@@ -57,6 +60,7 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
   const [search, setSearch] = useState(initialFilters.search || "");
   const [category, setCategory] = useState(initialFilters.category || "");
   const [priceRange, setPriceRange] = useState(initialFilters.priceRange || "");
+  const [eventType, setEventType] = useState(initialFilters.eventType || "");
   const [isThemed, setIsThemed] = useState(initialFilters.isThemed || false);
   const [themeType, setThemeType] = useState(initialFilters.themeType || "");
   const [dietary, setDietary] = useState(initialFilters.dietary || "");
@@ -95,6 +99,7 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
     if (search) filters.search = search;
     if (category) filters.category = category;
     if (priceRange) filters.priceRange = priceRange;
+    if (eventType) filters.eventType = eventType;
     if (isThemed) filters.isThemed = 'true';
     if (themeType) filters.themeType = themeType;
     if (dietary) filters.dietary = dietary;
@@ -109,6 +114,7 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
       search, 
       category, 
       priceRange,
+      eventType,
       isThemed,
       themeType,
       dietary,
@@ -134,6 +140,7 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
     setSearch("");
     setCategory("");
     setPriceRange("");
+    setEventType("");
     setIsThemed(false);
     setThemeType("");
     setDietary("");
@@ -204,6 +211,27 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
                       <SelectItem value="$$">$$ - Moderate</SelectItem>
                       <SelectItem value="$$$">$$$ - Premium</SelectItem>
                       <SelectItem value="$$$$">$$$$ - Luxury</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+            
+            <AccordionItem value="eventType">
+              <AccordionTrigger>Event Type</AccordionTrigger>
+              <AccordionContent>
+                <div className="space-y-2">
+                  <Select value={eventType} onValueChange={setEventType}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select event type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">Any Event Type</SelectItem>
+                      {eventTypes.map((type) => (
+                        <SelectItem key={type.value} value={type.value}>
+                          {type.label}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>

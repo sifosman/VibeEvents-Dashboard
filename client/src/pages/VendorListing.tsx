@@ -23,6 +23,7 @@ export default function VendorListing() {
     search: "",
     category: "",
     priceRange: "",
+    eventType: "",
     isThemed: false,
     themeType: "",
     dietary: "",
