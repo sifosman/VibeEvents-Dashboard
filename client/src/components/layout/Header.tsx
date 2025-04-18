@@ -35,6 +35,46 @@ function SimpleHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [location] = useLocation();
   const [selectedEventType, setSelectedEventType] = useState<string>("");
+  
+  // Handle event type changes
+  useEffect(() => {
+    if (selectedEventType) {
+      // Store the selected event type in session storage
+      sessionStorage.setItem('selectedEventType', selectedEventType);
+      
+      // If on vendors page, append query parameter
+      if (location.startsWith('/vendors')) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('eventType', selectedEventType);
+        window.history.replaceState({}, '', url.toString());
+      }
+    } else {
+      // Remove from session storage if no selection
+      sessionStorage.removeItem('selectedEventType');
+      
+      // Remove from URL if on vendors page
+      if (location.startsWith('/vendors')) {
+        const url = new URL(window.location.href);
+        url.searchParams.delete('eventType');
+        window.history.replaceState({}, '', url.toString());
+      }
+    }
+  }, [selectedEventType, location]);
+  
+  // Load saved event type on mount
+  useEffect(() => {
+    const savedEventType = sessionStorage.getItem('selectedEventType');
+    if (savedEventType) {
+      setSelectedEventType(savedEventType);
+    } else if (location.startsWith('/vendors')) {
+      // Check URL for event type parameter
+      const url = new URL(window.location.href);
+      const eventTypeParam = url.searchParams.get('eventType');
+      if (eventTypeParam) {
+        setSelectedEventType(eventTypeParam);
+      }
+    }
+  }, []);
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -231,6 +271,18 @@ function SimpleHeader() {
               </Link>
             ))}
             
+            {/* Event Type Selector for mobile */}
+            <div className="py-2">
+              <h4 className="font-display font-bold text-md mb-2">Event Type</h4>
+              <div className="pl-2 mb-4">
+                <EventTypeSelector 
+                  value={selectedEventType}
+                  onChange={setSelectedEventType}
+                  className="w-full"
+                />
+              </div>
+            </div>
+            
             {/* Mobile dropdown sections */}
             <div className="py-2">
               <h4 className="font-display font-bold text-md mb-2">For Event Hosts</h4>
@@ -311,6 +363,46 @@ export default function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [location] = useLocation();
     const [selectedEventType, setSelectedEventType] = useState<string>("");
+    
+    // Handle event type changes
+    useEffect(() => {
+      if (selectedEventType) {
+        // Store the selected event type in session storage
+        sessionStorage.setItem('selectedEventType', selectedEventType);
+        
+        // If on vendors page, append query parameter
+        if (location.startsWith('/vendors')) {
+          const url = new URL(window.location.href);
+          url.searchParams.set('eventType', selectedEventType);
+          window.history.replaceState({}, '', url.toString());
+        }
+      } else {
+        // Remove from session storage if no selection
+        sessionStorage.removeItem('selectedEventType');
+        
+        // Remove from URL if on vendors page
+        if (location.startsWith('/vendors')) {
+          const url = new URL(window.location.href);
+          url.searchParams.delete('eventType');
+          window.history.replaceState({}, '', url.toString());
+        }
+      }
+    }, [selectedEventType, location]);
+    
+    // Load saved event type on mount
+    useEffect(() => {
+      const savedEventType = sessionStorage.getItem('selectedEventType');
+      if (savedEventType) {
+        setSelectedEventType(savedEventType);
+      } else if (location.startsWith('/vendors')) {
+        // Check URL for event type parameter
+        const url = new URL(window.location.href);
+        const eventTypeParam = url.searchParams.get('eventType');
+        if (eventTypeParam) {
+          setSelectedEventType(eventTypeParam);
+        }
+      }
+    }, []);
     
     // If we get here, AuthContext is available
     const { user, isAuthenticated, logout } = useAuth();
@@ -464,6 +556,16 @@ export default function Header() {
                   {link.name}
                 </Link>
               ))}
+              
+              {/* Event Type Selector */}
+              <div className="flex items-center">
+                <EventTypeSelector 
+                  value={selectedEventType}
+                  onChange={setSelectedEventType}
+                  className="w-[180px] border-none shadow-sm"
+                  buttonVariant="ghost"
+                />
+              </div>
             </nav>
             
             <div className="flex items-center space-x-4">
@@ -516,6 +618,18 @@ export default function Header() {
                   {link.name}
                 </Link>
               ))}
+              
+              {/* Event Type Selector for mobile */}
+              <div className="py-2">
+                <h4 className="font-display font-bold text-md mb-2">Event Type</h4>
+                <div className="pl-2 mb-4">
+                  <EventTypeSelector 
+                    value={selectedEventType}
+                    onChange={setSelectedEventType}
+                    className="w-full"
+                  />
+                </div>
+              </div>
               
               {/* Mobile dropdown sections */}
               <div className="py-2">
