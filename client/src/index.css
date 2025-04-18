@@ -4,6 +4,40 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Reduced font sizes for better readability */
+.vendor-page p, 
+.vendor-page .text-base, 
+.vendor-page .text-sm,
+.vendor-page .text-xs {
+  font-size: 95% !important;
+}
+
+/* Reduce font size on vendor listing and results pages */
+.vendor-listing h1 {
+  font-size: 1.75rem !important;
+}
+
+.vendor-listing h2 {
+  font-size: 1.35rem !important;
+}
+
+.vendor-listing h3 {
+  font-size: 1.15rem !important; 
+}
+
+.vendor-listing p,
+.vendor-listing .text-base {
+  font-size: 0.92rem !important;
+}
+
+.vendor-listing .text-sm {
+  font-size: 0.8125rem !important;
+}
+
+.vendor-listing .text-xs {
+  font-size: 0.75rem !important;
+}
+
 @layer base {
   :root {
     --background: 30 30% 98%;

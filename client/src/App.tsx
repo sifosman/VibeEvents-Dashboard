@@ -106,7 +106,7 @@ function App() {
         <main className="flex-grow">
           <AppRouter />
           {/* Floating back/history navigation */}
-          <NavigationControls mode="floating" position="bottom-right" />
+          <NavigationControls mode="floating" position="bottom-left" />
         </main>
         <Footer />
         <Toaster />

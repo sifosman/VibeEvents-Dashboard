@@ -20,7 +20,8 @@ import {
   TableCell, 
   TableHead, 
   TableHeader, 
-  TableRow 
+  TableRow, 
+  TableFooter
 } from '@/components/ui/table';
 import { 
   Select, 
@@ -358,7 +359,7 @@ export default function VendorTracking() {
                   {filteredVendors?.map((item) => (
                     <TableRow key={item.id}>
                       <TableCell className="font-medium">{item.vendor.name}</TableCell>
-                      <TableCell>{item.vendor.categoryName}</TableCell>
+                      <TableCell>{item.vendor.categoryId}</TableCell>
                       <TableCell>
                         <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                           item.status === 'considering' ? 'bg-blue-100 text-blue-800' :
