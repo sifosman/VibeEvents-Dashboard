@@ -12,7 +12,8 @@ import {
   HelpCircle, 
   Info, 
   MessageCircle,
-  Filter
+  Filter,
+  User
 } from "lucide-react";
 import SouthAfricanBadge from "../shared/SouthAfricanBadge";
 import { EventTypeSelector } from "@/components/ui/event-type-selector";
@@ -94,6 +95,7 @@ function SimpleHeader() {
     { name: "Join as Vendor", href: "#", icon: <Building className="h-4 w-4 mr-2" /> },
     { name: "Vendor Benefits", href: "#", icon: <Sparkles className="h-4 w-4 mr-2" /> },
     { name: "Vendor Dashboard", href: "#", icon: <Globe className="h-4 w-4 mr-2" /> },
+    { name: "Vendor Profile", href: "/vendor/profile", icon: <User className="h-4 w-4 mr-2" /> },
     { name: "Success Stories", href: "#", icon: <Users className="h-4 w-4 mr-2" /> },
     { name: "Advertising Options", href: "#", icon: <MessageCircle className="h-4 w-4 mr-2" /> },
   ];
