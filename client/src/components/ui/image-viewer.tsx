@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { X } from 'lucide-react';
 
 export interface ImageViewerProps {
-  imageUrl: string;
+  imageUrl?: string;
   alt: string;
   className?: string;
   fullClassName?: string;
@@ -26,10 +26,13 @@ export function ImageViewer({
     setHasError(true);
   };
 
+  // Use fallback if URL is undefined or there's an error
+  const imageSrc = hasError || !imageUrl ? fallbackUrl : imageUrl;
+
   return (
     <>
       <img
-        src={hasError ? fallbackUrl : imageUrl}
+        src={imageSrc}
         alt={alt}
         className={cn("cursor-zoom-in", className)}
         onClick={() => setIsOpen(true)}
@@ -46,7 +49,7 @@ export function ImageViewer({
           </button>
           <div className="flex items-center justify-center w-full h-full p-4">
             <img
-              src={hasError ? fallbackUrl : imageUrl}
+              src={imageSrc}
               alt={alt}
               className={cn(fullClassName)}
               onError={handleError}
