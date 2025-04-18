@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Category } from "@shared/schema";
 import SouthAfricanBadge from "../shared/SouthAfricanBadge";
+import { Filter, Map, SortDesc } from "lucide-react";
 
 export default function Hero() {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
@@ -49,6 +50,30 @@ export default function Hero() {
               }>
                 <Button className="bg-primary text-white px-6 py-6 h-12 hover:bg-primary/90 whitespace-nowrap">
                   Search
+                </Button>
+              </Link>
+            </div>
+            
+            {/* Filter/Sort/Map strip */}
+            <div className="flex gap-2 mt-4">
+              <Link href="/vendors?filter=true">
+                <Button variant="outline" className="flex-1 flex items-center justify-center gap-2 bg-white/90 hover:bg-white">
+                  <Filter className="h-4 w-4" />
+                  Filter
+                </Button>
+              </Link>
+              
+              <Link href="/vendors?sort=popular">
+                <Button variant="outline" className="flex-1 flex items-center justify-center gap-2 bg-white/90 hover:bg-white">
+                  <SortDesc className="h-4 w-4" />
+                  Sort
+                </Button>
+              </Link>
+              
+              <Link href="/map">
+                <Button variant="outline" className="flex-1 flex items-center justify-center gap-2 bg-white/90 hover:bg-white">
+                  <Map className="h-4 w-4" />
+                  Map
                 </Button>
               </Link>
             </div>
