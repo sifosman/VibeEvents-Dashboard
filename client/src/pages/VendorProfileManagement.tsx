@@ -45,8 +45,10 @@ export default function VendorProfileManagement() {
   const [vendorInfo, setVendorInfo] = useState({
     name: "",
     description: "",
-    priceRange: "",
-    location: "",
+    email: "",
+    country: "",
+    province: "",
+    city: "",
     whatsappNumber: "",
     instagramUrl: "",
     websiteUrl: "",
@@ -84,11 +86,32 @@ export default function VendorProfileManagement() {
       
       setCataloguePages(catalogItemsArray.length);
       
+      // Parse location into country, province, city if it exists
+      let country = "", province = "", city = "";
+      if (vendor.location) {
+        // Try to parse location in format "Country, Province, City" or similar
+        const locationParts = vendor.location.split(',').map(part => part.trim());
+        if (locationParts.length >= 3) {
+          country = locationParts[0];
+          province = locationParts[1];
+          city = locationParts[2];
+        } else if (locationParts.length === 2) {
+          country = "South Africa"; // Default to South Africa
+          province = locationParts[0];
+          city = locationParts[1];
+        } else if (locationParts.length === 1) {
+          country = "South Africa"; // Default to South Africa
+          city = locationParts[0];
+        }
+      }
+      
       setVendorInfo({
         name: vendor.name || "",
         description: vendor.description || "",
-        priceRange: vendor.priceRange || "",
-        location: vendor.location || "",
+        email: "vendor@example.com", // Demo email
+        country: country,
+        province: province,
+        city: city,
         whatsappNumber: vendor.whatsappNumber || "",
         instagramUrl: vendor.instagramUrl || "",
         websiteUrl: vendor.websiteUrl || "",
@@ -417,7 +440,6 @@ export default function VendorProfileManagement() {
           <TabsTrigger value="basic-info">Basic Information</TabsTrigger>
           <TabsTrigger value="catalog">Catalog</TabsTrigger>
           <TabsTrigger value="images">Images</TabsTrigger>
-          <TabsTrigger value="social">Social Media</TabsTrigger>
           <TabsTrigger value="subscription">Subscription</TabsTrigger>
         </TabsList>
         
@@ -443,12 +465,14 @@ export default function VendorProfileManagement() {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="priceRange">Price Range</Label>
+                    <Label htmlFor="email">Business Email</Label>
                     <Input 
-                      id="priceRange" 
-                      value={vendorInfo.priceRange} 
-                      onChange={(e) => setVendorInfo({...vendorInfo, priceRange: e.target.value})}
-                      placeholder="e.g., $100-$500, Budget, Premium"
+                      id="email" 
+                      type="email"
+                      value={vendorInfo.email} 
+                      onChange={(e) => setVendorInfo({...vendorInfo, email: e.target.value})}
+                      placeholder="info@yourbusiness.com"
+                      required
                     />
                   </div>
                 </div>
@@ -469,14 +493,57 @@ export default function VendorProfileManagement() {
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="location">Location</Label>
-                  <Input 
-                    id="location" 
-                    value={vendorInfo.location} 
-                    onChange={(e) => setVendorInfo({...vendorInfo, location: e.target.value})}
-                    placeholder="e.g., Cape Town, South Africa"
-                  />
+                {/* Location fields with Google Maps integration */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="country">Country</Label>
+                    <Input 
+                      id="country" 
+                      value={vendorInfo.country} 
+                      onChange={(e) => setVendorInfo({...vendorInfo, country: e.target.value})}
+                      placeholder="e.g., South Africa"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="province">Province/State</Label>
+                    <Input 
+                      id="province" 
+                      value={vendorInfo.province} 
+                      onChange={(e) => setVendorInfo({...vendorInfo, province: e.target.value})}
+                      placeholder="e.g., Western Cape"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="city">City</Label>
+                    <Input 
+                      id="city" 
+                      value={vendorInfo.city} 
+                      onChange={(e) => setVendorInfo({...vendorInfo, city: e.target.value})}
+                      placeholder="e.g., Cape Town"
+                    />
+                  </div>
+                </div>
+                
+                <div className="border p-4 rounded-md bg-gray-50">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="h-6 w-6 rounded-full bg-gray-200 flex items-center justify-center">
+                      <svg className="h-4 w-4 text-gray-500" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 0c-4.198 0-8 3.403-8 7.602 0 4.198 3.469 9.21 8 16.398 4.531-7.188 8-12.2 8-16.398 0-4.199-3.801-7.602-8-7.602zm0 11c-1.657 0-3-1.343-3-3s1.343-3 3-3 3 1.343 3 3-1.343 3-3 3z" />
+                      </svg>
+                    </div>
+                    <span className="font-medium">Google Maps Integration</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Link your business location to Google Maps for accurate positioning and radius search functionality.
+                  </p>
+                  <Button variant="outline" className="text-sm" disabled>
+                    <svg className="h-4 w-4 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-2.917 16.083c-2.258 0-4.083-1.825-4.083-4.083s1.825-4.083 4.083-4.083c1.103 0 2.024.402 2.735 1.067l-1.107 1.068c-.304-.292-.834-.63-1.628-.63-1.394 0-2.531 1.155-2.531 2.579 0 1.424 1.138 2.579 2.531 2.579 1.616 0 2.224-1.162 2.316-1.762h-2.316v-1.4h3.855c.036.204.064.408.064.677.001 2.332-1.563 3.988-3.919 3.988zm9.917-3.5h-1.75v1.75h-1.167v-1.75h-1.75v-1.166h1.75v-1.75h1.167v1.75h1.75v1.166z"/>
+                    </svg>
+                    Connect with Google Maps (Coming Soon)
+                  </Button>
                 </div>
 
                 <div className="space-y-2">
@@ -487,6 +554,53 @@ export default function VendorProfileManagement() {
                     onChange={(e) => setVendorInfo({...vendorInfo, whatsappNumber: e.target.value})}
                     placeholder="+27 XX XXX XXXX"
                   />
+                </div>
+                
+                {/* Social Media Section */}
+                <div className="space-y-4 border-t border-gray-200 pt-4 mt-4">
+                  <h3 className="font-medium">Social Media Links</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="websiteUrl">Website URL</Label>
+                      <Input 
+                        id="websiteUrl" 
+                        value={vendorInfo.websiteUrl} 
+                        onChange={(e) => setVendorInfo({...vendorInfo, websiteUrl: e.target.value})}
+                        placeholder="https://www.yourwebsite.com"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="instagramUrl">Instagram URL</Label>
+                      <Input 
+                        id="instagramUrl" 
+                        value={vendorInfo.instagramUrl} 
+                        onChange={(e) => setVendorInfo({...vendorInfo, instagramUrl: e.target.value})}
+                        placeholder="https://www.instagram.com/yourbusiness"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="facebookUrl">Facebook URL</Label>
+                      <Input 
+                        id="facebookUrl" 
+                        value={vendorInfo.facebookUrl} 
+                        onChange={(e) => setVendorInfo({...vendorInfo, facebookUrl: e.target.value})}
+                        placeholder="https://www.facebook.com/yourbusiness"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="twitterUrl">Twitter URL</Label>
+                      <Input 
+                        id="twitterUrl" 
+                        value={vendorInfo.twitterUrl} 
+                        onChange={(e) => setVendorInfo({...vendorInfo, twitterUrl: e.target.value})}
+                        placeholder="https://twitter.com/yourbusiness"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 <div className="flex items-center space-x-2">
@@ -806,80 +920,7 @@ export default function VendorProfileManagement() {
           </div>
         </TabsContent>
         
-        <TabsContent value="social">
-          <Card>
-            <CardHeader>
-              <CardTitle>Social Media & External Links</CardTitle>
-              <CardDescription>
-                Connect your social media accounts and external websites to your vendor profile.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleBasicInfoSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="websiteUrl">Website URL</Label>
-                    <Input 
-                      id="websiteUrl" 
-                      value={vendorInfo.websiteUrl} 
-                      onChange={(e) => setVendorInfo({...vendorInfo, websiteUrl: e.target.value})}
-                      placeholder="https://www.yourbusiness.com"
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="instagramUrl">Instagram</Label>
-                    <Input 
-                      id="instagramUrl" 
-                      value={vendorInfo.instagramUrl} 
-                      onChange={(e) => setVendorInfo({...vendorInfo, instagramUrl: e.target.value})}
-                      placeholder="https://www.instagram.com/yourbusiness"
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="facebookUrl">Facebook</Label>
-                    <Input 
-                      id="facebookUrl" 
-                      value={vendorInfo.facebookUrl} 
-                      onChange={(e) => setVendorInfo({...vendorInfo, facebookUrl: e.target.value})}
-                      placeholder="https://www.facebook.com/yourbusiness"
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="twitterUrl">Twitter</Label>
-                    <Input 
-                      id="twitterUrl" 
-                      value={vendorInfo.twitterUrl} 
-                      onChange={(e) => setVendorInfo({...vendorInfo, twitterUrl: e.target.value})}
-                      placeholder="https://twitter.com/yourbusiness"
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="youtubeUrl">YouTube</Label>
-                    <Input 
-                      id="youtubeUrl" 
-                      value={vendorInfo.youtubeUrl} 
-                      onChange={(e) => setVendorInfo({...vendorInfo, youtubeUrl: e.target.value})}
-                      placeholder="https://www.youtube.com/c/yourbusiness"
-                    />
-                  </div>
-                </div>
 
-                <Button 
-                  type="submit" 
-                  className="bg-primary text-white hover:bg-primary/90"
-                  disabled={updateBasicInfoMutation.isPending}
-                >
-                  {updateBasicInfoMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Save Social Media Links
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </TabsContent>
         
         <TabsContent value="subscription">
           <Card>
