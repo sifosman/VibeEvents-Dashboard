@@ -121,7 +121,7 @@ function SimpleHeader() {
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-64">
+              <DropdownMenuContent align="start" className="w-72 max-h-[85vh] overflow-y-auto">
                 <DropdownMenuLabel>Site Navigation</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 
@@ -134,68 +134,64 @@ function SimpleHeader() {
                       </DropdownMenuItem>
                     </Link>
                   ))}
+                  
+                  {/* Prominent link to Vendor Profile page */}
+                  <Link href="/vendor/profile">
+                    <DropdownMenuItem className="cursor-pointer bg-primary/5 my-1 font-semibold">
+                      <User className="h-4 w-4 mr-2" />
+                      Vendor Profile Management
+                    </DropdownMenuItem>
+                  </Link>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 
-                {/* For Event Hosts Section */}
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger>
-                    <Users className="h-4 w-4 mr-2" />
-                    <span>For Event Hosts</span>
-                  </DropdownMenuSubTrigger>
-                  <DropdownMenuPortal>
-                    <DropdownMenuSubContent>
-                      {eventHostsLinks.map((link) => (
-                        <Link key={link.name} href={link.href}>
-                          <DropdownMenuItem className="cursor-pointer">
-                            {link.icon}
-                            {link.name}
-                          </DropdownMenuItem>
-                        </Link>
-                      ))}
-                    </DropdownMenuSubContent>
-                  </DropdownMenuPortal>
-                </DropdownMenuSub>
+                {/* For Event Hosts Section - with regular dropdown instead of subdropdown */}
+                <DropdownMenuLabel className="mt-2 text-sm font-semibold">
+                  <Users className="h-4 w-4 mr-2 inline" />
+                  For Event Hosts
+                </DropdownMenuLabel>
+                <DropdownMenuGroup className="pl-6">
+                  {eventHostsLinks.map((link) => (
+                    <Link key={link.name} href={link.href}>
+                      <DropdownMenuItem className="cursor-pointer">
+                        {link.icon}
+                        {link.name}
+                      </DropdownMenuItem>
+                    </Link>
+                  ))}
+                </DropdownMenuGroup>
                 
-                {/* For Vendors Section */}
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger>
-                    <Building className="h-4 w-4 mr-2" />
-                    <span>For Vendors</span>
-                  </DropdownMenuSubTrigger>
-                  <DropdownMenuPortal>
-                    <DropdownMenuSubContent>
-                      {vendorLinks.map((link) => (
-                        <Link key={link.name} href={link.href}>
-                          <DropdownMenuItem className="cursor-pointer">
-                            {link.icon}
-                            {link.name}
-                          </DropdownMenuItem>
-                        </Link>
-                      ))}
-                    </DropdownMenuSubContent>
-                  </DropdownMenuPortal>
-                </DropdownMenuSub>
+                {/* For Vendors Section - with regular dropdown instead of subdropdown */}
+                <DropdownMenuLabel className="mt-2 text-sm font-semibold">
+                  <Building className="h-4 w-4 mr-2 inline" />
+                  For Vendors
+                </DropdownMenuLabel>
+                <DropdownMenuGroup className="pl-6">
+                  {vendorLinks.map((link) => (
+                    <Link key={link.name} href={link.href}>
+                      <DropdownMenuItem className="cursor-pointer">
+                        {link.icon}
+                        {link.name}
+                      </DropdownMenuItem>
+                    </Link>
+                  ))}
+                </DropdownMenuGroup>
                 
-                {/* Support Section */}
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger>
-                    <HelpCircle className="h-4 w-4 mr-2" />
-                    <span>Support</span>
-                  </DropdownMenuSubTrigger>
-                  <DropdownMenuPortal>
-                    <DropdownMenuSubContent>
-                      {supportLinks.map((link) => (
-                        <Link key={link.name} href={link.href}>
-                          <DropdownMenuItem className="cursor-pointer">
-                            {link.icon}
-                            {link.name}
-                          </DropdownMenuItem>
-                        </Link>
-                      ))}
-                    </DropdownMenuSubContent>
-                  </DropdownMenuPortal>
-                </DropdownMenuSub>
+                {/* Support Section - with regular dropdown instead of subdropdown */}
+                <DropdownMenuLabel className="mt-2 text-sm font-semibold">
+                  <HelpCircle className="h-4 w-4 mr-2 inline" />
+                  Support
+                </DropdownMenuLabel>
+                <DropdownMenuGroup className="pl-6">
+                  {supportLinks.map((link) => (
+                    <Link key={link.name} href={link.href}>
+                      <DropdownMenuItem className="cursor-pointer">
+                        {link.icon}
+                        {link.name}
+                      </DropdownMenuItem>
+                    </Link>
+                  ))}
+                </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>
             
@@ -272,6 +268,16 @@ function SimpleHeader() {
                 {link.name}
               </Link>
             ))}
+            
+            {/* Prominent link to Vendor Profile - special highlight for easier access */}
+            <Link 
+              href="/vendor/profile"
+              className="py-3 px-3 my-2 transition font-semibold bg-primary/10 rounded-md text-primary flex items-center"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <User className="h-4 w-4 mr-2" />
+              Vendor Profile Management
+            </Link>
             
             {/* Event Type Selector for mobile */}
             <div className="py-2">

@@ -914,7 +914,7 @@ export default function VendorProfileManagement() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
                     <div className="flex items-center justify-between">
                       <span>Catalog Pages</span>
-                      <span className="font-medium">{vendor.cataloguePages} / {getMaxCataloguePages()}</span>
+                      <span className="font-medium">{cataloguePages} / {getMaxCataloguePages()}</span>
                     </div>
                     
                     <div className="flex items-center justify-between">
