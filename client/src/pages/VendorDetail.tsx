@@ -77,7 +77,7 @@ export default function VendorDetail() {
         <div className="container-custom">
           <div className="flex items-center mb-8">
             <Button variant="ghost" asChild className="p-0 mr-3 hover:bg-transparent">
-              <a href="javascript:history.back()">
+              <a href="/vendors">
                 <ArrowLeft className="h-4 w-4 mr-1" />
                 Back to {category?.name || "Vendors"}
               </a>
