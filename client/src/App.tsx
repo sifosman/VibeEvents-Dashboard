@@ -18,28 +18,36 @@ import { Loader2 } from "lucide-react";
 import { useAuth } from "./context/AuthContext";
 
 // Protected route component
-const ProtectedRoute = ({ component: Component, redirectTo = "/login" }: { component: React.ComponentType, redirectTo?: string }) => {
-  // Get auth context without using require (which is causing issues)
-  const { user, isLoading } = useAuth();
-  const [, setLocation] = useLocation();
-  
-  // While auth is loading, show loading spinner
-  if (isLoading) {
-    return (
-      <div className="h-[70vh] flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
-  
-  // Redirect to login if not authenticated
-  if (!user) {
+function ProtectedRoute({ component: Component, redirectTo = "/login" }: { component: React.ComponentType, redirectTo?: string }) {
+  try {
+    // Try to use auth context
+    const { user, isLoading } = useAuth();
+    const [, setLocation] = useLocation();
+    
+    // While auth is loading, show loading spinner
+    if (isLoading) {
+      return (
+        <div className="h-[70vh] flex items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      );
+    }
+    
+    // Redirect to login if not authenticated
+    if (!user) {
+      setLocation(redirectTo);
+      return null;
+    }
+    
+    // If authenticated, render the component
+    return <Component />;
+  } catch (error) {
+    console.error("Auth error in ProtectedRoute:", error);
+    // Fallback to login
+    const [, setLocation] = useLocation();
     setLocation(redirectTo);
     return null;
   }
-  
-  // If authenticated, render the component
-  return <Component />;
 };
 
 // Router component with enhanced auth checks
