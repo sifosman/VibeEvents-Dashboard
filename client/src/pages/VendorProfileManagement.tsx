@@ -66,9 +66,23 @@ export default function VendorProfileManagement() {
   // Load vendor data when it becomes available
   React.useEffect(() => {
     if (vendor) {
-      // Set Demo cataloguePages for display
-      const catalogItems = vendor.catalogItems || [];
-      setCataloguePages(catalogItems.length);
+      // Set Demo cataloguePages for display - parse JSON field
+      let catalogItemsArray: any[] = [];
+      try {
+        if (vendor.catalogItems) {
+          // Handle if it's a string or already parsed
+          if (typeof vendor.catalogItems === 'string') {
+            catalogItemsArray = JSON.parse(vendor.catalogItems);
+          } else {
+            catalogItemsArray = Array.isArray(vendor.catalogItems) ? vendor.catalogItems : [];
+          }
+        }
+      } catch (e) {
+        console.error("Error parsing catalog items:", e);
+        catalogItemsArray = [];
+      }
+      
+      setCataloguePages(catalogItemsArray.length);
       
       setVendorInfo({
         name: vendor.name || "",
