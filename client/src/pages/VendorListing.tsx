@@ -6,7 +6,7 @@ import { Vendor, Category } from "@shared/schema";
 import { VendorFilter } from "@/components/vendors/VendorFilter";
 import { VendorCard } from "@/components/vendors/VendorCard";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Filter } from "lucide-react";
+import { ArrowLeft, Filter, Map, SortDesc } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -150,104 +150,106 @@ export default function VendorListing() {
               <p className="text-muted-foreground">{selectedCategory.description}</p>
             )}
           </div>
+
+          {/* Filter/Sort/Map icons strip */}
+          <div className="flex gap-2 mb-4 border-b pb-4">
+            <Sheet open={showMobileFilters} onOpenChange={setShowMobileFilters}>
+              <SheetTrigger asChild>
+                <Button variant="outline" className="flex-1 flex items-center justify-center gap-2">
+                  <Filter className="h-4 w-4" />
+                  Filter
+                </Button>
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader>
+                  <SheetTitle>Filter Vendors</SheetTitle>
+                  <SheetDescription>
+                    Customize your search results
+                  </SheetDescription>
+                </SheetHeader>
+                <div className="py-4">
+                  <VendorFilter onFilter={handleFilterChange} initialFilters={filters} />
+                </div>
+              </SheetContent>
+            </Sheet>
+            
+            <Button variant="outline" className="flex-1 flex items-center justify-center gap-2">
+              <SortDesc className="h-4 w-4" />
+              Sort
+            </Button>
+            
+            <Button variant="outline" className="flex-1 flex items-center justify-center gap-2">
+              <Map className="h-4 w-4" />
+              Map
+            </Button>
+          </div>
           
-          <div className="flex flex-col md:flex-row gap-8">
-            {/* Desktop Filters */}
-            <div className="hidden md:block md:w-1/4">
-              <VendorFilter onFilter={handleFilterChange} initialFilters={filters} />
-            </div>
-            
-            {/* Mobile Filters */}
-            <div className="md:hidden mb-4">
-              <Sheet open={showMobileFilters} onOpenChange={setShowMobileFilters}>
-                <SheetTrigger asChild>
-                  <Button variant="outline" className="w-full flex items-center justify-center">
-                    <Filter className="h-4 w-4 mr-2" />
-                    Filter Vendors
-                  </Button>
-                </SheetTrigger>
-                <SheetContent>
-                  <SheetHeader>
-                    <SheetTitle>Filter Vendors</SheetTitle>
-                    <SheetDescription>
-                      Customize your search results
-                    </SheetDescription>
-                  </SheetHeader>
-                  <div className="py-4">
-                    <VendorFilter onFilter={handleFilterChange} initialFilters={filters} />
-                  </div>
-                </SheetContent>
-              </Sheet>
-            </div>
-            
-            {/* Vendor Listings */}
-            <div className="md:w-3/4">
-              {isLoading ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                  {[...Array(10)].map((_, index) => (
-                    <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse">
-                      <div className="h-32 bg-gray-200"></div>
-                      <div className="p-3">
-                        <div className="h-5 bg-gray-300 rounded w-3/4 mb-2"></div>
-                        <div className="flex justify-between items-center mb-2">
-                          <div className="h-4 bg-gray-200 rounded w-1/3"></div>
-                          <div className="h-4 bg-gray-200 rounded w-1/6"></div>
-                        </div>
-                        <div className="h-4 bg-gray-100 rounded w-full mb-3"></div>
-                        <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+          {/* Vendor Listings */}
+          <div>
+            {isLoading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                {[...Array(10)].map((_, index) => (
+                  <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse">
+                    <div className="h-32 bg-gray-200"></div>
+                    <div className="p-3">
+                      <div className="h-5 bg-gray-300 rounded w-3/4 mb-2"></div>
+                      <div className="flex justify-between items-center mb-2">
+                        <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+                        <div className="h-4 bg-gray-200 rounded w-1/6"></div>
                       </div>
+                      <div className="h-4 bg-gray-100 rounded w-full mb-3"></div>
+                      <div className="h-4 bg-gray-200 rounded w-1/4"></div>
                     </div>
+                  </div>
+                ))}
+              </div>
+            ) : vendors && vendors.length > 0 ? (
+              <>
+                <div className="mb-4 flex justify-between items-center">
+                  <p className="text-muted-foreground">
+                    Showing {vendors.length} {vendors.length === 1 ? "vendor" : "vendors"}
+                  </p>
+                  <div className="flex gap-2">
+                    {/* Additional sorting options could go here */}
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                  {vendors.map((vendor) => (
+                    <VendorCard 
+                      key={vendor.id} 
+                      vendor={vendor} 
+                    />
                   ))}
                 </div>
-              ) : vendors && vendors.length > 0 ? (
-                <>
-                  <div className="mb-4 flex justify-between items-center">
-                    <p className="text-muted-foreground">
-                      Showing {vendors.length} {vendors.length === 1 ? "vendor" : "vendors"}
-                    </p>
-                    <div className="flex gap-2">
-                      {/* Additional sorting options could go here */}
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                    {vendors.map((vendor) => (
-                      <VendorCard 
-                        key={vendor.id} 
-                        vendor={vendor} 
-                        category={categories?.find(c => c.id === vendor.categoryId)}
-                      />
-                    ))}
-                  </div>
-                </>
-              ) : (
-                <div className="text-center py-16 bg-white rounded-lg shadow-sm">
-                  <h3 className="text-xl font-medium mb-2">No vendors found</h3>
-                  <p className="text-muted-foreground mb-6">
-                    Try adjusting your filters or search criteria
-                  </p>
-                  <Button 
-                    onClick={() => handleFilterChange({ 
-                      search: "", 
-                      category: "", 
-                      priceRange: "",
-                      isThemed: false,
-                      themeType: "",
-                      dietary: "",
-                      cuisine: "",
-                      country: "",
-                      region: "",
-                      province: "",
-                      area: "",
-                      town: ""
-                    })}
-                    className="bg-primary text-white hover:bg-primary/90"
-                  >
-                    Clear Filters
-                  </Button>
-                </div>
-              )}
-            </div>
+              </>
+            ) : (
+              <div className="text-center py-16 bg-white rounded-lg shadow-sm">
+                <h3 className="text-xl font-medium mb-2">No vendors found</h3>
+                <p className="text-muted-foreground mb-6">
+                  Try adjusting your filters or search criteria
+                </p>
+                <Button 
+                  onClick={() => handleFilterChange({ 
+                    search: "", 
+                    category: "", 
+                    priceRange: "",
+                    isThemed: false,
+                    themeType: "",
+                    dietary: "",
+                    cuisine: "",
+                    country: "",
+                    region: "",
+                    province: "",
+                    area: "",
+                    town: ""
+                  })}
+                  className="bg-primary text-white hover:bg-primary/90"
+                >
+                  Clear Filters
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>
