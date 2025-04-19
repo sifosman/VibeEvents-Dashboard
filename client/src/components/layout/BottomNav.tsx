@@ -29,7 +29,7 @@ export function BottomNav() {
     },
     {
       name: "My Account",
-      href: "/profile",
+      href: "/account",
       icon: User
     }
   ];

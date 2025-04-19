@@ -15,6 +15,7 @@ import VendorTracking from "./pages/VendorTracking";
 import VendorProfileManagement from "./pages/VendorProfileManagement";
 import ServiceCategories from "./pages/ServiceCategories";
 import BrowseByCategory from "./pages/BrowseByCategory";
+import MyAccount from "./pages/MyAccount";
 import NotFound from "@/pages/not-found";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "./context/AuthContext";
@@ -80,6 +81,9 @@ function AppRouter() {
           <ProtectedRoute component={VendorTracking} />
         </Route>
         <Route path="/vendor/profile" component={VendorProfileManagement} />
+        <Route path="/account">
+          <ProtectedRoute component={MyAccount} />
+        </Route>
         
         <Route component={NotFound} />
       </Switch>
@@ -101,6 +105,7 @@ function AppRouter() {
         <Route path="/gift-registry" component={GiftRegistry} />
         <Route path="/profile/customize" component={Login} />
         <Route path="/vendor/profile" component={Login} />
+        <Route path="/account" component={Login} />
         <Route component={NotFound} />
       </Switch>
     );
