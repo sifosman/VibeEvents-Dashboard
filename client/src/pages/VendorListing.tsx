@@ -105,7 +105,43 @@ export default function VendorListing() {
       queryParts.push(`vendorTag=${encodeURIComponent(filters.vendorTag)}`);
     }
     
-    // Price range filtering would be implemented in the backend
+    if (filters.priceRange) {
+      queryParts.push(`priceRange=${encodeURIComponent(filters.priceRange)}`);
+    }
+    
+    if (filters.eventType) {
+      queryParts.push(`eventType=${encodeURIComponent(filters.eventType)}`);
+    }
+    
+    if (filters.isThemed) {
+      queryParts.push(`isThemed=true`);
+    }
+    
+    if (filters.themeType) {
+      queryParts.push(`themeType=${encodeURIComponent(filters.themeType)}`);
+    }
+    
+    if (filters.dietary) {
+      queryParts.push(`dietary=${encodeURIComponent(filters.dietary)}`);
+    }
+    
+    if (filters.cuisine) {
+      queryParts.push(`cuisine=${encodeURIComponent(filters.cuisine)}`);
+    }
+    
+    if (filters.country || filters.region || filters.province || filters.area || filters.town) {
+      // Combine location filters
+      const locationParts = [];
+      if (filters.country) locationParts.push(filters.country);
+      if (filters.region) locationParts.push(filters.region);
+      if (filters.province) locationParts.push(filters.province);
+      if (filters.area) locationParts.push(filters.area);
+      if (filters.town) locationParts.push(filters.town);
+      
+      if (locationParts.length > 0) {
+        queryParts.push(`location=${encodeURIComponent(locationParts.join(', '))}`);
+      }
+    }
     
     return queryParts.length > 0 ? `?${queryParts.join('&')}` : '';
   };
