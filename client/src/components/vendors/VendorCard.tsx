@@ -8,11 +8,11 @@ import { ImageViewer } from '../ui/image-viewer';
 import { Vendor as SchemaVendor } from '@shared/schema';
 
 // Extended vendor interface with additional display properties
-interface Vendor extends SchemaVendor {
+interface Vendor extends Omit<SchemaVendor, 'vendorTags'> {
   featured?: boolean;
   venueCapacity?: number;
   servesAlcohol?: boolean;
-  vendorTags?: string[];
+  vendorTags?: string[] | null;
 }
 
 interface VendorCardProps {

@@ -131,6 +131,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         priceRange, 
         location,
         servesAlcohol,
+        vendorTag,
         page = '1',
         limit = '20'
       } = req.query;
@@ -193,6 +194,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Add alcohol filter if present
       if (servesAlcohol !== undefined) {
         filters.servesAlcohol = servesAlcohol === 'true';
+      }
+      
+      // Add vendor tag filter if present
+      if (vendorTag) {
+        filters.vendorTags = Array.isArray(vendorTag) 
+          ? vendorTag as string[] 
+          : [vendorTag as string];
       }
       
       // Use search function even without search term to utilize its filtering capabilities

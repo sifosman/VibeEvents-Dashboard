@@ -96,7 +96,12 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
   ];
   
   const vendorTagOptions = [
-    "Service Provider", "Vendor", "Premium", "Featured", "Verified"
+    "Caterer", "Florist", "Photographer", "Videographer", "DJ", 
+    "Live Band", "Decor", "Wedding Planner", "Venue", "Cake Baker",
+    "Hair Stylist", "Makeup Artist", "Transportation", "Lighting",
+    "Sound System", "Security", "Cleaning", "Event Planner", "Bartender",
+    "Officiant", "Invitation Designer", "Jewelry", "Dress Designer",
+    "Rental Service", "Photo Booth", "Entertainment"
   ];
 
   const handleSubmit = (e: React.FormEvent) => {

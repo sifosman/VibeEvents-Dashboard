@@ -852,6 +852,7 @@ export class MemStorage implements IStorage {
     cuisineTypes?: string[];
     priceRange?: string;
     location?: string;
+    vendorTags?: string[];
   }): Promise<Vendor[]> {
     let results = Array.from(this.vendors.values());
     
@@ -916,6 +917,15 @@ export class MemStorage implements IStorage {
         const lowerLocation = filters.location.toLowerCase();
         results = results.filter(vendor => 
           vendor.location?.toLowerCase().includes(lowerLocation)
+        );
+      }
+      
+      // Filter by vendor tags
+      if (filters.vendorTags && filters.vendorTags.length > 0) {
+        results = results.filter(vendor => 
+          vendor.vendorTags?.some(tag => 
+            filters.vendorTags?.includes(tag)
+          )
         );
       }
     }
