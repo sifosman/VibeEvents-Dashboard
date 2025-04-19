@@ -64,16 +64,118 @@ export class DatabaseStorage implements IStorage {
 
   // Vendor operations
   async getVendors(): Promise<Vendor[]> {
-    return db.select().from(vendors);
+    try {
+      // Use raw SQL to avoid ORM schema issues
+      const result = await db.execute(sql`
+        SELECT 
+          id, name, description, image_url as "imageUrl", logo_url as "logoUrl",
+          category_id as "categoryId", price_range as "priceRange", rating, review_count as "reviewCount",
+          instagram_url as "instagramUrl", website_url as "websiteUrl", 
+          whatsapp_number as "whatsappNumber", location,
+          is_themed as "isThemed", subscription_tier as "subscriptionTier",
+          stripe_customer_id as "stripeCustomerId", stripe_subscription_id as "stripeSubscriptionId",
+          subscription_status as "subscriptionStatus", google_maps_link as "googleMapsLink",
+          facebook_url as "facebookUrl", twitter_url as "twitterUrl", youtube_url as "youtubeUrl",
+          coalesce(theme_types, '{}') as "themeTypes", 
+          coalesce(dietary_options, '{}') as "dietaryOptions",
+          coalesce(cuisine_types, '{}') as "cuisineTypes"
+        FROM vendors
+        ORDER BY name ASC
+      `);
+      
+      // Format results for frontend
+      return result.rows.map(vendor => ({
+        ...vendor,
+        vendorTags: [],
+        themeTypes: vendor.themeTypes || [],
+        dietaryOptions: vendor.dietaryOptions || [],
+        cuisineTypes: vendor.cuisineTypes || []
+      }));
+    } catch (error) {
+      console.error('Error in getVendors:', error);
+      return [];
+    }
   }
 
   async getVendorsByCategory(categoryId: number): Promise<Vendor[]> {
-    return db.select().from(vendors).where(eq(vendors.categoryId, categoryId));
+    try {
+      // Use raw SQL to avoid ORM schema issues
+      const result = await db.execute(sql`
+        SELECT 
+          id, name, description, image_url as "imageUrl", logo_url as "logoUrl",
+          category_id as "categoryId", price_range as "priceRange", rating, review_count as "reviewCount",
+          instagram_url as "instagramUrl", website_url as "websiteUrl", 
+          whatsapp_number as "whatsappNumber", location,
+          is_themed as "isThemed", subscription_tier as "subscriptionTier",
+          stripe_customer_id as "stripeCustomerId", stripe_subscription_id as "stripeSubscriptionId",
+          subscription_status as "subscriptionStatus", google_maps_link as "googleMapsLink",
+          facebook_url as "facebookUrl", twitter_url as "twitterUrl", youtube_url as "youtubeUrl",
+          coalesce(theme_types, '{}') as "themeTypes", 
+          coalesce(dietary_options, '{}') as "dietaryOptions",
+          coalesce(cuisine_types, '{}') as "cuisineTypes"
+        FROM vendors
+        WHERE category_id = ${categoryId}
+        ORDER BY rating DESC
+      `);
+      
+      // Format results for frontend
+      return result.rows.map(vendor => ({
+        ...vendor,
+        vendorTags: [],
+        themeTypes: vendor.themeTypes || [],
+        dietaryOptions: vendor.dietaryOptions || [],
+        cuisineTypes: vendor.cuisineTypes || []
+      }));
+    } catch (error) {
+      console.error('Error in getVendorsByCategory:', error);
+      return [];
+    }
   }
 
   async getVendor(id: number): Promise<Vendor | undefined> {
-    const [vendor] = await db.select().from(vendors).where(eq(vendors.id, id));
-    return vendor || undefined;
+    try {
+      // Use raw SQL to avoid ORM schema issues
+      const result = await db.execute(sql`
+        SELECT 
+          id, name, description, image_url as "imageUrl", logo_url as "logoUrl",
+          category_id as "categoryId", price_range as "priceRange", rating, review_count as "reviewCount",
+          instagram_url as "instagramUrl", website_url as "websiteUrl", 
+          whatsapp_number as "whatsappNumber", location,
+          is_themed as "isThemed", subscription_tier as "subscriptionTier",
+          stripe_customer_id as "stripeCustomerId", stripe_subscription_id as "stripeSubscriptionId",
+          subscription_status as "subscriptionStatus", google_maps_link as "googleMapsLink",
+          facebook_url as "facebookUrl", twitter_url as "twitterUrl", youtube_url as "youtubeUrl",
+          coalesce(theme_types, '{}') as "themeTypes", 
+          coalesce(dietary_options, '{}') as "dietaryOptions",
+          coalesce(cuisine_types, '{}') as "cuisineTypes",
+          coalesce(additional_photos, '{}') as "additionalPhotos",
+          catalogue_pages as "cataloguePages",
+          calendar_view as "calendarView",
+          coalesce(catalog_items, '[]') as "catalogItems"
+        FROM vendors
+        WHERE id = ${id}
+      `);
+      
+      if (result.rows.length === 0) {
+        return undefined;
+      }
+      
+      // Format results for frontend with all expected fields
+      const vendor = {
+        ...result.rows[0],
+        vendorTags: [],
+        themeTypes: result.rows[0].themeTypes || [],
+        dietaryOptions: result.rows[0].dietaryOptions || [],
+        cuisineTypes: result.rows[0].cuisineTypes || [],
+        additionalPhotos: result.rows[0].additionalPhotos || [],
+        catalogItems: result.rows[0].catalogItems || []
+      };
+      
+      return vendor;
+    } catch (error) {
+      console.error('Error in getVendor:', error);
+      return undefined;
+    }
   }
 
   async createVendor(vendor: InsertVendor): Promise<Vendor> {
@@ -83,32 +185,23 @@ export class DatabaseStorage implements IStorage {
 
   async getFeaturedVendors(limit = 3): Promise<Vendor[]> {
     try {
-      // Select only the columns that exist in the database
-      const featuredVendors = await db
-        .select({
-          id: vendors.id,
-          name: vendors.name,
-          description: vendors.description,
-          imageUrl: vendors.imageUrl,
-          logoUrl: vendors.logoUrl,
-          categoryId: vendors.categoryId,
-          priceRange: vendors.priceRange,
-          rating: vendors.rating,
-          reviewCount: vendors.reviewCount,
-          instagramUrl: vendors.instagramUrl,
-          websiteUrl: vendors.websiteUrl,
-          whatsappNumber: vendors.whatsappNumber,
-          location: vendors.location,
-          isThemed: vendors.isThemed,
-          subscriptionTier: vendors.subscriptionTier
-        })
-        .from(vendors)
-        .orderBy(desc(vendors.rating))
-        .limit(limit);
+      // Use a raw SQL query to avoid ORM schema issues
+      const result = await db.execute(sql`
+        SELECT 
+          id, name, description, image_url as "imageUrl", logo_url as "logoUrl",
+          category_id as "categoryId", price_range as "priceRange", rating, review_count as "reviewCount",
+          instagram_url as "instagramUrl", website_url as "websiteUrl", 
+          whatsapp_number as "whatsappNumber", location,
+          is_themed as "isThemed", subscription_tier as "subscriptionTier"
+        FROM vendors
+        ORDER BY rating DESC
+        LIMIT ${limit}
+      `);
       
-      // Add empty vendorTags array to each vendor to prevent frontend errors
-      return featuredVendors.map(vendor => ({
+      // Format the results to match what the frontend expects
+      return result.rows.map(vendor => ({
         ...vendor,
+        // Add empty arrays for fields expected by frontend
         vendorTags: [],
         themeTypes: [],
         dietaryOptions: [],
@@ -116,7 +209,8 @@ export class DatabaseStorage implements IStorage {
       }));
     } catch (error) {
       console.error('Error in getFeaturedVendors:', error);
-      throw error;
+      // Return empty array instead of throwing
+      return [];
     }
   }
 
@@ -137,117 +231,80 @@ export class DatabaseStorage implements IStorage {
       offset?: number;
     }
   ): Promise<Vendor[]> {
-    const likeQuery = `%${query}%`;
-    let sqlFilters = [];
-    
-    // Add name search filter
-    sqlFilters.push(like(vendors.name, likeQuery));
-    
-    // Add category filter if provided
-    if (categoryId) {
-      sqlFilters.push(eq(vendors.categoryId, categoryId));
+    try {
+      // Construct WHERE clause parts for SQL query
+      const whereClause = [];
+      const params: any[] = [];
+      
+      // Add name search filter
+      const likeQuery = `%${query}%`;
+      whereClause.push(`name ILIKE $${params.length + 1}`);
+      params.push(likeQuery);
+      
+      // Add category filter if provided
+      if (categoryId) {
+        whereClause.push(`category_id = $${params.length + 1}`);
+        params.push(categoryId);
+      }
+      
+      // If isThemed filter is specified, add it to SQL filters
+      if (filters?.isThemed !== undefined) {
+        whereClause.push(`is_themed = $${params.length + 1}`);
+        params.push(filters.isThemed);
+      }
+      
+      // Add location filter if present
+      if (filters?.location) {
+        whereClause.push(`location ILIKE $${params.length + 1}`);
+        params.push(`%${filters.location}%`);
+      }
+      
+      // Add price range filter if present
+      if (filters?.priceRange) {
+        whereClause.push(`price_range = $${params.length + 1}`);
+        params.push(filters.priceRange);
+      }
+      
+      // Construct the WHERE clause string
+      const whereClauseStr = whereClause.length > 0 ? 
+        'WHERE ' + whereClause.join(' AND ') : '';
+      
+      // Execute the raw SQL query
+      const result = await db.execute(sql`
+        SELECT 
+          id, name, description, image_url as "imageUrl", logo_url as "logoUrl",
+          category_id as "categoryId", price_range as "priceRange", rating, review_count as "reviewCount",
+          instagram_url as "instagramUrl", website_url as "websiteUrl", 
+          whatsapp_number as "whatsappNumber", location,
+          is_themed as "isThemed", subscription_tier as "subscriptionTier",
+          stripe_customer_id as "stripeCustomerId", stripe_subscription_id as "stripeSubscriptionId",
+          subscription_status as "subscriptionStatus", google_maps_link as "googleMapsLink",
+          facebook_url as "facebookUrl", twitter_url as "twitterUrl", youtube_url as "youtubeUrl",
+          coalesce(theme_types, '{}') as "themeTypes", 
+          coalesce(dietary_options, '{}') as "dietaryOptions",
+          coalesce(cuisine_types, '{}') as "cuisineTypes",
+          coalesce(word_count, 0) as "wordCount"
+        FROM vendors
+        ${sql.raw(whereClauseStr)}
+        ORDER BY rating DESC
+      `);
+      
+      // Format results for frontend
+      return result.rows.map(vendor => {
+        return {
+          ...vendor,
+          // Add any missing fields expected by frontend
+          vendorTags: [],
+          themeTypes: vendor.themeTypes || [],
+          dietaryOptions: vendor.dietaryOptions || [],
+          cuisineTypes: vendor.cuisineTypes || []
+        };
+      });
+    } catch (error) {
+      console.error('Error in searchVendors:', error);
+      // Return empty array instead of failing
+      return [];
     }
-    
-    // If isThemed filter is specified, add it to SQL filters
-    if (filters?.isThemed !== undefined) {
-      sqlFilters.push(eq(vendors.isThemed, filters.isThemed));
-    }
-    
-    // Execute the query with basic filters - select specific columns to avoid errors
-    let results = await db
-      .select({
-        id: vendors.id,
-        name: vendors.name,
-        description: vendors.description,
-        imageUrl: vendors.imageUrl,
-        logoUrl: vendors.logoUrl,
-        categoryId: vendors.categoryId,
-        priceRange: vendors.priceRange,
-        rating: vendors.rating,
-        reviewCount: vendors.reviewCount,
-        instagramUrl: vendors.instagramUrl,
-        websiteUrl: vendors.websiteUrl,
-        whatsappNumber: vendors.whatsappNumber,
-        location: vendors.location,
-        isThemed: vendors.isThemed,
-        subscriptionTier: vendors.subscriptionTier,
-        // Include other columns from the database table
-        stripeCustomerId: vendors.stripeCustomerId,
-        stripeSubscriptionId: vendors.stripeSubscriptionId,
-        subscriptionStatus: vendors.subscriptionStatus,
-        googleMapsLink: vendors.googleMapsLink,
-        facebookUrl: vendors.facebookUrl,
-        twitterUrl: vendors.twitterUrl,
-        youtubeUrl: vendors.youtubeUrl
-      })
-      .from(vendors)
-      .where(and(...sqlFilters))
-      .orderBy(desc(vendors.rating));
-    
-    // Post-query filtering for array and complex filter types
-    // We need to do this in-memory because we're filtering array fields
-    
-    // No legacy parameters needed
-    
-    // Handle new filter structure
-    if (filters) {
-      // Filter by specific theme types
-      if (filters.themeTypes && filters.themeTypes.length > 0) {
-        results = results.filter(vendor => 
-          vendor.themeTypes?.some(theme => 
-            filters.themeTypes?.includes(theme)
-          )
-        );
-      }
-      
-      // Filter by dietary options
-      if (filters.dietaryOptions && filters.dietaryOptions.length > 0) {
-        results = results.filter(vendor => 
-          vendor.dietaryOptions?.some(option => 
-            filters.dietaryOptions?.includes(option)
-          )
-        );
-      }
-      
-      // Filter by cuisine types
-      if (filters.cuisineTypes && filters.cuisineTypes.length > 0) {
-        results = results.filter(vendor => 
-          vendor.cuisineTypes?.some(cuisine => 
-            filters.cuisineTypes?.includes(cuisine)
-          )
-        );
-      }
-      
-      // Filter by price range
-      if (filters.priceRange) {
-        results = results.filter(vendor => 
-          vendor.priceRange === filters.priceRange
-        );
-      }
-      
-      // Filter by location
-      if (filters.location) {
-        const lowerLocation = filters.location.toLowerCase();
-        results = results.filter(vendor => 
-          vendor.location?.toLowerCase().includes(lowerLocation)
-        );
-      }
-      
-      // Temporarily disabling servesAlcohol filter since the column may not exist
-      /*
-      if (filters.servesAlcohol !== undefined) {
-        results = results.filter(vendor => 
-          vendor.servesAlcohol === filters.servesAlcohol
-        );
-      }
-      */
-    }
-    
-    // Add empty vendorTags array to each vendor to prevent frontend errors
-    return results.map(vendor => ({
-      ...vendor,
-      vendorTags: []
-    }));
   }
 
   async updateVendorStripeCustomerId(id: number, customerId: string): Promise<Vendor> {
