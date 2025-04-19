@@ -65,8 +65,8 @@ export class DatabaseStorage implements IStorage {
   // Vendor operations
   async getVendors(): Promise<Vendor[]> {
     try {
-      // Use raw SQL to avoid ORM schema issues
-      const result = await db.execute(sql`
+      // Use native query to avoid Drizzle ORM schema issues
+      const query = `
         SELECT 
           id, name, description, image_url as "imageUrl", logo_url as "logoUrl",
           category_id as "categoryId", price_range as "priceRange", rating, review_count as "reviewCount",
@@ -81,7 +81,9 @@ export class DatabaseStorage implements IStorage {
           coalesce(cuisine_types, '{}') as "cuisineTypes"
         FROM vendors
         ORDER BY name ASC
-      `);
+      `;
+      
+      const result = await db.query(query);
       
       // Format results for frontend
       return result.rows.map(vendor => ({
@@ -99,8 +101,8 @@ export class DatabaseStorage implements IStorage {
 
   async getVendorsByCategory(categoryId: number): Promise<Vendor[]> {
     try {
-      // Use raw SQL to avoid ORM schema issues
-      const result = await db.execute(sql`
+      // Use native query to avoid Drizzle ORM schema issues
+      const query = `
         SELECT 
           id, name, description, image_url as "imageUrl", logo_url as "logoUrl",
           category_id as "categoryId", price_range as "priceRange", rating, review_count as "reviewCount",
@@ -114,9 +116,11 @@ export class DatabaseStorage implements IStorage {
           coalesce(dietary_options, '{}') as "dietaryOptions",
           coalesce(cuisine_types, '{}') as "cuisineTypes"
         FROM vendors
-        WHERE category_id = ${categoryId}
+        WHERE category_id = $1
         ORDER BY rating DESC
-      `);
+      `;
+      
+      const result = await db.query(query, [categoryId]);
       
       // Format results for frontend
       return result.rows.map(vendor => ({
@@ -134,8 +138,8 @@ export class DatabaseStorage implements IStorage {
 
   async getVendor(id: number): Promise<Vendor | undefined> {
     try {
-      // Use raw SQL to avoid ORM schema issues
-      const result = await db.execute(sql`
+      // Use native query to avoid Drizzle ORM schema issues
+      const query = `
         SELECT 
           id, name, description, image_url as "imageUrl", logo_url as "logoUrl",
           category_id as "categoryId", price_range as "priceRange", rating, review_count as "reviewCount",
@@ -153,8 +157,10 @@ export class DatabaseStorage implements IStorage {
           calendar_view as "calendarView",
           coalesce(catalog_items, '[]') as "catalogItems"
         FROM vendors
-        WHERE id = ${id}
-      `);
+        WHERE id = $1
+      `;
+      
+      const result = await db.query(query, [id]);
       
       if (result.rows.length === 0) {
         return undefined;
@@ -185,8 +191,8 @@ export class DatabaseStorage implements IStorage {
 
   async getFeaturedVendors(limit = 3): Promise<Vendor[]> {
     try {
-      // Use a raw SQL query to avoid ORM schema issues
-      const result = await db.execute(sql`
+      // Use a raw SQL query to avoid ORM schema issues - no reference to vendor_tags
+      const query = `
         SELECT 
           id, name, description, image_url as "imageUrl", logo_url as "logoUrl",
           category_id as "categoryId", price_range as "priceRange", rating, review_count as "reviewCount",
@@ -195,8 +201,10 @@ export class DatabaseStorage implements IStorage {
           is_themed as "isThemed", subscription_tier as "subscriptionTier"
         FROM vendors
         ORDER BY rating DESC
-        LIMIT ${limit}
-      `);
+        LIMIT $1
+      `;
+      
+      const result = await db.query(query, [limit]);
       
       // Format the results to match what the frontend expects
       return result.rows.map(vendor => ({
@@ -265,12 +273,8 @@ export class DatabaseStorage implements IStorage {
         params.push(filters.priceRange);
       }
       
-      // Construct the WHERE clause string
-      const whereClauseStr = whereClause.length > 0 ? 
-        'WHERE ' + whereClause.join(' AND ') : '';
-      
-      // Execute the raw SQL query
-      const result = await db.execute(sql`
+      // Build complete SQL query
+      let sqlQuery = `
         SELECT 
           id, name, description, image_url as "imageUrl", logo_url as "logoUrl",
           category_id as "categoryId", price_range as "priceRange", rating, review_count as "reviewCount",
@@ -285,9 +289,18 @@ export class DatabaseStorage implements IStorage {
           coalesce(cuisine_types, '{}') as "cuisineTypes",
           coalesce(word_count, 0) as "wordCount"
         FROM vendors
-        ${sql.raw(whereClauseStr)}
-        ORDER BY rating DESC
-      `);
+      `;
+      
+      // Add WHERE clause if we have conditions
+      if (whereClause.length > 0) {
+        sqlQuery += ' WHERE ' + whereClause.join(' AND ');
+      }
+      
+      // Add ordering
+      sqlQuery += ' ORDER BY rating DESC';
+      
+      // Execute the query
+      const result = await db.query(sqlQuery, params);
       
       // Format results for frontend
       return result.rows.map(vendor => {
