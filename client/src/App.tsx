@@ -112,6 +112,7 @@ import GeoBlockedView from "./components/shared/GeoBlockedView";
 import { NavigationProvider } from "./context/NavigationContext";
 import NavigationControls from "./components/navigation/NavigationControls";
 import { ScrollRestoration } from "./components/ui/scroll-restoration";
+import { BottomNav } from "./components/layout/BottomNav";
 
 function App() {
   return (
@@ -120,12 +121,13 @@ function App() {
         {/* Add geo-blocking overlay that will only display for blocked countries */}
         <GeoBlockedView />
         <Header />
-        <main className="flex-grow">
+        <main className="flex-grow pb-16 md:pb-0">
           <AppRouter />
-          {/* Floating back/history navigation */}
-          <NavigationControls mode="floating" position="bottom-left" />
+          {/* Floating back/history navigation - adjusted to avoid bottom nav on mobile */}
+          <NavigationControls mode="floating" position="top-left" />
         </main>
         <Footer />
+        <BottomNav />
         <Toaster />
         {/* Automatically scroll to top on page transitions */}
         <ScrollRestoration />
