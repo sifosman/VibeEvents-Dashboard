@@ -191,10 +191,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         filters.location = location as string;
       }
       
-      // Add alcohol filter if present
+      // Temporarily disabling servesAlcohol filter
+      /*
       if (servesAlcohol !== undefined) {
         filters.servesAlcohol = servesAlcohol === 'true';
       }
+      */
       
       // Vendor tag filter temporarily disabled
       // if (vendorTag) {

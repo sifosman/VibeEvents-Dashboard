@@ -83,8 +83,25 @@ export class DatabaseStorage implements IStorage {
 
   async getFeaturedVendors(limit = 3): Promise<Vendor[]> {
     try {
+      // Select only the columns that exist in the database
       const featuredVendors = await db
-        .select()
+        .select({
+          id: vendors.id,
+          name: vendors.name,
+          description: vendors.description,
+          imageUrl: vendors.imageUrl,
+          logoUrl: vendors.logoUrl,
+          categoryId: vendors.categoryId,
+          priceRange: vendors.priceRange,
+          rating: vendors.rating,
+          reviewCount: vendors.reviewCount,
+          instagramUrl: vendors.instagramUrl,
+          websiteUrl: vendors.websiteUrl,
+          whatsappNumber: vendors.whatsappNumber,
+          location: vendors.location,
+          isThemed: vendors.isThemed,
+          subscriptionTier: vendors.subscriptionTier
+        })
         .from(vendors)
         .orderBy(desc(vendors.rating))
         .limit(limit);
@@ -92,7 +109,10 @@ export class DatabaseStorage implements IStorage {
       // Add empty vendorTags array to each vendor to prevent frontend errors
       return featuredVendors.map(vendor => ({
         ...vendor,
-        vendorTags: []
+        vendorTags: [],
+        themeTypes: [],
+        dietaryOptions: [],
+        cuisineTypes: []
       }));
     } catch (error) {
       console.error('Error in getFeaturedVendors:', error);
@@ -133,9 +153,33 @@ export class DatabaseStorage implements IStorage {
       sqlFilters.push(eq(vendors.isThemed, filters.isThemed));
     }
     
-    // Execute the query with basic filters
+    // Execute the query with basic filters - select specific columns to avoid errors
     let results = await db
-      .select()
+      .select({
+        id: vendors.id,
+        name: vendors.name,
+        description: vendors.description,
+        imageUrl: vendors.imageUrl,
+        logoUrl: vendors.logoUrl,
+        categoryId: vendors.categoryId,
+        priceRange: vendors.priceRange,
+        rating: vendors.rating,
+        reviewCount: vendors.reviewCount,
+        instagramUrl: vendors.instagramUrl,
+        websiteUrl: vendors.websiteUrl,
+        whatsappNumber: vendors.whatsappNumber,
+        location: vendors.location,
+        isThemed: vendors.isThemed,
+        subscriptionTier: vendors.subscriptionTier,
+        // Include other columns from the database table
+        stripeCustomerId: vendors.stripeCustomerId,
+        stripeSubscriptionId: vendors.stripeSubscriptionId,
+        subscriptionStatus: vendors.subscriptionStatus,
+        googleMapsLink: vendors.googleMapsLink,
+        facebookUrl: vendors.facebookUrl,
+        twitterUrl: vendors.twitterUrl,
+        youtubeUrl: vendors.youtubeUrl
+      })
       .from(vendors)
       .where(and(...sqlFilters))
       .orderBy(desc(vendors.rating));
@@ -189,12 +233,14 @@ export class DatabaseStorage implements IStorage {
         );
       }
       
-      // Filter by servesAlcohol flag
+      // Temporarily disabling servesAlcohol filter since the column may not exist
+      /*
       if (filters.servesAlcohol !== undefined) {
         results = results.filter(vendor => 
           vendor.servesAlcohol === filters.servesAlcohol
         );
       }
+      */
     }
     
     // Add empty vendorTags array to each vendor to prevent frontend errors
