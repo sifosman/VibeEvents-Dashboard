@@ -12,6 +12,7 @@ interface Vendor extends SchemaVendor {
   featured?: boolean;
   venueCapacity?: number;
   servesAlcohol?: boolean;
+  vendorTags?: string[];
 }
 
 interface VendorCardProps {
@@ -97,6 +98,12 @@ export function VendorCard({ vendor }: VendorCardProps) {
                 Alcohol-free
               </Badge>
             )}
+            
+            {vendor.vendorTags && vendor.vendorTags.map((tag) => (
+              <Badge key={tag} variant="outline" className="text-xs py-0 px-1.5 h-5 bg-primary/5">
+                {tag}
+              </Badge>
+            ))}
           </div>
         </CardContent>
       </div>

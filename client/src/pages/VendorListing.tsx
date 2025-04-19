@@ -33,6 +33,7 @@ export default function VendorListing() {
     province: "",
     area: "",
     town: "",
+    vendorTag: "",
   });
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [sortBy, setSortBy] = useState("popular"); // Default sort option
@@ -53,6 +54,7 @@ export default function VendorListing() {
     const provinceParam = params.get("province") || "";
     const areaParam = params.get("area") || "";
     const townParam = params.get("town") || "";
+    const vendorTagParam = params.get("vendorTag") || "";
     
     setFilters({
       search: searchParam,
@@ -68,6 +70,7 @@ export default function VendorListing() {
       province: provinceParam,
       area: areaParam,
       town: townParam,
+      vendorTag: vendorTagParam,
     });
   }, [location]);
 
@@ -96,6 +99,10 @@ export default function VendorListing() {
       } else {
         queryParts.push(`category=${encodeURIComponent(filters.category)}`);
       }
+    }
+    
+    if (filters.vendorTag) {
+      queryParts.push(`vendorTag=${encodeURIComponent(filters.vendorTag)}`);
     }
     
     // Price range filtering would be implemented in the backend
@@ -247,7 +254,8 @@ export default function VendorListing() {
                     region: "",
                     province: "",
                     area: "",
-                    town: ""
+                    town: "",
+                    vendorTag: ""
                   })}
                   className="bg-primary text-white hover:bg-primary/90"
                 >

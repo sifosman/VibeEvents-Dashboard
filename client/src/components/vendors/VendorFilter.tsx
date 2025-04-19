@@ -94,6 +94,10 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
     "French", "American", "African", "Middle Eastern", "Latin American",
     "Greek", "Japanese", "Thai", "Chinese", "Spanish", "Fusion"
   ];
+  
+  const vendorTagOptions = [
+    "Service Provider", "Vendor", "Premium", "Featured", "Verified"
+  ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -112,6 +116,7 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
     if (province) filters.province = province;
     if (area) filters.area = area;
     if (town) filters.town = town;
+    if (vendorTag) filters.vendorTag = vendorTag;
     
     onFilter({ 
       search, 
@@ -126,7 +131,8 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
       region,
       province,
       area,
-      town
+      town,
+      vendorTag
     });
     
     // Update URL with query params
@@ -153,6 +159,7 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
     setProvince("");
     setArea("");
     setTown("");
+    setVendorTag("");
     onFilter({});
     setLocation("/vendors");
   };
@@ -312,6 +319,27 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
                     <SelectContent>
                       <SelectItem value="">Any Cuisine</SelectItem>
                       {cuisineOptions.map((option) => (
+                        <SelectItem key={option} value={option}>
+                          {option}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+            
+            <AccordionItem value="vendorType" className="border-b-0">
+              <AccordionTrigger className="py-2">Vendor Type</AccordionTrigger>
+              <AccordionContent className="pt-1 pb-2">
+                <div>
+                  <Select value={vendorTag} onValueChange={setVendorTag}>
+                    <SelectTrigger className="h-8">
+                      <SelectValue placeholder="Select vendor type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">Any Vendor Type</SelectItem>
+                      {vendorTagOptions.map((option) => (
                         <SelectItem key={option} value={option}>
                           {option}
                         </SelectItem>
