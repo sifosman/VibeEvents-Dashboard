@@ -7,18 +7,33 @@ import { VendorCard } from "../components/vendors/VendorCard";
 import { Helmet } from "react-helmet";
 
 export default function BrowseByCategory() {
+  type TabType = 'all' | 'venues' | 'services' | 'vendors';
+  
   const [activeCategory, setActiveCategory] = useState<number | null>(null);
+  const [activeTab, setActiveTab] = useState<TabType>('all');
   
   const { data: categories } = useQuery<Category[]>({
     queryKey: ['/api/categories'],
   });
   
   const { data: vendors, isLoading } = useQuery<Vendor[]>({
-    queryKey: ['/api/vendors', activeCategory ? `category=${activeCategory}` : ''],
+    queryKey: ['/api/vendors', activeCategory ? `category=${activeCategory}` : '', activeTab !== 'all' ? `tab=${activeTab}` : ''],
     queryFn: async () => {
-      const url = activeCategory
-        ? `/api/vendors?category=${activeCategory}`
-        : '/api/vendors';
+      let url = '/api/vendors';
+      const params = new URLSearchParams();
+      
+      if (activeCategory) {
+        params.append('category', activeCategory.toString());
+      }
+      
+      if (activeTab !== 'all') {
+        params.append('type', activeTab);
+      }
+      
+      if (params.toString()) {
+        url += `?${params.toString()}`;
+      }
+      
       const res = await fetch(url);
       if (!res.ok) throw new Error('Failed to fetch vendors');
       return res.json();
@@ -38,6 +53,48 @@ export default function BrowseByCategory() {
           <p className="text-muted-foreground max-w-2xl mx-auto">Find the perfect match for each aspect of your event</p>
         </div>
         
+        {/* Tab Navigation */}
+        <div className="bg-accent/20 rounded-lg shadow-sm overflow-hidden mb-6">
+          <div className="flex flex-wrap">
+            <Button
+              className={`px-8 py-3 rounded-none ${
+                activeTab === 'all' ? 'bg-primary text-white' : 'bg-transparent text-foreground hover:bg-accent hover:text-primary'
+              }`}
+              onClick={() => setActiveTab('all')}
+            >
+              All
+            </Button>
+            
+            <Button
+              className={`px-8 py-3 rounded-none ${
+                activeTab === 'venues' ? 'bg-primary text-white' : 'bg-transparent text-foreground hover:bg-accent hover:text-primary'
+              }`}
+              onClick={() => setActiveTab('venues')}
+            >
+              Venues
+            </Button>
+
+            <Button
+              className={`px-8 py-3 rounded-none ${
+                activeTab === 'services' ? 'bg-primary text-white' : 'bg-transparent text-foreground hover:bg-accent hover:text-primary'
+              }`}
+              onClick={() => setActiveTab('services')}
+            >
+              Services
+            </Button>
+
+            <Button
+              className={`px-8 py-3 rounded-none ${
+                activeTab === 'vendors' ? 'bg-primary text-white' : 'bg-transparent text-foreground hover:bg-accent hover:text-primary'
+              }`}
+              onClick={() => setActiveTab('vendors')}
+            >
+              Vendors
+            </Button>
+          </div>
+        </div>
+        
+        {/* Category Selection */}
         <div className="bg-neutral rounded-lg shadow overflow-hidden mb-8">
           <div className="flex flex-wrap">
             <Button
@@ -93,13 +150,29 @@ export default function BrowseByCategory() {
               </div>
             ))}
           </div>
-        ) : (
+        ) : vendors && vendors.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {vendors?.map((vendor) => (
+            {vendors.map((vendor) => (
               <div key={vendor.id}>
                 <VendorCard vendor={vendor} />
               </div>
             ))}
+          </div>
+        ) : (
+          <div className="text-center py-16 border rounded-lg bg-background">
+            <h3 className="text-xl font-semibold mb-2">No results found</h3>
+            <p className="text-muted-foreground mb-6">
+              Try adjusting your search filters or browse a different category
+            </p>
+            <Button 
+              className="bg-primary text-white"
+              onClick={() => {
+                setActiveTab('all');
+                setActiveCategory(null);
+              }}
+            >
+              Reset Filters
+            </Button>
           </div>
         )}
         
