@@ -82,11 +82,22 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getFeaturedVendors(limit = 3): Promise<Vendor[]> {
-    return db
-      .select()
-      .from(vendors)
-      .orderBy(desc(vendors.rating))
-      .limit(limit);
+    try {
+      const featuredVendors = await db
+        .select()
+        .from(vendors)
+        .orderBy(desc(vendors.rating))
+        .limit(limit);
+      
+      // Add empty vendorTags array to each vendor to prevent frontend errors
+      return featuredVendors.map(vendor => ({
+        ...vendor,
+        vendorTags: []
+      }));
+    } catch (error) {
+      console.error('Error in getFeaturedVendors:', error);
+      throw error;
+    }
   }
 
   async searchVendors(
@@ -186,7 +197,11 @@ export class DatabaseStorage implements IStorage {
       }
     }
     
-    return results;
+    // Add empty vendorTags array to each vendor to prevent frontend errors
+    return results.map(vendor => ({
+      ...vendor,
+      vendorTags: []
+    }));
   }
 
   async updateVendorStripeCustomerId(id: number, customerId: string): Promise<Vendor> {

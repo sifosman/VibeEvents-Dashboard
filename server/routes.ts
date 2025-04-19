@@ -196,12 +196,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         filters.servesAlcohol = servesAlcohol === 'true';
       }
       
-      // Add vendor tag filter if present
-      if (vendorTag) {
-        filters.vendorTags = Array.isArray(vendorTag) 
-          ? vendorTag as string[] 
-          : [vendorTag as string];
-      }
+      // Vendor tag filter temporarily disabled
+      // if (vendorTag) {
+      //   filters.vendorTags = Array.isArray(vendorTag) 
+      //     ? vendorTag as string[] 
+      //     : [vendorTag as string];
+      // }
       
       // Use search function even without search term to utilize its filtering capabilities
       const searchQuery = search ? (search as string) : '';
@@ -220,7 +220,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const vendors = await storage.getFeaturedVendors(limit);
       res.status(200).json(vendors);
     } catch (error) {
-      res.status(500).json({ message: 'Server error' });
+      console.error('Error fetching featured vendors:', error);
+      res.status(500).json({ message: 'Server error', error: (error as Error).message });
     }
   });
 
