@@ -80,6 +80,7 @@ function SimpleHeader() {
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "Browse Vendors", href: "/vendors" },
+    { name: "For Service Providers", href: "#" },
   ];
 
   // Footer navigation links moved to header dropdown
@@ -88,7 +89,6 @@ function SimpleHeader() {
     { name: "Browse Vendors", href: "/vendors", icon: <Building className="h-4 w-4 mr-2" /> },
     { name: "Service Categories", href: "/ServiceCategories", icon: <Filter className="h-4 w-4 mr-2" /> },
     { name: "Browse by Category", href: "/BrowseByCategory", icon: <Building className="h-4 w-4 mr-2" /> },
-    { name: "For Service Providers", href: "#", icon: <Building className="h-4 w-4 mr-2" /> },
     { name: "Event Planner Tools", href: "/planner", icon: <Sparkles className="h-4 w-4 mr-2" /> },
     { name: "Event Inspiration", href: "#", icon: <Globe className="h-4 w-4 mr-2" /> },
     { name: "Success Stories", href: "#", icon: <Users className="h-4 w-4 mr-2" /> },
@@ -155,7 +155,43 @@ function SimpleHeader() {
                   ))}
                 </DropdownMenuGroup>
                 
-
+                {/* For Vendors Section - with regular dropdown instead of subdropdown */}
+                <DropdownMenuLabel className="mt-2 text-sm font-semibold">
+                  <Building className="h-4 w-4 mr-2 inline" />
+                  For Vendors
+                </DropdownMenuLabel>
+                <DropdownMenuGroup className="pl-6">
+                  <Link href="#">
+                    <DropdownMenuItem className="cursor-pointer">
+                      <Building className="h-4 w-4 mr-2" />
+                      Join as Vendor
+                    </DropdownMenuItem>
+                  </Link>
+                  <Link href="#">
+                    <DropdownMenuItem className="cursor-pointer">
+                      <Sparkles className="h-4 w-4 mr-2" />
+                      Vendor Benefits
+                    </DropdownMenuItem>
+                  </Link>
+                  <Link href="#">
+                    <DropdownMenuItem className="cursor-pointer">
+                      <Globe className="h-4 w-4 mr-2" />
+                      Vendor Dashboard
+                    </DropdownMenuItem>
+                  </Link>
+                  <Link href="#">
+                    <DropdownMenuItem className="cursor-pointer">
+                      <Users className="h-4 w-4 mr-2" />
+                      Success Stories
+                    </DropdownMenuItem>
+                  </Link>
+                  <Link href="#">
+                    <DropdownMenuItem className="cursor-pointer">
+                      <MessageCircle className="h-4 w-4 mr-2" />
+                      Advertising Options
+                    </DropdownMenuItem>
+                  </Link>
+                </DropdownMenuGroup>
                 
                 {/* Support Section - with regular dropdown instead of subdropdown */}
                 <DropdownMenuLabel className="mt-2 text-sm font-semibold">
