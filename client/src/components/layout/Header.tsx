@@ -80,7 +80,15 @@ function SimpleHeader() {
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "Browse Vendors", href: "/vendors" },
-    { name: "For Service Providers", href: "#" },
+  ];
+  
+  // Service provider links
+  const serviceProviderLinks = [
+    { name: "List Your Services", href: "#", icon: <Building className="h-4 w-4 mr-2" /> },
+    { name: "Service Provider Benefits", href: "#", icon: <Sparkles className="h-4 w-4 mr-2" /> },
+    { name: "Provider Dashboard", href: "#", icon: <Globe className="h-4 w-4 mr-2" /> },
+    { name: "Marketing Tips", href: "#", icon: <Users className="h-4 w-4 mr-2" /> },
+    { name: "Advertising Packages", href: "#", icon: <MessageCircle className="h-4 w-4 mr-2" /> },
   ];
 
   // Footer navigation links moved to header dropdown
@@ -146,6 +154,22 @@ function SimpleHeader() {
                 </DropdownMenuLabel>
                 <DropdownMenuGroup className="pl-6">
                   {eventHostsLinks.map((link) => (
+                    <Link key={link.name} href={link.href}>
+                      <DropdownMenuItem className="cursor-pointer">
+                        {link.icon}
+                        {link.name}
+                      </DropdownMenuItem>
+                    </Link>
+                  ))}
+                </DropdownMenuGroup>
+                
+                {/* For Service Providers Section */}
+                <DropdownMenuLabel className="mt-2 text-sm font-semibold">
+                  <Building className="h-4 w-4 mr-2 inline" />
+                  For Service Providers
+                </DropdownMenuLabel>
+                <DropdownMenuGroup className="pl-6">
+                  {serviceProviderLinks.map((link) => (
                     <Link key={link.name} href={link.href}>
                       <DropdownMenuItem className="cursor-pointer">
                         {link.icon}
@@ -231,6 +255,25 @@ function SimpleHeader() {
                 {link.name}
               </Link>
             ))}
+            
+            {/* Service Providers Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex items-center transition hover:text-primary font-medium">
+                  For Service Providers <ChevronDown className="ml-1 h-4 w-4" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {serviceProviderLinks.map((link) => (
+                  <Link key={link.name} href={link.href}>
+                    <DropdownMenuItem className="cursor-pointer">
+                      {link.icon}
+                      {link.name}
+                    </DropdownMenuItem>
+                  </Link>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
             
             {/* Event Type Selector */}
             <div className="flex items-center">
@@ -324,8 +367,69 @@ function SimpleHeader() {
                 ))}
               </div>
             </div>
-            
 
+            <div className="py-2">
+              <h4 className="font-display font-bold text-md mb-2">For Service Providers</h4>
+              <div className="pl-2 flex flex-col space-y-2">
+                {serviceProviderLinks.map((link) => (
+                  <Link 
+                    key={link.name} 
+                    href={link.href}
+                    className="text-muted-foreground hover:text-primary transition flex items-center"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {link.icon}
+                    {link.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
+            
+            <div className="py-2">
+              <h4 className="font-display font-bold text-md mb-2">For Vendors</h4>
+              <div className="pl-2 flex flex-col space-y-2">
+                <Link 
+                  href="#"
+                  className="text-muted-foreground hover:text-primary transition flex items-center"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Building className="h-4 w-4 mr-2" />
+                  Join as Vendor
+                </Link>
+                <Link 
+                  href="#"
+                  className="text-muted-foreground hover:text-primary transition flex items-center"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  Vendor Benefits
+                </Link>
+                <Link 
+                  href="#"
+                  className="text-muted-foreground hover:text-primary transition flex items-center"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Globe className="h-4 w-4 mr-2" />
+                  Vendor Dashboard
+                </Link>
+                <Link 
+                  href="#"
+                  className="text-muted-foreground hover:text-primary transition flex items-center"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Users className="h-4 w-4 mr-2" />
+                  Success Stories
+                </Link>
+                <Link 
+                  href="#"
+                  className="text-muted-foreground hover:text-primary transition flex items-center"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <MessageCircle className="h-4 w-4 mr-2" />
+                  Advertising Options
+                </Link>
+              </div>
+            </div>
             
             <div className="py-2">
               <h4 className="font-display font-bold text-md mb-2">Support</h4>
