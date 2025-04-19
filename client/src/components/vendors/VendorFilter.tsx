@@ -37,6 +37,7 @@ interface VendorFilterProps {
     province?: string;
     area?: string;
     town?: string;
+    vendorTag?: string;
   }) => void;
   initialFilters?: {
     search?: string;
@@ -52,6 +53,7 @@ interface VendorFilterProps {
     province?: string;
     area?: string;
     town?: string;
+    vendorTag?: string;
   };
 }
 
@@ -70,6 +72,7 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
   const [province, setProvince] = useState(initialFilters.province || "");
   const [area, setArea] = useState(initialFilters.area || "");
   const [town, setTown] = useState(initialFilters.town || "");
+  const [vendorTag, setVendorTag] = useState(initialFilters.vendorTag || "");
 
   const { data: categories } = useQuery<Category[]>({
     queryKey: ['/api/categories'],

@@ -63,6 +63,8 @@ export const vendors = pgTable("vendors", {
   websiteUrl: text("website_url"),
   whatsappNumber: text("whatsapp_number"),
   location: text("location"),
+  // Vendor type and tags
+  vendorTags: text("vendor_tags").array(),          // service provider, vendor, premium, etc.
   // Dietary options and cuisines
   dietaryOptions: text("dietary_options").array(),  // halaal, kosher, vegan, vegetarian, gluten-free, dairy-free, nut-free, alcohol-free
   cuisineTypes: text("cuisine_types").array(),      // Mediterranean, Indian, Asian, Mexican, Italian, French, American, African, etc.
