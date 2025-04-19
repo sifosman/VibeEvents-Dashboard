@@ -99,11 +99,7 @@ export function VendorCard({ vendor }: VendorCardProps) {
               </Badge>
             )}
             
-            {vendor.vendorTags && vendor.vendorTags.map((tag) => (
-              <Badge key={tag} variant="outline" className="text-xs py-0 px-1.5 h-5 bg-primary/5">
-                {tag}
-              </Badge>
-            ))}
+            {/* Vendor tags temporarily disabled */}
           </div>
         </CardContent>
       </div>
