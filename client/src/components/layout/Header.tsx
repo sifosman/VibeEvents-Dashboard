@@ -88,18 +88,10 @@ function SimpleHeader() {
     { name: "Browse Vendors", href: "/vendors", icon: <Building className="h-4 w-4 mr-2" /> },
     { name: "Service Categories", href: "/ServiceCategories", icon: <Filter className="h-4 w-4 mr-2" /> },
     { name: "Browse by Category", href: "/BrowseByCategory", icon: <Building className="h-4 w-4 mr-2" /> },
+    { name: "For Service Providers", href: "#", icon: <Building className="h-4 w-4 mr-2" /> },
     { name: "Event Planner Tools", href: "/planner", icon: <Sparkles className="h-4 w-4 mr-2" /> },
     { name: "Event Inspiration", href: "#", icon: <Globe className="h-4 w-4 mr-2" /> },
     { name: "Success Stories", href: "#", icon: <Users className="h-4 w-4 mr-2" /> },
-  ];
-
-  const vendorLinks = [
-    { name: "Join as Vendor", href: "#", icon: <Building className="h-4 w-4 mr-2" /> },
-    { name: "Vendor Benefits", href: "#", icon: <Sparkles className="h-4 w-4 mr-2" /> },
-    { name: "Vendor Dashboard", href: "#", icon: <Globe className="h-4 w-4 mr-2" /> },
-    { name: "Vendor Profile", href: "/vendor/profile", icon: <User className="h-4 w-4 mr-2" /> },
-    { name: "Success Stories", href: "#", icon: <Users className="h-4 w-4 mr-2" /> },
-    { name: "Advertising Options", href: "#", icon: <MessageCircle className="h-4 w-4 mr-2" /> },
   ];
 
   const supportLinks = [
@@ -163,21 +155,7 @@ function SimpleHeader() {
                   ))}
                 </DropdownMenuGroup>
                 
-                {/* For Vendors Section - with regular dropdown instead of subdropdown */}
-                <DropdownMenuLabel className="mt-2 text-sm font-semibold">
-                  <Building className="h-4 w-4 mr-2 inline" />
-                  For Vendors
-                </DropdownMenuLabel>
-                <DropdownMenuGroup className="pl-6">
-                  {vendorLinks.map((link) => (
-                    <Link key={link.name} href={link.href}>
-                      <DropdownMenuItem className="cursor-pointer">
-                        {link.icon}
-                        {link.name}
-                      </DropdownMenuItem>
-                    </Link>
-                  ))}
-                </DropdownMenuGroup>
+
                 
                 {/* Support Section - with regular dropdown instead of subdropdown */}
                 <DropdownMenuLabel className="mt-2 text-sm font-semibold">
@@ -311,22 +289,7 @@ function SimpleHeader() {
               </div>
             </div>
             
-            <div className="py-2">
-              <h4 className="font-display font-bold text-md mb-2">For Vendors</h4>
-              <div className="pl-2 flex flex-col space-y-2">
-                {vendorLinks.map((link) => (
-                  <Link 
-                    key={link.name} 
-                    href={link.href}
-                    className="text-muted-foreground hover:text-primary transition flex items-center"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {link.icon}
-                    {link.name}
-                  </Link>
-                ))}
-              </div>
-            </div>
+
             
             <div className="py-2">
               <h4 className="font-display font-bold text-md mb-2">Support</h4>
@@ -504,25 +467,7 @@ export default function Header() {
                     </DropdownMenuPortal>
                   </DropdownMenuSub>
                   
-                  {/* For Vendors Section */}
-                  <DropdownMenuSub>
-                    <DropdownMenuSubTrigger>
-                      <Building className="h-4 w-4 mr-2" />
-                      <span>For Vendors</span>
-                    </DropdownMenuSubTrigger>
-                    <DropdownMenuPortal>
-                      <DropdownMenuSubContent>
-                        {vendorLinks.map((link) => (
-                          <Link key={link.name} href={link.href}>
-                            <DropdownMenuItem className="cursor-pointer">
-                              {link.icon}
-                              {link.name}
-                            </DropdownMenuItem>
-                          </Link>
-                        ))}
-                      </DropdownMenuSubContent>
-                    </DropdownMenuPortal>
-                  </DropdownMenuSub>
+
                   
                   {/* Support Section */}
                   <DropdownMenuSub>
@@ -659,22 +604,7 @@ export default function Header() {
                 </div>
               </div>
               
-              <div className="py-2">
-                <h4 className="font-display font-bold text-md mb-2">For Vendors</h4>
-                <div className="pl-2 flex flex-col space-y-2">
-                  {vendorLinks.map((link) => (
-                    <Link 
-                      key={link.name} 
-                      href={link.href}
-                      className="text-muted-foreground hover:text-primary transition flex items-center"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {link.icon}
-                      {link.name}
-                    </Link>
-                  ))}
-                </div>
-              </div>
+
               
               <div className="py-2">
                 <h4 className="font-display font-bold text-md mb-2">Support</h4>
