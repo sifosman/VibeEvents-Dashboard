@@ -6,6 +6,11 @@ import Home from "./pages/Home";
 import VendorListing from "./pages/VendorListing";
 import VendorDetail from "./pages/VendorDetail";
 import PlannerDashboard from "./pages/PlannerDashboard";
+import MyPlanningPage from "./pages/MyPlanningPage";
+import EventsDiary from "./pages/EventsDiary";
+import QuotesPage from "./pages/QuotesPage";
+import BookingConfirmations from "./pages/BookingConfirmations";
+import BudgetTracker from "./pages/BudgetTracker";
 import LikedItems from "./pages/LikedItems";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -71,7 +76,7 @@ function AppRouter() {
           <ProtectedRoute component={LikedItems} />
         </Route>
         <Route path="/planner">
-          <ProtectedRoute component={PlannerDashboard} />
+          <ProtectedRoute component={MyPlanningPage} />
         </Route>
         <Route path="/gift-registry" component={GiftRegistry} />
         <Route path="/profile/customize">
@@ -83,6 +88,18 @@ function AppRouter() {
         <Route path="/vendor/profile" component={VendorProfileManagement} />
         <Route path="/account">
           <ProtectedRoute component={MyAccount} />
+        </Route>
+        <Route path="/planner/events-diary">
+          <ProtectedRoute component={EventsDiary} />
+        </Route>
+        <Route path="/planner/quotes">
+          <ProtectedRoute component={QuotesPage} />
+        </Route>
+        <Route path="/planner/bookings">
+          <ProtectedRoute component={BookingConfirmations} />
+        </Route>
+        <Route path="/planner/budget">
+          <ProtectedRoute component={BudgetTracker} />
         </Route>
         
         <Route component={NotFound} />
