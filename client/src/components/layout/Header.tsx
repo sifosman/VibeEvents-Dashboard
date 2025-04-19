@@ -86,8 +86,8 @@ function SimpleHeader() {
   const eventHostsLinks = [
     { name: "How It Works", href: "#", icon: <Info className="h-4 w-4 mr-2" /> },
     { name: "Browse Vendors", href: "/vendors", icon: <Building className="h-4 w-4 mr-2" /> },
-    { name: "Service Categories", href: "/vendors/categories", icon: <Filter className="h-4 w-4 mr-2" /> },
-    { name: "Browse by Category", href: "/vendors/by-category", icon: <Building className="h-4 w-4 mr-2" /> },
+    { name: "Service Categories", href: "/ServiceCategories", icon: <Filter className="h-4 w-4 mr-2" /> },
+    { name: "Browse by Category", href: "/BrowseByCategory", icon: <Building className="h-4 w-4 mr-2" /> },
     { name: "Event Planner Tools", href: "/planner", icon: <Sparkles className="h-4 w-4 mr-2" /> },
     { name: "Event Inspiration", href: "#", icon: <Globe className="h-4 w-4 mr-2" /> },
     { name: "Success Stories", href: "#", icon: <Users className="h-4 w-4 mr-2" /> },

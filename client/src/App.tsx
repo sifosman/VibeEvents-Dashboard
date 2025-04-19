@@ -13,6 +13,8 @@ import GiftRegistry from "./pages/GiftRegistry";
 import ProfileCustomization from "./pages/ProfileCustomization";
 import VendorTracking from "./pages/VendorTracking";
 import VendorProfileManagement from "./pages/VendorProfileManagement";
+import ServiceCategories from "./pages/ServiceCategories";
+import BrowseByCategory from "./pages/BrowseByCategory";
 import NotFound from "@/pages/not-found";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "./context/AuthContext";
@@ -58,6 +60,8 @@ function AppRouter() {
         <Route path="/" component={Home} />
         <Route path="/vendors" component={VendorListing} />
         <Route path="/vendors/:id" component={VendorDetail} />
+        <Route path="/ServiceCategories" component={ServiceCategories} />
+        <Route path="/BrowseByCategory" component={BrowseByCategory} />
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
         
@@ -88,6 +92,8 @@ function AppRouter() {
         <Route path="/" component={Home} />
         <Route path="/vendors" component={VendorListing} />
         <Route path="/vendors/:id" component={VendorDetail} />
+        <Route path="/ServiceCategories" component={ServiceCategories} />
+        <Route path="/BrowseByCategory" component={BrowseByCategory} />
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
         <Route path="/likes" component={Login} />
