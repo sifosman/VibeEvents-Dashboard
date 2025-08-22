@@ -179,6 +179,44 @@ function SimpleHeader() {
                   ))}
                 </DropdownMenuGroup>
                 
+                {/* For Venues Section */}
+                <DropdownMenuLabel className="mt-2 text-sm font-semibold">
+                  <Globe className="h-4 w-4 mr-2 inline" />
+                  For Venues
+                </DropdownMenuLabel>
+                <DropdownMenuGroup className="pl-6">
+                  <Link href="/venues/register">
+                    <DropdownMenuItem className="cursor-pointer">
+                      <Building className="h-4 w-4 mr-2" />
+                      Register Your Venue
+                    </DropdownMenuItem>
+                  </Link>
+                  <Link href="/venues/benefits">
+                    <DropdownMenuItem className="cursor-pointer">
+                      <Sparkles className="h-4 w-4 mr-2" />
+                      Venue Benefits
+                    </DropdownMenuItem>
+                  </Link>
+                  <Link href="/venues/dashboard">
+                    <DropdownMenuItem className="cursor-pointer">
+                      <Globe className="h-4 w-4 mr-2" />
+                      Venue Dashboard
+                    </DropdownMenuItem>
+                  </Link>
+                  <Link href="/venues/booking-management">
+                    <DropdownMenuItem className="cursor-pointer">
+                      <Users className="h-4 w-4 mr-2" />
+                      Booking Management
+                    </DropdownMenuItem>
+                  </Link>
+                  <Link href="/venues/marketing">
+                    <DropdownMenuItem className="cursor-pointer">
+                      <MessageCircle className="h-4 w-4 mr-2" />
+                      Marketing Tools
+                    </DropdownMenuItem>
+                  </Link>
+                </DropdownMenuGroup>
+                
                 {/* For Vendors Section - with regular dropdown instead of subdropdown */}
                 <DropdownMenuLabel className="mt-2 text-sm font-semibold">
                   <Building className="h-4 w-4 mr-2 inline" />
