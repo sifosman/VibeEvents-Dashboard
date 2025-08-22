@@ -8,7 +8,7 @@ import {
   CardHeader, 
   CardTitle 
 } from "@/components/ui/card";
-import { MapPin, Globe, Instagram, MessageSquare, Phone } from "lucide-react";
+import { MapPin, Globe, Instagram, MessageSquare, Phone, Calendar, Map } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import StarRating from "../ui/star-rating";
 import { LikeButton } from "./ShortlistButton";
@@ -119,6 +119,8 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
               <TabsTrigger value="about">About</TabsTrigger>
               <TabsTrigger value="services">Services</TabsTrigger>
               <TabsTrigger value="catalog">Catalog</TabsTrigger>
+              <TabsTrigger value="calendar">Calendar</TabsTrigger>
+              <TabsTrigger value="map">Map</TabsTrigger>
               {hasReviewFeature && (
                 <TabsTrigger value="reviews">
                   Reviews ({vendor.reviewCount || 0})
@@ -217,6 +219,108 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
 
             <TabsContent value="catalog">
               <VendorCatalog vendorId={vendorId} />
+            </TabsContent>
+
+            <TabsContent value="calendar">
+              <div>
+                <h2 className="font-display text-xl font-semibold mb-4 flex items-center">
+                  <Calendar className="h-5 w-5 mr-2" />
+                  Availability Calendar
+                </h2>
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="text-center py-8">
+                      <Calendar className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
+                      <h3 className="text-lg font-medium mb-2">Check Availability</h3>
+                      <p className="text-muted-foreground mb-4">
+                        View real-time availability and book directly with {vendor.name}
+                      </p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                        <Card className="border-green-200 bg-green-50">
+                          <CardContent className="p-4 text-center">
+                            <div className="text-green-600 font-semibold mb-2">Available Dates</div>
+                            <p className="text-sm text-green-700">Contact to confirm specific dates and pricing</p>
+                          </CardContent>
+                        </Card>
+                        <Card className="border-red-200 bg-red-50">
+                          <CardContent className="p-4 text-center">
+                            <div className="text-red-600 font-semibold mb-2">Booking Notice</div>
+                            <p className="text-sm text-red-700">Popular dates require advance booking</p>
+                          </CardContent>
+                        </Card>
+                      </div>
+                      <Button className="mt-6" size="lg">
+                        <Calendar className="h-4 w-4 mr-2" />
+                        Contact for Availability
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="map">
+              <div>
+                <h2 className="font-display text-xl font-semibold mb-4 flex items-center">
+                  <Map className="h-5 w-5 mr-2" />
+                  Location & Service Area
+                </h2>
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="space-y-6">
+                      <div>
+                        <h3 className="font-medium mb-3 flex items-center">
+                          <MapPin className="h-4 w-4 mr-2" />
+                          Primary Location
+                        </h3>
+                        <div className="bg-gray-100 rounded-lg p-4">
+                          <p className="font-medium">{vendor.location || 'Cape Town, South Africa'}</p>
+                          <p className="text-sm text-muted-foreground mt-1">
+                            Main service area with no additional travel fees
+                          </p>
+                        </div>
+                      </div>
+
+                      <div>
+                        <h3 className="font-medium mb-3">Service Coverage</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <Card className="border-blue-200 bg-blue-50">
+                            <CardContent className="p-4">
+                              <div className="text-blue-600 font-semibold mb-2">Local Service Area</div>
+                              <p className="text-sm text-blue-700">
+                                Greater Cape Town metropolitan area
+                              </p>
+                            </CardContent>
+                          </Card>
+                          <Card className="border-orange-200 bg-orange-50">
+                            <CardContent className="p-4">
+                              <div className="text-orange-600 font-semibold mb-2">Extended Coverage</div>
+                              <p className="text-sm text-orange-700">
+                                Destination events with travel fees
+                              </p>
+                            </CardContent>
+                          </Card>
+                        </div>
+                      </div>
+
+                      <div className="border-t pt-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h4 className="font-medium">Travel Policy</h4>
+                            <p className="text-sm text-muted-foreground">
+                              Additional fees may apply for events outside primary service area
+                            </p>
+                          </div>
+                          <Button variant="outline">
+                            <MessageSquare className="h-4 w-4 mr-2" />
+                            Discuss Location
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             </TabsContent>
 
             {hasReviewFeature && (
