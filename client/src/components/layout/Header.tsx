@@ -114,16 +114,22 @@ function SimpleHeader() {
     <header className="bg-white shadow-sm">
       <div className="container-custom">
         <div className="flex justify-between items-center py-3">
-          <div className="flex items-center">
+          <div className="flex items-center ml-4">
             {/* Top-left dropdown navigation menu */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="text-primary flex items-center mr-2 p-1">
+                <Button variant="ghost" size="sm" className="text-primary flex items-center mr-2 p-2 ml-2">
                   <Menu className="h-5 w-5 mr-1" />
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-72 max-h-[85vh] overflow-y-auto">
+              <DropdownMenuContent 
+                align="start" 
+                side="bottom"
+                sideOffset={8}
+                alignOffset={16}
+                className="w-72 max-h-[85vh] overflow-y-auto z-50"
+              >
                 <DropdownMenuLabel>Site Navigation</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 
