@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
 import { CatalogItem, Vendor } from '@shared/schema';
 import { formatCurrency } from '@/lib/currencyUtils';
+import { CartButton } from './CartButton';
 import { cn } from '@/lib/utils';
 import { ImageViewer } from '@/components/ui/image-viewer';
 
@@ -434,26 +435,36 @@ export function VendorCatalog({
                 <p className="text-gray-600 text-sm line-clamp-3 mb-3">{item.description}</p>
               )}
               
-              {isEditable && (
-                <div className="flex justify-end gap-2 mt-auto">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={() => handleEditItem(item)}
-                    className="gap-1"
-                  >
-                    <Edit className="w-4 h-4" /> Edit
-                  </Button>
-                  <Button 
-                    variant="destructive" 
-                    size="sm" 
-                    onClick={() => handleDeleteItem(item.id)}
-                    className="gap-1"
-                  >
-                    <Trash2 className="w-4 h-4" /> Delete
-                  </Button>
-                </div>
-              )}
+              <div className="flex flex-col gap-2 mt-auto">
+                {!isEditable && item.inStock && (
+                  <CartButton 
+                    catalogItem={item} 
+                    vendorId={vendorId || 0}
+                    vendorName={vendor?.name || 'Unknown Vendor'}
+                  />
+                )}
+                
+                {isEditable && (
+                  <div className="flex justify-end gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => handleEditItem(item)}
+                      className="gap-1"
+                    >
+                      <Edit className="w-4 h-4" /> Edit
+                    </Button>
+                    <Button 
+                      variant="destructive" 
+                      size="sm" 
+                      onClick={() => handleDeleteItem(item.id)}
+                      className="gap-1"
+                    >
+                      <Trash2 className="w-4 h-4" /> Delete
+                    </Button>
+                  </div>
+                )}
+              </div>
             </div>
           </Card>
         ))}

@@ -255,6 +255,145 @@ export type InsertQuoteRequest = z.infer<typeof insertQuoteRequestSchema>;
 export type BookingDeposit = typeof bookingDeposits.$inferSelect;
 export type InsertBookingDeposit = z.infer<typeof insertBookingDepositSchema>;
 
+// Cart functionality tables
+export const cartItems = pgTable("cart_items", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull(),
+  vendorId: integer("vendor_id").notNull(),
+  catalogItemId: text("catalog_item_id").notNull(),
+  catalogItemName: text("catalog_item_name").notNull(),
+  catalogItemPrice: text("catalog_item_price").notNull(),
+  catalogItemImage: text("catalog_item_image"),
+  quantity: integer("quantity").notNull().default(1),
+  notes: text("notes"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertCartItemSchema = createInsertSchema(cartItems).omit({
+  id: true,
+  createdAt: true,
+});
+
+// Enhanced quote requests with cart items
+export const enhancedQuoteRequests = pgTable("enhanced_quote_requests", {
+  id: serial("id").primaryKey(),
+  vendorId: integer("vendor_id").notNull(),
+  userId: integer("user_id").notNull(),
+  customerName: text("customer_name").notNull(),
+  customerEmail: text("customer_email").notNull(),
+  customerPhone: text("customer_phone"),
+  eventType: text("event_type"),
+  eventDate: timestamp("event_date"),
+  eventLocation: text("event_location"),
+  guestCount: integer("guest_count"),
+  status: text("status").notNull().default("requested"), // requested, pending, accepted, rejected, amendment_requested
+  totalAmount: doublePrecision("total_amount"),
+  vendorNotes: text("vendor_notes"),
+  customerRequirements: text("customer_requirements"),
+  submittedAt: timestamp("submitted_at").defaultNow(),
+  quotedAt: timestamp("quoted_at"),
+  respondedAt: timestamp("responded_at"),
+});
+
+export const insertEnhancedQuoteRequestSchema = createInsertSchema(enhancedQuoteRequests).omit({
+  id: true,
+  submittedAt: true,
+});
+
+// Quote line items
+export const quoteLineItems = pgTable("quote_line_items", {
+  id: serial("id").primaryKey(),
+  quoteRequestId: integer("quote_request_id").notNull(),
+  catalogItemId: text("catalog_item_id").notNull(),
+  catalogItemName: text("catalog_item_name").notNull(),
+  quantity: integer("quantity").notNull().default(1),
+  unitPrice: doublePrecision("unit_price").notNull(),
+  totalPrice: doublePrecision("total_price").notNull(),
+  customerNotes: text("customer_notes"),
+  vendorNotes: text("vendor_notes"),
+});
+
+export const insertQuoteLineItemSchema = createInsertSchema(quoteLineItems).omit({
+  id: true,
+});
+
+// Quote messages for vendor-customer communication
+export const quoteMessages = pgTable("quote_messages", {
+  id: serial("id").primaryKey(),
+  quoteRequestId: integer("quote_request_id").notNull(),
+  senderId: integer("sender_id").notNull(),
+  senderType: text("sender_type").notNull(), // 'vendor' or 'customer'
+  senderName: text("sender_name").notNull(),
+  message: text("message").notNull(),
+  messageType: text("message_type").notNull().default("text"), // text, quote_update, amendment_request
+  attachments: text("attachments").array(),
+  isRead: boolean("is_read").default(false),
+  sentAt: timestamp("sent_at").defaultNow(),
+});
+
+export const insertQuoteMessageSchema = createInsertSchema(quoteMessages).omit({
+  id: true,
+  sentAt: true,
+});
+
+// Invoices converted from accepted quotes
+export const invoices = pgTable("invoices", {
+  id: serial("id").primaryKey(),
+  quoteRequestId: integer("quote_request_id").notNull(),
+  vendorId: integer("vendor_id").notNull(),
+  customerId: integer("customer_id").notNull(),
+  invoiceNumber: text("invoice_number").notNull().unique(),
+  totalAmount: doublePrecision("total_amount").notNull(),
+  depositAmount: doublePrecision("deposit_amount"),
+  remainingAmount: doublePrecision("remaining_amount"),
+  paymentStatus: text("payment_status").notNull().default("pending"), // pending, partial, paid, overdue
+  paymentTerms: text("payment_terms"),
+  dueDate: timestamp("due_date"),
+  notes: text("notes"),
+  createdAt: timestamp("created_at").defaultNow(),
+  paidAt: timestamp("paid_at"),
+});
+
+export const insertInvoiceSchema = createInsertSchema(invoices).omit({
+  id: true,
+  createdAt: true,
+});
+
+// Invoice line items
+export const invoiceLineItems = pgTable("invoice_line_items", {
+  id: serial("id").primaryKey(),
+  invoiceId: integer("invoice_id").notNull(),
+  catalogItemId: text("catalog_item_id").notNull(),
+  catalogItemName: text("catalog_item_name").notNull(),
+  quantity: integer("quantity").notNull(),
+  unitPrice: doublePrecision("unit_price").notNull(),
+  totalPrice: doublePrecision("total_price").notNull(),
+  description: text("description"),
+});
+
+export const insertInvoiceLineItemSchema = createInsertSchema(invoiceLineItems).omit({
+  id: true,
+});
+
+// Type exports for new tables
+export type CartItem = typeof cartItems.$inferSelect;
+export type InsertCartItem = z.infer<typeof insertCartItemSchema>;
+
+export type EnhancedQuoteRequest = typeof enhancedQuoteRequests.$inferSelect;
+export type InsertEnhancedQuoteRequest = z.infer<typeof insertEnhancedQuoteRequestSchema>;
+
+export type QuoteLineItem = typeof quoteLineItems.$inferSelect;
+export type InsertQuoteLineItem = z.infer<typeof insertQuoteLineItemSchema>;
+
+export type QuoteMessage = typeof quoteMessages.$inferSelect;
+export type InsertQuoteMessage = z.infer<typeof insertQuoteMessageSchema>;
+
+export type Invoice = typeof invoices.$inferSelect;
+export type InsertInvoice = z.infer<typeof insertInvoiceSchema>;
+
+export type InvoiceLineItem = typeof invoiceLineItems.$inferSelect;
+export type InsertInvoiceLineItem = z.infer<typeof insertInvoiceLineItemSchema>;
+
 // WhatsApp integration tables
 export const whatsappGroups = pgTable("whatsapp_groups", {
   id: serial("id").primaryKey(),
