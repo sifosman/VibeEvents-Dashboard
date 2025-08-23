@@ -25,11 +25,22 @@ interface VendorDetailProps {
 export function VendorDetail({ vendorId }: VendorDetailProps) {
   const { data: vendor, isLoading: vendorLoading } = useQuery<Vendor>({
     queryKey: ['/api/vendors', String(vendorId)],
+    queryFn: async () => {
+      const response = await fetch(`/api/vendors/${vendorId}`);
+      if (!response.ok) throw new Error('Failed to fetch vendor');
+      return response.json();
+    },
     enabled: vendorId > 0,
   });
 
   const { data: category, isLoading: categoryLoading } = useQuery<Category>({
     queryKey: vendor ? ['/api/categories', String(vendor.categoryId)] : ['no-category'],
+    queryFn: async () => {
+      if (!vendor?.categoryId) throw new Error('No category ID');
+      const response = await fetch(`/api/categories/${vendor.categoryId}`);
+      if (!response.ok) throw new Error('Failed to fetch category');
+      return response.json();
+    },
     enabled: !!vendor && !!vendor.categoryId,
   });
 
@@ -423,10 +434,6 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
           )}
         </div>
         
-        {/* Debug info - will remove later */}
-        <div className="text-xs text-gray-500 mb-4">
-          Debug: Loading: {similarVendorsLoading.toString()}, Count: {similarVendors.length}, Category: {vendor?.categoryId}
-        </div>
 
         {similarVendorsLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
