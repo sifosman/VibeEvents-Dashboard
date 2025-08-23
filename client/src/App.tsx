@@ -25,6 +25,7 @@ import VendorRegistration from "./pages/vendor-registration";
 import UserDashboard from "./pages/UserDashboard";
 import UserProfile from "./pages/UserProfile";
 import VendorReview from "./pages/VendorReview";
+import Support from "./pages/Support";
 import NotFound from "@/pages/not-found";
 import { Loader2 } from "lucide-react";
 // import { useAuth } from "./context/AuthContext";
@@ -50,6 +51,7 @@ function AppRouter() {
       <Route path="/vendor-registration" component={VendorRegistration} />
       <Route path="/dashboard" component={UserDashboard} />
       <Route path="/profile" component={UserProfile} />
+      <Route path="/support" component={Support} />
       <Route path="/gift-registry" component={GiftRegistry} />
       <Route path="/likes" component={LikedItems} />
       <Route path="/planner" component={MyPlanningPage} />
