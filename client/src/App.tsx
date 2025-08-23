@@ -21,6 +21,7 @@ import VendorProfileManagement from "./pages/VendorProfileManagement";
 import ServiceCategories from "./pages/ServiceCategories";
 import BrowseByCategory from "./pages/BrowseByCategory";
 import MyAccount from "./pages/MyAccount";
+import VendorRegistration from "./pages/vendor-registration";
 import NotFound from "@/pages/not-found";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "./context/AuthContext";
@@ -70,6 +71,7 @@ function AppRouter() {
         <Route path="/BrowseByCategory" component={BrowseByCategory} />
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
+        <Route path="/vendor-registration" component={VendorRegistration} />
         
         {/* Protected routes with auto-redirect */}
         <Route path="/likes">
@@ -117,6 +119,7 @@ function AppRouter() {
         <Route path="/BrowseByCategory" component={BrowseByCategory} />
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
+        <Route path="/vendor-registration" component={VendorRegistration} />
         <Route path="/likes" component={Login} />
         <Route path="/planner" component={Login} />
         <Route path="/gift-registry" component={GiftRegistry} />

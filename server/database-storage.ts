@@ -4,6 +4,7 @@ import {
   users, type User, type InsertUser,
   categories, type Category, type InsertCategory,
   vendors, type Vendor, type InsertVendor,
+  vendorRegistrations, type VendorRegistration, type InsertVendorRegistration,
   shortlists, type Shortlist, type InsertShortlist,
   tasks, type Task, type InsertTask,
   timelineEvents, type TimelineEvent, type InsertTimelineEvent,
@@ -375,6 +376,36 @@ export class DatabaseStorage implements IStorage {
       .returning();
     
     return updatedVendor;
+  }
+
+  // Vendor Registration operations
+  async getVendorRegistrations(): Promise<VendorRegistration[]> {
+    return db.select().from(vendorRegistrations).orderBy(desc(vendorRegistrations.createdAt));
+  }
+
+  async getVendorRegistrationById(id: number): Promise<VendorRegistration | undefined> {
+    const [registration] = await db.select().from(vendorRegistrations).where(eq(vendorRegistrations.id, id));
+    return registration || undefined;
+  }
+
+  async createVendorRegistration(registration: InsertVendorRegistration): Promise<VendorRegistration> {
+    const [newRegistration] = await db.insert(vendorRegistrations).values(registration).returning();
+    return newRegistration;
+  }
+
+  async updateVendorRegistrationStatus(id: number, status: string, adminNotes?: string): Promise<VendorRegistration | undefined> {
+    const [updatedRegistration] = await db
+      .update(vendorRegistrations)
+      .set({ 
+        status, 
+        adminNotes,
+        reviewedAt: new Date(),
+        updatedAt: new Date()
+      })
+      .where(eq(vendorRegistrations.id, id))
+      .returning();
+    
+    return updatedRegistration || undefined;
   }
 
   // Shortlist operations

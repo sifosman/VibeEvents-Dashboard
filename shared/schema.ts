@@ -711,6 +711,65 @@ export const insertVendorApplicationSchema = createInsertSchema(vendorApplicatio
   updatedAt: true,
 });
 
+// Vendor profile registration applications table - for new vendors to register and create profiles
+export const vendorRegistrations = pgTable("vendor_registrations", {
+  id: serial("id").primaryKey(),
+  // Company Information
+  companyName: text("company_name").notNull(),
+  registrationNumber: text("registration_number"),
+  ownerName: text("owner_name").notNull(),
+  idNumber: text("id_number").notNull(),
+  
+  // Address Information
+  billingAddress: text("billing_address").notNull(),
+  locationAddress: text("location_address").notNull(),
+  googleMapsLocation: text("google_maps_location"), // Google Maps coordinates or place ID
+  
+  // Business Information
+  about: text("about").notNull(),
+  cateringCapacity: integer("catering_capacity"),
+  servicesProducts: text("services_products").notNull(),
+  uniqueFeatures: text("unique_features"),
+  hashtags: text("hashtags").array(), // Selected hashtags for filtering
+  
+  // Category Information
+  categoryId: integer("category_id").notNull(),
+  
+  // File Uploads
+  catalogueFileUrl: text("catalogue_file_url"),
+  pictureUrls: text("picture_urls").array(),
+  videoUrls: text("video_urls").array(),
+  
+  // Terms and Conditions
+  acceptedTerms: boolean("accepted_terms").notNull().default(false),
+  acceptedDate: timestamp("accepted_date"),
+  
+  // Application Status
+  status: text("status").notNull().default("pending"), // pending, approved, rejected, under_review
+  adminNotes: text("admin_notes"),
+  reviewedBy: integer("reviewed_by"), // Admin user ID who reviewed
+  reviewedAt: timestamp("reviewed_at"),
+  
+  // Contact Information
+  contactEmail: text("contact_email").notNull(),
+  contactPhone: text("contact_phone"),
+  websiteUrl: text("website_url"),
+  instagramUrl: text("instagram_url"),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertVendorRegistrationSchema = createInsertSchema(vendorRegistrations).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  status: true,
+  adminNotes: true,
+  reviewedBy: true,
+  reviewedAt: true,
+});
+
 // Reviews table
 export const reviews = pgTable("reviews", {
   id: serial("id").primaryKey(),
@@ -790,6 +849,8 @@ export type EventOpportunity = typeof eventOpportunities.$inferSelect;
 export type InsertEventOpportunity = z.infer<typeof insertEventOpportunitySchema>;
 
 export type VendorApplication = typeof vendorApplications.$inferSelect;
+export type VendorRegistration = typeof vendorRegistrations.$inferSelect;
+export type InsertVendorRegistration = z.infer<typeof insertVendorRegistrationSchema>;
 export type InsertVendorApplication = z.infer<typeof insertVendorApplicationSchema>;
 
 export type Review = typeof reviews.$inferSelect;

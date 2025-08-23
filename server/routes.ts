@@ -18,11 +18,13 @@ import {
   insertSeoPackageSchema,
   insertEventOpportunitySchema,
   insertVendorApplicationSchema,
+  insertVendorRegistrationSchema,
   insertCalendarEventSchema,
   insertReviewSchema,
   insertConversationSchema,
   insertMessageSchema
 } from "@shared/schema";
+import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
 import { z } from "zod";
 import Stripe from "stripe";
 
@@ -2659,6 +2661,106 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error uploading additional images:', error);
       res.status(500).json({ message: 'Failed to upload additional images', details: (error as Error).message });
+    }
+  });
+
+  // Vendor Registration Routes
+  app.post('/api/vendor-registrations', async (req: Request, res: Response) => {
+    try {
+      const validatedData = insertVendorRegistrationSchema.parse(req.body);
+      const registration = await storage.createVendorRegistration(validatedData);
+      res.status(201).json(registration);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: 'Invalid input data', errors: error.errors });
+      }
+      console.error('Error creating vendor registration:', error);
+      res.status(500).json({ message: 'Failed to create vendor registration' });
+    }
+  });
+
+  app.get('/api/vendor-registrations', async (req: Request, res: Response) => {
+    try {
+      const registrations = await storage.getVendorRegistrations();
+      res.json(registrations);
+    } catch (error) {
+      console.error('Error fetching vendor registrations:', error);
+      res.status(500).json({ message: 'Failed to fetch vendor registrations' });
+    }
+  });
+
+  app.get('/api/vendor-registrations/:id', async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const registration = await storage.getVendorRegistrationById(id);
+      if (!registration) {
+        return res.status(404).json({ message: 'Vendor registration not found' });
+      }
+      res.json(registration);
+    } catch (error) {
+      console.error('Error fetching vendor registration:', error);
+      res.status(500).json({ message: 'Failed to fetch vendor registration' });
+    }
+  });
+
+  app.put('/api/vendor-registrations/:id/status', async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { status, adminNotes } = req.body;
+      
+      if (!['pending', 'approved', 'rejected', 'under_review'].includes(status)) {
+        return res.status(400).json({ message: 'Invalid status value' });
+      }
+
+      const registration = await storage.updateVendorRegistrationStatus(id, status, adminNotes);
+      if (!registration) {
+        return res.status(404).json({ message: 'Vendor registration not found' });
+      }
+      res.json(registration);
+    } catch (error) {
+      console.error('Error updating vendor registration status:', error);
+      res.status(500).json({ message: 'Failed to update vendor registration status' });
+    }
+  });
+
+  // Object Storage Routes
+  app.get("/public-objects/:filePath(*)", async (req: Request, res: Response) => {
+    const filePath = req.params.filePath;
+    const objectStorageService = new ObjectStorageService();
+    try {
+      const file = await objectStorageService.searchPublicObject(filePath);
+      if (!file) {
+        return res.status(404).json({ error: "File not found" });
+      }
+      objectStorageService.downloadObject(file, res);
+    } catch (error) {
+      console.error("Error searching for public object:", error);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  app.get("/objects/:objectPath(*)", async (req: Request, res: Response) => {
+    const objectStorageService = new ObjectStorageService();
+    try {
+      const objectFile = await objectStorageService.getObjectEntityFile(req.path);
+      objectStorageService.downloadObject(objectFile, res);
+    } catch (error) {
+      console.error("Error checking object access:", error);
+      if (error instanceof ObjectNotFoundError) {
+        return res.sendStatus(404);
+      }
+      return res.sendStatus(500);
+    }
+  });
+
+  app.post("/api/objects/upload", async (req: Request, res: Response) => {
+    const objectStorageService = new ObjectStorageService();
+    try {
+      const uploadURL = await objectStorageService.getObjectEntityUploadURL();
+      res.json({ uploadURL });
+    } catch (error) {
+      console.error("Error getting upload URL:", error);
+      res.status(500).json({ error: "Failed to generate upload URL" });
     }
   });
 

@@ -2,6 +2,7 @@ import {
   users, type User, type InsertUser,
   categories, type Category, type InsertCategory,
   vendors, type Vendor, type InsertVendor,
+  vendorRegistrations, type VendorRegistration, type InsertVendorRegistration,
   shortlists, type Shortlist, type InsertShortlist,
   tasks, type Task, type InsertTask,
   timelineEvents, type TimelineEvent, type InsertTimelineEvent,
@@ -42,6 +43,12 @@ export interface IStorage {
   updateVendorStripeCustomerId(id: number, customerId: string): Promise<Vendor>;
   updateVendorSubscription(id: number, subscriptionId: string, subscriptionTier: string): Promise<Vendor>;
   updateVendorSubscriptionStatus(subscriptionId: string, status: string): Promise<Vendor | undefined>;
+
+  // Vendor Registration operations
+  getVendorRegistrations(): Promise<VendorRegistration[]>;
+  getVendorRegistrationById(id: number): Promise<VendorRegistration | undefined>;
+  createVendorRegistration(registration: InsertVendorRegistration): Promise<VendorRegistration>;
+  updateVendorRegistrationStatus(id: number, status: string, adminNotes?: string): Promise<VendorRegistration | undefined>;
   
   // Review operations
   getReviewsByVendor(vendorId: number): Promise<Review[]>;
@@ -149,6 +156,7 @@ export class MemStorage implements IStorage {
   private users: Map<number, User>;
   private categories: Map<number, Category>;
   private vendors: Map<number, Vendor>;
+  private vendorRegistrations: Map<number, VendorRegistration>;
   private shortlists: Map<number, Shortlist>;
   private tasks: Map<number, Task>;
   private timelineEvents: Map<number, TimelineEvent>;
@@ -169,6 +177,7 @@ export class MemStorage implements IStorage {
   private userIdCounter: number;
   private categoryIdCounter: number;
   private vendorIdCounter: number;
+  private vendorRegistrationIdCounter: number;
   private shortlistIdCounter: number;
   private taskIdCounter: number;
   private timelineEventIdCounter: number;
@@ -190,6 +199,7 @@ export class MemStorage implements IStorage {
     this.users = new Map();
     this.categories = new Map();
     this.vendors = new Map();
+    this.vendorRegistrations = new Map();
     this.shortlists = new Map();
     this.tasks = new Map();
     this.timelineEvents = new Map();
@@ -210,6 +220,7 @@ export class MemStorage implements IStorage {
     this.userIdCounter = 1;
     this.categoryIdCounter = 1;
     this.vendorIdCounter = 1;
+    this.vendorRegistrationIdCounter = 1;
     this.shortlistIdCounter = 1;
     this.taskIdCounter = 1;
     this.timelineEventIdCounter = 1;
@@ -1389,6 +1400,51 @@ export class MemStorage implements IStorage {
     }
 
     return updatedVendor;
+  }
+
+  // Vendor Registration operations
+  async getVendorRegistrations(): Promise<VendorRegistration[]> {
+    return Array.from(this.vendorRegistrations.values());
+  }
+
+  async getVendorRegistrationById(id: number): Promise<VendorRegistration | undefined> {
+    return this.vendorRegistrations.get(id);
+  }
+
+  async createVendorRegistration(registration: InsertVendorRegistration): Promise<VendorRegistration> {
+    const id = this.vendorRegistrationIdCounter++;
+    const now = new Date();
+    const vendorRegistration: VendorRegistration = {
+      ...registration,
+      id,
+      status: 'pending',
+      acceptedDate: registration.acceptedTerms ? now : null,
+      createdAt: now,
+      updatedAt: now,
+      adminNotes: null,
+      reviewedBy: null,
+      reviewedAt: null,
+    };
+    this.vendorRegistrations.set(id, vendorRegistration);
+    return vendorRegistration;
+  }
+
+  async updateVendorRegistrationStatus(id: number, status: string, adminNotes?: string): Promise<VendorRegistration | undefined> {
+    const registration = this.vendorRegistrations.get(id);
+    if (!registration) {
+      return undefined;
+    }
+
+    const updatedRegistration: VendorRegistration = {
+      ...registration,
+      status,
+      adminNotes: adminNotes || registration.adminNotes,
+      reviewedAt: new Date(),
+      updatedAt: new Date(),
+    };
+    
+    this.vendorRegistrations.set(id, updatedRegistration);
+    return updatedRegistration;
   }
 }
 
