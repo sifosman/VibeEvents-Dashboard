@@ -420,7 +420,7 @@ export class MemStorage implements IStorage {
     // Add vendors
     const vendorsData: InsertVendor[] = [
       {
-        name: "Rose Garden Hall",
+        name: "Elegant Gardens Venue",
         description: "Elegant garden venue with indoor and outdoor spaces, perfect for ceremonies and receptions up to 300 guests.",
         imageUrl: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         categoryId: 1, // Venues
@@ -513,7 +513,7 @@ export class MemStorage implements IStorage {
         ]
       },
       {
-        name: "Sweet Delights Bakery",
+        name: "Sweet Dreams Bakery",
         description: "Award-winning cake designer specializing in custom wedding cakes, cupcakes, and dessert tables for your special day.",
         imageUrl: "https://images.unsplash.com/photo-1547059470-3b0c7cd958a4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         categoryId: 2, // Catering & Bakers
