@@ -16,7 +16,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { Link } from "wouter";
+import { FaFacebook, FaGoogle, FaApple } from "react-icons/fa";
 
 // Extend the user schema with confirm password for registration
 const registerSchema = insertUserSchema.extend({
@@ -41,6 +43,13 @@ interface AuthFormProps {
   onSubmit: (data: any) => Promise<void>;
   isLoading: boolean;
 }
+
+// Social login handlers (placeholder implementations)
+const handleSocialLogin = (provider: 'google' | 'facebook' | 'apple') => {
+  // For now, these will be placeholder functions
+  // In a real implementation, these would integrate with OAuth providers
+  console.log(`${provider} login clicked - integrate OAuth here`);
+};
 
 export default function AuthForm({ type, onSubmit, isLoading }: AuthFormProps) {
   const { toast } = useToast();
@@ -165,6 +174,45 @@ export default function AuthForm({ type, onSubmit, isLoading }: AuthFormProps) {
             </Button>
           </form>
         </Form>
+        
+        {/* Social Login Section */}
+        <div className="relative my-6">
+          <Separator />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="bg-white px-3 text-sm text-muted-foreground">
+              Or continue with
+            </span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-3">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => handleSocialLogin('google')}
+            className="w-full"
+          >
+            <FaGoogle className="h-4 w-4 text-red-500" />
+          </Button>
+          
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => handleSocialLogin('facebook')}
+            className="w-full"
+          >
+            <FaFacebook className="h-4 w-4 text-blue-600" />
+          </Button>
+          
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => handleSocialLogin('apple')}
+            className="w-full"
+          >
+            <FaApple className="h-4 w-4 text-black" />
+          </Button>
+        </div>
       </CardContent>
       <CardFooter className="flex flex-col space-y-2">
         <div className="text-sm text-center">

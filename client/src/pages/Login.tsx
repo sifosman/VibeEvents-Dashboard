@@ -1,24 +1,25 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 import { useLocation } from "wouter";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/hooks/use-auth";
 import AuthForm from "@/components/auth/AuthForm";
 
 export default function Login() {
-  const { login, isLoading, isAuthenticated } = useAuth();
+  const { user, isLoading, loginMutation } = useAuth();
   const [, setLocation] = useLocation();
+  const isAuthenticated = !!user;
 
   // Redirect if already logged in
   React.useEffect(() => {
     if (isAuthenticated) {
-      setLocation("/planner");
+      setLocation("/dashboard");
     }
   }, [isAuthenticated, setLocation]);
 
   const handleLogin = async (data: { username: string; password: string }) => {
     try {
-      await login(data.username, data.password);
-      setLocation("/planner");
+      await loginMutation.mutateAsync(data);
+      setLocation("/dashboard");
     } catch (error) {
       console.error("Login error:", error);
     }

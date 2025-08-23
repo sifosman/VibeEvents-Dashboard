@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
 
 // Fallback version that doesn't depend on auth
 function SimpleCallToAction() {
@@ -34,7 +35,6 @@ function SimpleCallToAction() {
 export default function CallToAction() {
   try {
     // Try to use auth context
-    const { useAuth } = require("@/context/AuthContext");
     const { isAuthenticated } = useAuth();
 
     return (

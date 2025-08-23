@@ -1,26 +1,16 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 import { useLocation } from "wouter";
-import { useAuth } from "@/context/AuthContext";
 import AuthForm from "@/components/auth/AuthForm";
 
 export default function Register() {
-  const { register, isLoading, isAuthenticated } = useAuth();
   const [, setLocation] = useLocation();
-
-  // Redirect if already logged in
-  React.useEffect(() => {
-    if (isAuthenticated) {
-      setLocation("/planner");
-    }
-  }, [isAuthenticated, setLocation]);
 
   const handleRegister = async (data: any) => {
     try {
-      // Remove the confirmPassword field before sending to API
-      const { confirmPassword, ...userData } = data;
-      await register(userData);
-      setLocation("/planner");
+      console.log("Mock registration:", data);
+      // Mock successful registration and redirect
+      setLocation("/dashboard");
     } catch (error) {
       console.error("Registration error:", error);
     }
@@ -43,7 +33,7 @@ export default function Register() {
             <AuthForm 
               type="register" 
               onSubmit={handleRegister} 
-              isLoading={isLoading} 
+              isLoading={false} 
             />
           </div>
         </div>

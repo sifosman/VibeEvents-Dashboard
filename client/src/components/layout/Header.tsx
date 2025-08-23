@@ -30,6 +30,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuPortal
 } from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/context/AuthContext";
 
 // Simple header that doesn't require auth
 function SimpleHeader() {
@@ -514,8 +515,8 @@ function SimpleHeader() {
 
 export default function Header() {
   try {
-    // We're using a dynamic import with require to avoid the React hook error on initial render
-    const { useAuth } = require("@/context/AuthContext");
+    // We're using the auth context hook
+    const { user, isAuthenticated, logout } = useAuth();
     
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [location] = useLocation();
@@ -562,7 +563,6 @@ export default function Header() {
     }, []);
     
     // If we get here, AuthContext is available
-    const { user, isAuthenticated, logout } = useAuth();
 
     const navLinks = [
       { name: "Home", href: "/" },

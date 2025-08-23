@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { Check, ChevronRight, ExternalLink, Hourglass, Trash2 } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 // Simple version of PlannerScreens that doesn't require auth
 function SimplePlannerScreens() {
@@ -103,7 +104,6 @@ function SimplePlannerScreens() {
 export default function PlannerScreens() {
   try {
     // Try to use auth context
-    const { useAuth } = require("@/context/AuthContext");
     const { isAuthenticated } = useAuth();
 
     // Note: This component shows a preview of planner features - actual functionality would be in the planner dashboard page

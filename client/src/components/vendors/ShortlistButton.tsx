@@ -5,6 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/context/AuthContext";
 
 interface LikeButtonProps {
   vendorId: number;
@@ -55,7 +56,6 @@ function SimpleLikeButton({
 export function LikeButton(props: LikeButtonProps) {
   try {
     // Try to use auth context
-    const { useAuth } = require("@/context/AuthContext");
     const { user, isAuthenticated } = useAuth();
     const { toast } = useToast();
     const queryClient = useQueryClient();

@@ -53,21 +53,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [registerError, setRegisterError] = useState<Error | null>(null);
   const { toast } = useToast();
 
-  // Check for existing session on load
-  useEffect(() => {
-    const checkSession = async () => {
-      try {
-        await revalidateSession();
-      } catch (error) {
-        // Session not valid, that's okay
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    checkSession();
-  }, []);
-
   // Revalidate the user's session with the server
   const revalidateSession = async (): Promise<User> => {
     try {
@@ -206,6 +191,21 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
+  // Check for existing session on load
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        await revalidateSession();
+      } catch (error) {
+        // Session not valid, that's okay
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    checkSession();
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
@@ -217,7 +217,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         logout,
         revalidateSession,
         loginMutation: {
-          mutateAsync: login,
+          mutateAsync: async (credentials: { username: string; password: string }) => {
+            return await login(credentials.username, credentials.password);
+          },
           isPending: loginPending,
           isError: !!loginError,
           error: loginError,
