@@ -24,7 +24,7 @@ interface VendorDetailProps {
 
 export function VendorDetail({ vendorId }: VendorDetailProps) {
   const { data: vendor, isLoading: vendorLoading } = useQuery<Vendor>({
-    queryKey: ['/api/vendors', String(vendorId)],
+    queryKey: ['vendor-detail', vendorId],
     queryFn: async () => {
       const response = await fetch(`/api/vendors/${vendorId}`);
       if (!response.ok) throw new Error('Failed to fetch vendor');
@@ -34,7 +34,7 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
   });
 
   const { data: category, isLoading: categoryLoading } = useQuery<Category>({
-    queryKey: vendor ? ['/api/categories', String(vendor.categoryId)] : ['no-category'],
+    queryKey: ['category-detail', vendor?.categoryId],
     queryFn: async () => {
       if (!vendor?.categoryId) throw new Error('No category ID');
       const response = await fetch(`/api/categories/${vendor.categoryId}`);
