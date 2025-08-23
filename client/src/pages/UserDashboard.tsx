@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAuth } from "@/hooks/use-auth";
+// import { useAuth } from "@/hooks/use-auth";
 import { 
   Search, 
   MapPin, 
@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 
 export default function UserDashboard() {
-  const { user } = useAuth();
+  // const { user } = useAuth();
 
   const navigationOptions = [
     {
@@ -57,9 +57,9 @@ export default function UserDashboard() {
     },
     {
       title: "My Profile",
-      description: "Update your account and preferences",
+      description: "Set up your event planning details and preferences",
       icon: <User className="h-8 w-8 text-gray-600" />,
-      href: "/account",
+      href: "/profile",
       color: "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
     }
   ];
@@ -76,7 +76,7 @@ export default function UserDashboard() {
           {/* Welcome Header */}
           <div className="text-center mb-10">
             <h1 className="text-4xl font-display font-bold text-gray-900 mb-4">
-              Welcome to HowzEventz{user?.fullName ? `, ${user.fullName}` : ''}! 🎉
+              Welcome to HowzEventz! 🎉
             </h1>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               Your event planning journey starts here. Choose what you'd like to explore first.
