@@ -430,7 +430,87 @@ export class MemStorage implements IStorage {
         instagramUrl: "https://instagram.com/",
         websiteUrl: "https://example.com/",
         whatsappNumber: "+1234567890",
-        location: "New York, NY"
+        location: "New York, NY",
+        catalogItems: [
+          {
+            id: "garden_venue_basic",
+            name: "Garden Venue - Basic Package",
+            description: "Beautiful outdoor garden venue with basic setup. Includes tables, chairs, and garden access for up to 80 guests.",
+            imageUrl: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            price: "R18,500",
+            category: "Venue Packages",
+            inStock: true,
+            featured: true,
+            sortOrder: 1,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          },
+          {
+            id: "garden_venue_premium",
+            name: "Garden Venue - Premium Package",
+            description: "Luxury garden venue experience with premium setup, floral arrangements, lighting, and dedicated event coordinator.",
+            imageUrl: "https://images.unsplash.com/photo-1571058503354-b091e5ab2035?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            price: "R35,000",
+            category: "Venue Packages",
+            inStock: true,
+            featured: true,
+            sortOrder: 2,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          },
+          {
+            id: "bridal_bouquet",
+            name: "Bridal Bouquet - Elegant White",
+            description: "Stunning white rose and eucalyptus bridal bouquet, hand-crafted by our expert florists.",
+            imageUrl: "https://images.unsplash.com/photo-1594736797933-d0d92066c675?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            price: "R1,250",
+            category: "Floral Arrangements",
+            inStock: true,
+            featured: false,
+            sortOrder: 3,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          },
+          {
+            id: "centerpieces",
+            name: "Table Centerpieces (Set of 10)",
+            description: "Elegant table centerpieces with seasonal flowers and candles. Perfect for reception tables.",
+            imageUrl: "https://images.unsplash.com/photo-1560690633-d1b8106e2b1e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            price: "R2,800",
+            category: "Floral Arrangements",
+            inStock: true,
+            featured: false,
+            sortOrder: 4,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          },
+          {
+            id: "photography_basic",
+            name: "Wedding Photography - 6 Hours",
+            description: "Professional wedding photography package including ceremony and reception coverage with 200+ edited photos.",
+            imageUrl: "https://images.unsplash.com/photo-1606216794074-735e91aa2c92?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            price: "R8,500",
+            category: "Photography",
+            inStock: true,
+            featured: true,
+            sortOrder: 5,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          },
+          {
+            id: "catering_buffet",
+            name: "Buffet Catering (Per Person)",
+            description: "Delicious buffet catering with multiple course options. Price per person for groups of 50+.",
+            imageUrl: "https://images.unsplash.com/photo-1555244162-803834f70033?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            price: "R385",
+            category: "Catering",
+            inStock: true,
+            featured: false,
+            sortOrder: 6,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          }
+        ]
       },
       {
         name: "Sweet Delights Bakery",
@@ -443,7 +523,61 @@ export class MemStorage implements IStorage {
         instagramUrl: "https://instagram.com/",
         websiteUrl: "https://example.com/",
         whatsappNumber: "+1234567890",
-        location: "Chicago, IL"
+        location: "Chicago, IL",
+        catalogItems: [
+          {
+            id: "wedding_cake_3tier",
+            name: "3-Tier Wedding Cake",
+            description: "Elegant 3-tier wedding cake with custom decorations. Serves 80-100 guests. Choose from vanilla, chocolate, or red velvet.",
+            imageUrl: "https://images.unsplash.com/photo-1535141192574-5d4897c12636?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            price: "R3,200",
+            category: "Wedding Cakes",
+            inStock: true,
+            featured: true,
+            sortOrder: 1,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          },
+          {
+            id: "cupcake_tower",
+            name: "Cupcake Tower (50 pieces)",
+            description: "Beautiful cupcake tower with assorted flavors and elegant decorations. Perfect alternative to traditional cake.",
+            imageUrl: "https://images.unsplash.com/photo-1448043552756-e747b7a2b2b8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            price: "R1,800",
+            category: "Cupcakes",
+            inStock: true,
+            featured: false,
+            sortOrder: 2,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          },
+          {
+            id: "dessert_table",
+            name: "Complete Dessert Table",
+            description: "Full dessert table setup with variety of pastries, macarons, mini cakes, and seasonal treats for 100 guests.",
+            imageUrl: "https://images.unsplash.com/photo-1563776219665-6291d0acbc69?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            price: "R4,500",
+            category: "Dessert Tables",
+            inStock: true,
+            featured: true,
+            sortOrder: 3,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          },
+          {
+            id: "custom_cookies",
+            name: "Custom Decorated Cookies (2 dozen)",
+            description: "Hand-decorated sugar cookies with custom designs matching your event theme. Perfect for favors or dessert tables.",
+            imageUrl: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            price: "R680",
+            category: "Cookies",
+            inStock: true,
+            featured: false,
+            sortOrder: 4,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          }
+        ]
       },
       {
         name: "Glamour Bridal Studio",
