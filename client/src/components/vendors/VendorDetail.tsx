@@ -33,6 +33,20 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
     enabled: !!vendor && !!vendor.categoryId,
   });
 
+  // Fetch similar vendors in the same category
+  const { data: similarVendors = [], isLoading: similarVendorsLoading } = useQuery<Vendor[]>({
+    queryKey: ['/api/vendors', { categoryId: vendor?.categoryId }],
+    queryFn: async () => {
+      if (!vendor?.categoryId) return [];
+      const response = await fetch(`/api/vendors?categoryId=${vendor.categoryId}&limit=8`);
+      if (!response.ok) throw new Error('Failed to fetch similar vendors');
+      const allVendors = await response.json();
+      // Filter out the current vendor and limit to 4 vendors
+      return allVendors.filter((v: Vendor) => v.id !== vendorId).slice(0, 4);
+    },
+    enabled: !!vendor?.categoryId,
+  });
+
   // Temporary hard-coded user ID for demos (will be replaced with actual auth)
   const userId = 1;
 
@@ -396,6 +410,79 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
             />
           </div>
         </div>
+      </div>
+
+      {/* Similar Vendors Section */}
+      <div className="mt-12 pt-8 border-t border-border">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="font-display text-2xl font-bold">Similar Vendors</h2>
+          {category && (
+            <p className="text-muted-foreground">
+              More {category.name.toLowerCase()} in your area
+            </p>
+          )}
+        </div>
+
+        {similarVendorsLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="animate-pulse">
+                <div className="aspect-[4/3] bg-gray-200 rounded-lg mb-3"></div>
+                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                <div className="h-3 bg-gray-100 rounded w-1/2"></div>
+              </div>
+            ))}
+          </div>
+        ) : similarVendors.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {similarVendors.map((similarVendor) => (
+              <Card key={similarVendor.id} className="group cursor-pointer hover:shadow-lg transition-shadow">
+                <div className="aspect-[4/3] overflow-hidden rounded-t-lg">
+                  <ImageViewer 
+                    imageUrl={similarVendor.imageUrl} 
+                    alt={`${similarVendor.name} preview`}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <CardContent className="p-4">
+                  <h3 className="font-semibold text-lg mb-1 line-clamp-1">
+                    {similarVendor.name}
+                  </h3>
+                  <div className="flex items-center justify-between mb-2">
+                    <StarRating 
+                      rating={similarVendor.rating} 
+                      reviewCount={similarVendor.reviewCount} 
+                      size="sm"
+                    />
+                    <span className="text-primary font-medium text-sm">
+                      {similarVendor.priceRange}
+                    </span>
+                  </div>
+                  {similarVendor.location && (
+                    <div className="flex items-center text-sm text-muted-foreground mb-3">
+                      <MapPin className="h-3 w-3 mr-1" />
+                      <span className="line-clamp-1">{similarVendor.location}</span>
+                    </div>
+                  )}
+                  <Button 
+                    className="w-full" 
+                    size="sm"
+                    onClick={() => {
+                      // Navigate to vendor detail page
+                      window.location.href = `/vendors/${similarVendor.id}`;
+                    }}
+                  >
+                    View Vendor
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-8 text-muted-foreground">
+            <p>No similar vendors found in this category.</p>
+          </div>
+        )}
       </div>
     </div>
   );
