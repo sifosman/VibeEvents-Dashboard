@@ -35,7 +35,7 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
 
   // Fetch similar vendors in the same category
   const { data: similarVendors = [], isLoading: similarVendorsLoading } = useQuery<Vendor[]>({
-    queryKey: ['/api/vendors', { categoryId: vendor?.categoryId }],
+    queryKey: ['similar-vendors', vendor?.categoryId, vendorId],
     queryFn: async () => {
       if (!vendor?.categoryId) return [];
       const response = await fetch(`/api/vendors?categoryId=${vendor.categoryId}&limit=8`);
@@ -44,7 +44,7 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
       // Filter out the current vendor and limit to 4 vendors
       return allVendors.filter((v: Vendor) => v.id !== vendorId).slice(0, 4);
     },
-    enabled: !!vendor?.categoryId,
+    enabled: !!vendor?.categoryId && vendorId > 0,
   });
 
   // Temporary hard-coded user ID for demos (will be replaced with actual auth)
@@ -421,6 +421,11 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
               More {category.name.toLowerCase()} in your area
             </p>
           )}
+        </div>
+        
+        {/* Debug info - will remove later */}
+        <div className="text-xs text-gray-500 mb-4">
+          Debug: Loading: {similarVendorsLoading.toString()}, Count: {similarVendors.length}, Category: {vendor?.categoryId}
         </div>
 
         {similarVendorsLoading ? (
