@@ -17,6 +17,7 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Reviews from "./Reviews";
 import { VendorCatalog } from "./VendorCatalog";
+import { RatingReviews } from "./RatingReviews";
 import { ImageViewer } from "../ui/image-viewer";
 
 interface VendorDetailProps {
@@ -155,6 +156,7 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
               <TabsTrigger value="about">About</TabsTrigger>
               <TabsTrigger value="services">Services</TabsTrigger>
               <TabsTrigger value="catalog">Catalog</TabsTrigger>
+              <TabsTrigger value="rating-reviews">Rating & Reviews</TabsTrigger>
               <TabsTrigger value="calendar">Calendar</TabsTrigger>
               <TabsTrigger value="map">Map</TabsTrigger>
               {hasReviewFeature && (
@@ -255,6 +257,10 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
 
             <TabsContent value="catalog">
               <VendorCatalog vendorId={vendorId} />
+            </TabsContent>
+
+            <TabsContent value="rating-reviews">
+              <RatingReviews vendorId={vendorId} vendorName={vendor.name} />
             </TabsContent>
 
             <TabsContent value="calendar">

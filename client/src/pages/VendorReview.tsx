@@ -227,7 +227,7 @@ export default function VendorReview() {
   return (
     <>
       <Helmet>
-        <title>Review {vendor.name} - HowzEventz</title>
+        <title>{`Review ${vendor.name} - HowzEventz`}</title>
         <meta name="description" content={`Share your experience and rate ${vendor.name}`} />
       </Helmet>
 
