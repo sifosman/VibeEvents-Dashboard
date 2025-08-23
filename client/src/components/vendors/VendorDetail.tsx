@@ -8,7 +8,8 @@ import {
   CardHeader, 
   CardTitle 
 } from "@/components/ui/card";
-import { MapPin, Globe, Instagram, MessageSquare, Phone, Calendar, Map } from "lucide-react";
+import { MapPin, Globe, Instagram, MessageSquare, Phone, Calendar, Map, Star } from "lucide-react";
+import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import StarRating from "../ui/star-rating";
 import { LikeButton } from "./ShortlistButton";
@@ -134,6 +135,16 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
                 size="md"
                 showText 
               />
+              <Link href={`/vendors/${vendor.id}/review`}>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="mt-3 w-full bg-primary text-white hover:bg-primary/90"
+                >
+                  <Star className="mr-2 h-4 w-4" />
+                  Click to Rate & Review
+                </Button>
+              </Link>
             </div>
           </div>
 
