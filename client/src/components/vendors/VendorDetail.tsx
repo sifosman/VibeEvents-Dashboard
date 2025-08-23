@@ -446,47 +446,86 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
             ))}
           </div>
         ) : similarVendors.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="space-y-4">
             {similarVendors.map((similarVendor) => (
-              <Card key={similarVendor.id} className="group cursor-pointer hover:shadow-lg transition-shadow">
-                <div className="aspect-[4/3] overflow-hidden rounded-t-lg">
-                  <ImageViewer 
-                    imageUrl={similarVendor.imageUrl} 
-                    alt={`${similarVendor.name} preview`}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <CardContent className="p-4">
-                  <h3 className="font-semibold text-lg mb-1 line-clamp-1">
-                    {similarVendor.name}
-                  </h3>
-                  <div className="flex items-center justify-between mb-2">
-                    <StarRating 
-                      rating={similarVendor.rating} 
-                      reviewCount={similarVendor.reviewCount} 
-                      size="sm"
-                    />
-                    <span className="text-primary font-medium text-sm">
-                      {similarVendor.priceRange}
-                    </span>
-                  </div>
-                  {similarVendor.location && (
-                    <div className="flex items-center text-sm text-muted-foreground mb-3">
-                      <MapPin className="h-3 w-3 mr-1" />
-                      <span className="line-clamp-1">{similarVendor.location}</span>
+              <Card key={similarVendor.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
+                <div className="flex flex-row">
+                  {/* Left side - Image */}
+                  <div className="relative w-1/3 overflow-hidden">
+                    <div className="h-full w-full">
+                      <ImageViewer
+                        imageUrl={similarVendor.imageUrl}
+                        alt={similarVendor.name}
+                        className="h-full w-full object-cover transition-transform duration-500 ease-in-out transform hover:scale-105"
+                        fallbackUrl="https://placehold.co/300x200?text=No+Image"
+                      />
                     </div>
-                  )}
-                  <Button 
-                    className="w-full" 
-                    size="sm"
+                    
+                    {similarVendor.subscriptionTier === 'premium' && (
+                      <div className="absolute top-2 left-2 bg-primary text-primary-foreground z-10 text-xs px-2 py-0.5 rounded">
+                        Featured
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Right side - Content */}
+                  <CardContent className="flex-grow p-3 w-2/3">
+                    <div className="flex items-start justify-between mb-1">
+                      <h3 className="font-semibold text-base tracking-tight">{similarVendor.name}</h3>
+                      <div className="flex items-center bg-primary/10 px-2 py-0.5 rounded text-xs">
+                        <div className="h-3 w-3 mr-1 text-primary">★</div>
+                        <span className="font-medium">{similarVendor.rating.toFixed(1)}</span>
+                        <span className="text-muted-foreground text-xs ml-1">({similarVendor.reviewCount})</span>
+                      </div>
+                    </div>
+                    
+                    {similarVendor.logoUrl && (
+                      <div className="float-right ml-2 mb-1 bg-white rounded-full p-0.5 shadow-sm">
+                        <ImageViewer
+                          imageUrl={similarVendor.logoUrl}
+                          alt={`${similarVendor.name} logo`}
+                          className="h-8 w-8 object-contain rounded-full"
+                          fallbackUrl="https://placehold.co/100x100?text=Logo"
+                        />
+                      </div>
+                    )}
+                    
+                    <p className="text-muted-foreground text-xs mb-2 line-clamp-2">
+                      {similarVendor.description.length > 80 ? `${similarVendor.description.slice(0, 80).trim()}...` : similarVendor.description}
+                    </p>
+                    
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {similarVendor.priceRange && (
+                        <div className="text-xs py-0 px-1.5 h-5 border border-gray-300 rounded bg-white">
+                          {similarVendor.priceRange}
+                        </div>
+                      )}
+                      
+                      {similarVendor.location && (
+                        <div className="text-xs py-0 px-1.5 h-5 border border-gray-300 rounded bg-white">
+                          {similarVendor.location}
+                        </div>
+                      )}
+                      
+                      {similarVendor.isThemed && (
+                        <div className="text-xs py-0 px-1.5 h-5 border border-gray-300 rounded bg-primary/5">
+                          Themed
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </div>
+                
+                <div className="p-3 pt-0">
+                  <button 
+                    className="w-full inline-flex justify-center py-1.5 px-3 border border-transparent shadow-sm text-xs font-medium rounded-md text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50 transition-colors"
                     onClick={() => {
-                      // Navigate to vendor detail page
                       window.location.href = `/vendors/${similarVendor.id}`;
                     }}
                   >
-                    View Vendor
-                  </Button>
-                </CardContent>
+                    View Details
+                  </button>
+                </div>
               </Card>
             ))}
           </div>
