@@ -34,7 +34,6 @@ import { useAuth } from "@/context/AuthContext";
 
 // Simple header that doesn't require auth
 function SimpleHeader() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [location] = useLocation();
   const [selectedEventType, setSelectedEventType] = useState<string>("");
   
@@ -181,171 +180,9 @@ function SimpleHeader() {
                 </Button>
               </Link>
             </div>
-            <Button 
-              variant="ghost" 
-              className="md:hidden text-primary"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Menu"
-            >
-              <Menu />
-            </Button>
           </div>
         </div>
       </div>
-      
-      {/* Mobile Menu with expanded navigation */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-white px-4 py-3 shadow-inner">
-          <nav className="flex flex-col space-y-3">
-            {navLinks.map((link) => (
-              <Link 
-                key={link.name} 
-                href={link.href}
-                className={`py-2 transition hover:text-primary font-medium ${
-                  location === link.href ? 'text-primary' : 'text-foreground'
-                }`}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {link.name}
-              </Link>
-            ))}
-            
-            {/* Prominent link to Vendor Profile - special highlight for easier access */}
-            <Link 
-              href="/vendor/profile"
-              className="py-3 px-3 my-2 transition font-semibold bg-primary/10 rounded-md text-primary flex items-center"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <User className="h-4 w-4 mr-2" />
-              Vendor Profile Management
-            </Link>
-            
-            {/* Event Type Selector for mobile */}
-            <div className="py-2">
-              <h4 className="font-display font-bold text-md mb-2">Event Type</h4>
-              <div className="pl-2 mb-4">
-                <EventTypeSelector 
-                  value={selectedEventType}
-                  onChange={setSelectedEventType}
-                  className="w-full"
-                />
-              </div>
-            </div>
-            
-            {/* Mobile dropdown sections */}
-            <div className="py-2">
-              <h4 className="font-display font-bold text-md mb-2">For Event Hosts</h4>
-              <div className="pl-2 flex flex-col space-y-2">
-                {eventHostsLinks.map((link) => (
-                  <Link 
-                    key={link.name} 
-                    href={link.href}
-                    className="text-muted-foreground hover:text-primary transition flex items-center"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {link.icon}
-                    {link.name}
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            <div className="py-2">
-              <h4 className="font-display font-bold text-md mb-2">For Service Providers</h4>
-              <div className="pl-2 flex flex-col space-y-2">
-                {serviceProviderLinks.map((link) => (
-                  <Link 
-                    key={link.name} 
-                    href={link.href}
-                    className="text-muted-foreground hover:text-primary transition flex items-center"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {link.icon}
-                    {link.name}
-                  </Link>
-                ))}
-              </div>
-            </div>
-            
-            <div className="py-2">
-              <h4 className="font-display font-bold text-md mb-2">For Vendors</h4>
-              <div className="pl-2 flex flex-col space-y-2">
-                <Link 
-                  href="#"
-                  className="text-muted-foreground hover:text-primary transition flex items-center"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <Building className="h-4 w-4 mr-2" />
-                  Join as Vendor
-                </Link>
-                <Link 
-                  href="#"
-                  className="text-muted-foreground hover:text-primary transition flex items-center"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <Sparkles className="h-4 w-4 mr-2" />
-                  Vendor Benefits
-                </Link>
-                <Link 
-                  href="#"
-                  className="text-muted-foreground hover:text-primary transition flex items-center"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <Globe className="h-4 w-4 mr-2" />
-                  Vendor Dashboard
-                </Link>
-                <Link 
-                  href="#"
-                  className="text-muted-foreground hover:text-primary transition flex items-center"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <Users className="h-4 w-4 mr-2" />
-                  Success Stories
-                </Link>
-                <Link 
-                  href="#"
-                  className="text-muted-foreground hover:text-primary transition flex items-center"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <MessageCircle className="h-4 w-4 mr-2" />
-                  Advertising Options
-                </Link>
-              </div>
-            </div>
-            
-            <div className="py-2">
-              <h4 className="font-display font-bold text-md mb-2">Support</h4>
-              <div className="pl-2 flex flex-col space-y-2">
-                {supportLinks.map((link) => (
-                  <Link 
-                    key={link.name} 
-                    href={link.href}
-                    className="text-muted-foreground hover:text-primary transition flex items-center"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {link.icon}
-                    {link.name}
-                  </Link>
-                ))}
-              </div>
-            </div>
-            
-            <hr className="border-gray-200" />
-            <div className="flex flex-col space-y-2 pt-2">
-              <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
-                <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary hover:text-white">
-                  Log In
-                </Button>
-              </Link>
-              <Link href="/register" onClick={() => setMobileMenuOpen(false)}>
-                <Button className="w-full bg-primary text-white hover:bg-primary/90">
-                  Sign Up
-                </Button>
-              </Link>
-            </div>
-          </nav>
-        </div>
-      )}
     </header>
   );
 }
@@ -355,7 +192,6 @@ export default function Header() {
     // We're using the auth context hook
     const { user, isAuthenticated, logout } = useAuth();
     
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [location] = useLocation();
     const [selectedEventType, setSelectedEventType] = useState<string>("");
     
@@ -435,83 +271,12 @@ export default function Header() {
       { name: "About Us", href: "#", icon: <Users className="h-4 w-4 mr-2" /> },
     ];
 
-    const toggleMobileMenu = () => {
-      setMobileMenuOpen(!mobileMenuOpen);
-    };
 
     return (
       <header className="bg-white shadow-sm">
         <div className="container-custom">
           <div className="flex justify-between items-center py-3">
             <div className="flex items-center">
-              {/* Top-left dropdown navigation menu */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="text-primary flex items-center mr-2 p-1">
-                    <Menu className="h-5 w-5 mr-1" />
-                    <ChevronDown className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-64">
-                  <DropdownMenuLabel>Site Navigation</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  
-                  {/* Main Navigation */}
-                  <DropdownMenuGroup>
-                    {navLinks.map((link) => (
-                      <Link key={link.name} href={link.href}>
-                        <DropdownMenuItem className="cursor-pointer">
-                          {link.name}
-                        </DropdownMenuItem>
-                      </Link>
-                    ))}
-                  </DropdownMenuGroup>
-                  <DropdownMenuSeparator />
-                  
-                  {/* For Event Hosts Section */}
-                  <DropdownMenuSub>
-                    <DropdownMenuSubTrigger>
-                      <Users className="h-4 w-4 mr-2" />
-                      <span>For Event Hosts</span>
-                    </DropdownMenuSubTrigger>
-                    <DropdownMenuPortal>
-                      <DropdownMenuSubContent>
-                        {eventHostsLinks.map((link) => (
-                          <Link key={link.name} href={link.href}>
-                            <DropdownMenuItem className="cursor-pointer">
-                              {link.icon}
-                              {link.name}
-                            </DropdownMenuItem>
-                          </Link>
-                        ))}
-                      </DropdownMenuSubContent>
-                    </DropdownMenuPortal>
-                  </DropdownMenuSub>
-                  
-
-                  
-                  {/* Support Section */}
-                  <DropdownMenuSub>
-                    <DropdownMenuSubTrigger>
-                      <HelpCircle className="h-4 w-4 mr-2" />
-                      <span>Support</span>
-                    </DropdownMenuSubTrigger>
-                    <DropdownMenuPortal>
-                      <DropdownMenuSubContent>
-                        {supportLinks.map((link) => (
-                          <Link key={link.name} href={link.href}>
-                            <DropdownMenuItem className="cursor-pointer">
-                              {link.icon}
-                              {link.name}
-                            </DropdownMenuItem>
-                          </Link>
-                        ))}
-                      </DropdownMenuSubContent>
-                    </DropdownMenuPortal>
-                  </DropdownMenuSub>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              
               <Link href="/" className="flex items-center">
                 <Heart className="text-primary mr-2" />
                 <h1 className="text-primary font-display font-bold text-2xl">HowzEvent</h1>
@@ -566,118 +331,10 @@ export default function Header() {
                   </Link>
                 </div>
               )}
-              <Button 
-                variant="ghost" 
-                className="md:hidden text-primary"
-                onClick={toggleMobileMenu}
-                aria-label="Menu"
-              >
-                <Menu />
-              </Button>
             </div>
           </div>
         </div>
         
-        {/* Mobile Menu with expanded navigation */}
-        {mobileMenuOpen && (
-          <div className="md:hidden bg-white px-4 py-3 shadow-inner">
-            <nav className="flex flex-col space-y-3">
-              {navLinks.map((link) => (
-                <Link 
-                  key={link.name} 
-                  href={link.href}
-                  className={`py-2 transition hover:text-primary font-medium ${
-                    location === link.href ? 'text-primary' : 'text-foreground'
-                  }`}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {link.name}
-                </Link>
-              ))}
-              
-              {/* Event Type Selector for mobile */}
-              <div className="py-2">
-                <h4 className="font-display font-bold text-md mb-2">Event Type</h4>
-                <div className="pl-2 mb-4">
-                  <EventTypeSelector 
-                    value={selectedEventType}
-                    onChange={setSelectedEventType}
-                    className="w-full"
-                  />
-                </div>
-              </div>
-              
-              {/* Mobile dropdown sections */}
-              <div className="py-2">
-                <h4 className="font-display font-bold text-md mb-2">For Event Hosts</h4>
-                <div className="pl-2 flex flex-col space-y-2">
-                  {eventHostsLinks.map((link) => (
-                    <Link 
-                      key={link.name} 
-                      href={link.href}
-                      className="text-muted-foreground hover:text-primary transition flex items-center"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {link.icon}
-                      {link.name}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-              
-
-              
-              <div className="py-2">
-                <h4 className="font-display font-bold text-md mb-2">Support</h4>
-                <div className="pl-2 flex flex-col space-y-2">
-                  {supportLinks.map((link) => (
-                    <Link 
-                      key={link.name} 
-                      href={link.href}
-                      className="text-muted-foreground hover:text-primary transition flex items-center"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {link.icon}
-                      {link.name}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-              
-              <hr className="border-gray-200" />
-              <div className="flex flex-col space-y-2 pt-2">
-                {isAuthenticated ? (
-                  <>
-                    <div className="text-sm py-2">Hi, {user?.fullName?.split(' ')[0] || user?.username}</div>
-                    <Button 
-                      variant="outline" 
-                      className="w-full border-primary text-primary hover:bg-primary hover:text-white"
-                      onClick={() => {
-                        logout();
-                        setMobileMenuOpen(false);
-                      }}
-                    >
-                      Log Out
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
-                      <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary hover:text-white">
-                        Log In
-                      </Button>
-                    </Link>
-                    <Link href="/register" onClick={() => setMobileMenuOpen(false)}>
-                      <Button className="w-full bg-primary text-white hover:bg-primary/90">
-                        Sign Up
-                      </Button>
-                    </Link>
-                  </>
-                )}
-              </div>
-            </nav>
-          </div>
-        )}
       </header>
     );
   } catch (error) {
