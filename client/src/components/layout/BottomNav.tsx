@@ -8,6 +8,11 @@ export function BottomNav() {
   
   const navItems = [
     {
+      name: "Home",
+      href: "/vendors",
+      icon: Home
+    },
+    {
       name: "Search by Category",
       href: "/BrowseByCategory",
       icon: Search
@@ -26,7 +31,7 @@ export function BottomNav() {
   
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border md:hidden z-50">
-      <div className="grid grid-cols-3 h-16">
+      <div className="grid grid-cols-4 h-16">
         {navItems.map((item) => {
           const isActive = location === item.href;
           return (
