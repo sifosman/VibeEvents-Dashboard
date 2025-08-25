@@ -230,7 +230,7 @@ export default function ServiceProviderSearch({ categoryId }: ServiceProviderSea
                 onChange={(e) => setTravelDistance(e.target.value)}
                 className="w-full p-2 border border-gray-300 rounded-md"
               >
-                <option value="">Any</option>
+                <option value="">Nationally</option>
                 {TRAVEL_OPTIONS.map(option => (
                   <option key={option.value} value={option.value}>
                     {option.label}
