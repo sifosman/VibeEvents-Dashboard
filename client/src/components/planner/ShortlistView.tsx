@@ -157,7 +157,7 @@ export default function ShortlistView() {
                 <div className="flex-grow">
                   <h4 className="font-medium text-base">{item.vendor.name}</h4>
                   <span className="text-xs text-muted-foreground">
-                    {categories?.find(c => c.id === item.vendor.categoryId)?.name || "Vendor"} • {item.vendor.priceRange}
+                    {categories?.find(c => c.id === item.vendor.categoryId)?.name || "Vendor"}
                   </span>
                 </div>
                 <div className="flex flex-col space-y-2">
@@ -193,7 +193,7 @@ export default function ShortlistView() {
                     <div className="flex-grow">
                       <h4 className="font-medium text-base">{item.vendor.name}</h4>
                       <span className="text-xs text-muted-foreground">
-                        {category.name} • {item.vendor.priceRange}
+                        {category.name}
                       </span>
                     </div>
                     <div className="flex flex-col space-y-2">

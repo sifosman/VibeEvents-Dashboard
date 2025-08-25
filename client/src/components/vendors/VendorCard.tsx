@@ -85,12 +85,6 @@ export function VendorCard({ vendor }: VendorCardProps) {
           <p className="text-muted-foreground text-xs mb-2 line-clamp-2">{truncateDescription(vendor.description, 80)}</p>
           
           <div className="flex flex-wrap gap-1 mt-1">
-            {vendor.priceRange && (
-              <Badge variant="outline" className="text-xs py-0 px-1.5 h-5">
-                {vendor.priceRange}
-              </Badge>
-            )}
-            
             {vendor.location && (
               <Badge variant="outline" className="text-xs py-0 px-1.5 h-5">
                 {vendor.location}

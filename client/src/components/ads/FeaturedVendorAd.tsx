@@ -133,7 +133,6 @@ export default function FeaturedVendorAd({
             <CardContent className="p-4">
               <div className="flex justify-between items-start mb-2">
                 <h3 className="font-bold text-lg">{vendor.name}</h3>
-                <span className="text-sm text-muted-foreground">{vendor.priceRange}</span>
               </div>
               
               <p className="text-sm text-muted-foreground mb-2 line-clamp-2">

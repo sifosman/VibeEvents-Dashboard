@@ -132,7 +132,7 @@ const LikedItems: React.FC = () => {
                   
                   <CardContent className="pb-4 flex-grow">
                     <p className="text-muted-foreground text-sm mb-2">
-                      {item.vendor.priceRange} • {getCategoryName(item.vendor.categoryId)}
+                      {getCategoryName(item.vendor.categoryId)}
                     </p>
                     <p className="line-clamp-3 text-sm">{item.vendor.description}</p>
                     
