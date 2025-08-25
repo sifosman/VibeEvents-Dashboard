@@ -41,9 +41,11 @@ export default function Hero() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all-services">All Services</SelectItem>
-                  <SelectItem value="market-vendors">Market Vendors</SelectItem>
-                  <SelectItem value="vendor-opportunities">Vendor Opportunities</SelectItem>
-                  {categories?.map((category) => (
+                  {categories?.filter((category) => 
+                    (category.id >= 22 && category.id <= 74) ||  // Service Providers
+                    (category.id >= 76 && category.id <= 101) || // Vendors
+                    (category.id >= 102 && category.id <= 131)   // Venues
+                  ).map((category) => (
                     <SelectItem key={category.id} value={category.slug}>
                       {category.name}
                     </SelectItem>
@@ -81,8 +83,6 @@ export default function Hero() {
               
               <Link href={
                 selectedCategory === "all-services" ? "/services" :
-                selectedCategory === "market-vendors" ? "/market-vendors" :
-                selectedCategory === "vendor-opportunities" ? "/opportunities" :
                 selectedCategory ? `/vendors?category=${selectedCategory}${searchByName && searchByName !== 'all' ? `&name=${searchByName}` : ''}${searchByArea && searchByArea !== 'all' ? `&area=${searchByArea}` : ''}` : "/services"
               }>
                 <Button className="bg-primary text-white text-sm px-4 h-9 hover:bg-primary/90 whitespace-nowrap">
