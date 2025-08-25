@@ -82,7 +82,7 @@ export function VendorCard({ vendor }: VendorCardProps) {
             </div>
           )}
           
-          <p className="text-muted-foreground text-xs mb-2 line-clamp-2">{truncateDescription(vendor.description, 80)}</p>
+          <p className="text-muted-foreground text-xs mb-2 line-clamp-4">{truncateDescription(vendor.description, 150)}</p>
           
           <div className="flex flex-wrap gap-1 mt-1">
             {vendor.location && (
@@ -90,20 +90,6 @@ export function VendorCard({ vendor }: VendorCardProps) {
                 {vendor.location}
               </Badge>
             )}
-            
-            {vendor.isThemed && (
-              <Badge variant="outline" className="text-xs py-0 px-1.5 h-5 bg-primary/5">
-                Themed
-              </Badge>
-            )}
-            
-            {!vendor.servesAlcohol && (
-              <Badge variant="outline" className="text-xs py-0 px-1.5 h-5 bg-primary/5">
-                Alcohol-free
-              </Badge>
-            )}
-            
-            {/* Vendor tags temporarily disabled */}
           </div>
         </CardContent>
       </div>

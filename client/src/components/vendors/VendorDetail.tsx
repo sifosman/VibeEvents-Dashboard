@@ -507,26 +507,14 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
                       </div>
                     )}
                     
-                    <p className="text-muted-foreground text-xs mb-2 line-clamp-2">
-                      {similarVendor.description.length > 80 ? `${similarVendor.description.slice(0, 80).trim()}...` : similarVendor.description}
+                    <p className="text-muted-foreground text-xs mb-2 line-clamp-4">
+                      {similarVendor.description.length > 150 ? `${similarVendor.description.slice(0, 150).trim()}...` : similarVendor.description}
                     </p>
                     
                     <div className="flex flex-wrap gap-1 mt-1">
-                      {similarVendor.priceRange && (
-                        <div className="text-xs py-0 px-1.5 h-5 border border-gray-300 rounded bg-white">
-                          {similarVendor.priceRange}
-                        </div>
-                      )}
-                      
                       {similarVendor.location && (
                         <div className="text-xs py-0 px-1.5 h-5 border border-gray-300 rounded bg-white">
                           {similarVendor.location}
-                        </div>
-                      )}
-                      
-                      {similarVendor.isThemed && (
-                        <div className="text-xs py-0 px-1.5 h-5 border border-gray-300 rounded bg-primary/5">
-                          Themed
                         </div>
                       )}
                     </div>
