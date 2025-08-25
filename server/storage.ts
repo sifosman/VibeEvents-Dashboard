@@ -50,7 +50,7 @@ export interface IStorage {
     capacity: string;
     provinces: string[];
     cities: string[];
-    willingToTravel: boolean;
+    travelDistance: string;
   }): Promise<Vendor[]>;
 
   // Vendor Registration operations

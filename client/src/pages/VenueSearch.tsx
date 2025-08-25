@@ -29,6 +29,14 @@ const CAPACITY_OPTIONS = [
   { value: "2000_and_more", label: "2000 and More" }
 ];
 
+const TRAVEL_OPTIONS = [
+  { value: "no", label: "No" },
+  { value: "local", label: "Local" },
+  { value: "major_cities_only", label: "Major Cities Only" },
+  { value: "province", label: "Province" },
+  { value: "region", label: "Region" }
+];
+
 interface VenueSearchProps {
   categoryId: number;
 }
@@ -37,7 +45,7 @@ export default function VenueSearch({ categoryId }: VenueSearchProps) {
   const [selectedCapacity, setSelectedCapacity] = useState<string>("");
   const [selectedProvinces, setSelectedProvinces] = useState<string[]>([]);
   const [selectedCities, setSelectedCities] = useState<string[]>([]);
-  const [willingToTravel, setWillingToTravel] = useState<boolean>(false);
+  const [travelDistance, setTravelDistance] = useState<string>("");
   const [showProvinceDropdown, setShowProvinceDropdown] = useState(false);
   const [showCityDropdown, setShowCityDropdown] = useState(false);
 
@@ -56,7 +64,7 @@ export default function VenueSearch({ categoryId }: VenueSearchProps) {
       capacity: selectedCapacity,
       provinces: selectedProvinces,
       cities: selectedCities,
-      willingToTravel
+      travelDistance
     }],
     queryFn: async () => {
       const params = new URLSearchParams({
@@ -64,7 +72,7 @@ export default function VenueSearch({ categoryId }: VenueSearchProps) {
         capacity: selectedCapacity,
         provinces: selectedProvinces.join(','),
         cities: selectedCities.join(','),
-        willingToTravel: willingToTravel.toString()
+        travelDistance: travelDistance
       });
       
       const res = await fetch(`/api/venues/search?${params}`);
@@ -214,19 +222,21 @@ export default function VenueSearch({ categoryId }: VenueSearchProps) {
               </div>
             </div>
 
-            {/* Willing to Travel */}
-            <div className="flex items-center space-x-2 pt-6">
-              <Checkbox
-                id="willing-to-travel"
-                checked={willingToTravel}
-                onCheckedChange={(checked) => setWillingToTravel(checked as boolean)}
-              />
-              <label 
-                htmlFor="willing-to-travel" 
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            {/* Travel Distance */}
+            <div>
+              <label className="block text-sm font-medium mb-2">Travel Distance</label>
+              <select
+                value={travelDistance}
+                onChange={(e) => setTravelDistance(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-md"
               >
-                Willing to travel
-              </label>
+                <option value="">Any Distance</option>
+                {TRAVEL_OPTIONS.map(option => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
         </div>

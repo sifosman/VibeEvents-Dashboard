@@ -943,7 +943,7 @@ export class DatabaseStorage implements IStorage {
     capacity: string;
     provinces: string[];
     cities: string[];
-    willingToTravel: boolean;
+    travelDistance: string;
   }): Promise<Vendor[]> {
     try {
       let query = db.select().from(vendors);
@@ -1000,9 +1000,9 @@ export class DatabaseStorage implements IStorage {
         }
       }
       
-      // Filter by willing to travel
-      if (params.willingToTravel) {
-        conditions.push(eq(vendors.willingToTravel, true));
+      // Filter by travel distance
+      if (params.travelDistance) {
+        conditions.push(eq(vendors.travelDistance, params.travelDistance));
       }
       
       // Apply all conditions

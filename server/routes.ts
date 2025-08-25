@@ -540,14 +540,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Venue search endpoint
   app.get('/api/venues/search', async (req: Request, res: Response) => {
     try {
-      const { categoryId, capacity, provinces, cities, willingToTravel } = req.query;
+      const { categoryId, capacity, provinces, cities, travelDistance } = req.query;
       
       const searchParams = {
         categoryId: Number(categoryId),
         capacity: capacity as string,
         provinces: provinces ? (provinces as string).split(',').filter(p => p.trim()) : [],
         cities: cities ? (cities as string).split(',').filter(c => c.trim()) : [],
-        willingToTravel: willingToTravel === 'true'
+        travelDistance: travelDistance as string
       };
       
       const venues = await storage.searchVenues(searchParams);
