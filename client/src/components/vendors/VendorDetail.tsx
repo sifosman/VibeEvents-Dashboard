@@ -108,7 +108,6 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
               </div>
             )}
           </div>
-          <LikeButton vendorId={vendor.id} className="bg-white border shadow-sm hover:bg-accent" />
         </div>
         
         {vendor.location && (
@@ -265,10 +264,6 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
         
         <div className="md:w-1/3">
           <Card>
-            <CardHeader>
-              <CardTitle>Contact {vendor.name}</CardTitle>
-              <CardDescription>Reach out to learn more about their services</CardDescription>
-            </CardHeader>
             <CardContent className="space-y-4">
               {vendor.whatsappNumber && (
                 <a 
@@ -287,29 +282,6 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
                 Request a Call
               </Button>
               
-              <div className="flex space-x-2 mt-4">
-                {vendor.instagramUrl && (
-                  <a 
-                    href={vendor.instagramUrl}
-                    className="flex-1 flex justify-center items-center border border-gray-300 rounded-md py-2 hover:bg-accent transition"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Instagram className="h-5 w-5" />
-                  </a>
-                )}
-                
-                {vendor.websiteUrl && (
-                  <a 
-                    href={vendor.websiteUrl}
-                    className="flex-1 flex justify-center items-center border border-gray-300 rounded-md py-2 hover:bg-accent transition"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Globe className="h-5 w-5" />
-                  </a>
-                )}
-              </div>
               
               <Separator className="my-4" />
               
@@ -319,14 +291,6 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
             </CardContent>
           </Card>
           
-          <div className="mt-6">
-            <LikeButton 
-              vendorId={vendor.id} 
-              variant="outline"
-              showText
-              className="w-full justify-center border-primary text-primary hover:bg-accent"
-            />
-          </div>
         </div>
       </div>
 
