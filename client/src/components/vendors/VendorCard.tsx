@@ -54,7 +54,7 @@ export function VendorCard({ vendor }: VendorCardProps) {
         {/* Right side - Content */}
         <CardContent className="flex-grow p-3 w-2/3">
           <div className="flex items-start justify-between mb-1">
-            <h3 className="font-semibold text-base tracking-tight">{vendor.name}</h3>
+            <h3 className="font-semibold text-base tracking-tight whitespace-nowrap overflow-hidden text-ellipsis flex-1 pr-2">{vendor.name}</h3>
             <div className="flex items-center gap-2">
               <div className="flex items-center bg-primary/10 px-2 py-0.5 rounded text-xs">
                 <StarIcon className="h-3 w-3 mr-1 text-primary" />
