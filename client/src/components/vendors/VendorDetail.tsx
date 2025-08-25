@@ -88,15 +88,63 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
 
   return (
     <div className="space-y-8">
+      <div className="space-y-4">
+        <div className="flex justify-between items-start">
+          <div>
+            <h1 className="text-3xl font-display font-bold mb-2">{vendor.name}</h1>
+            <div className="flex items-center gap-2 mb-2">
+              {category && (
+                <div className="category-badge inline-block">
+                  {category.name}
+                </div>
+              )}
+              {vendor.subscriptionTier === 'premium' && (
+                <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                  Premium Vendor
+                </div>
+              )}
+              {vendor.subscriptionTier === 'premium pro' && (
+                <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-amber-300 to-amber-500 text-amber-900">
+                  Premium Pro
+                </div>
+              )}
+            </div>
+            {vendor.location && (
+              <div className="flex items-center text-muted-foreground">
+                <MapPin className="h-4 w-4 mr-1" />
+                <span>{vendor.location}</span>
+              </div>
+            )}
+          </div>
+          <LikeButton vendorId={vendor.id} className="bg-white border shadow-sm hover:bg-accent" />
+        </div>
+        
+        <div className="flex items-center justify-between">
+          <StarRating 
+            rating={vendor.rating} 
+            reviewCount={vendor.reviewCount} 
+            size="md"
+            showText 
+          />
+          <Link href={`/vendors/${vendor.id}/review`}>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="bg-primary text-white hover:bg-primary/90"
+            >
+              <Star className="mr-2 h-4 w-4" />
+              Click to Rate & Review
+            </Button>
+          </Link>
+        </div>
+      </div>
+
       <div className="relative">
         <PhotoGallery 
           mainImage={vendor.imageUrl}
           additionalPhotos={vendor.additionalPhotos || []}
           vendorName={vendor.name}
         />
-        <div className="absolute top-4 right-4 z-10">
-          <LikeButton vendorId={vendor.id} className="bg-white bg-opacity-90 hover:bg-opacity-100" />
-        </div>
       </div>
 
       <Tabs defaultValue="about" className="w-full">
@@ -214,53 +262,6 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
 
       <div className="flex flex-col md:flex-row gap-8">
         <div className="md:w-2/3">
-          <div className="flex justify-between items-start mb-3">
-            <div>
-              <h1 className="text-3xl font-display font-bold mb-2">{vendor.name}</h1>
-              {category && (
-                <div className="category-badge inline-block">
-                  {category.name}
-                </div>
-              )}
-              {vendor.subscriptionTier === 'premium' && (
-                <div className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                  Premium Vendor
-                </div>
-              )}
-              {vendor.subscriptionTier === 'premium pro' && (
-                <div className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-amber-300 to-amber-500 text-amber-900">
-                  Premium Pro
-                </div>
-              )}
-              {vendor.location && (
-                <div className="flex items-center mt-3 text-muted-foreground">
-                  <MapPin className="h-4 w-4 mr-1" />
-                  <span>{vendor.location}</span>
-                </div>
-              )}
-            </div>
-            <div className="text-center">
-              <div className="price-badge text-base mb-2">
-                {vendor.priceRange}
-              </div>
-              <StarRating 
-                rating={vendor.rating} 
-                reviewCount={vendor.reviewCount} 
-                size="md"
-                showText 
-              />
-              <Link href={`/vendors/${vendor.id}/review`}>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="mt-3 w-full bg-primary text-white hover:bg-primary/90"
-                >
-                  <Star className="mr-2 h-4 w-4" />
-                  Click to Rate & Review
-                </Button>
-              </Link>
-            </div>
-          </div>
         </div>
         
         <div className="md:w-1/3">
