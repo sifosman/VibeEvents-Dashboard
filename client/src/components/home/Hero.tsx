@@ -10,10 +10,18 @@ import { Filter, Map, SortDesc } from "lucide-react";
 
 export default function Hero() {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [searchByName, setSearchByName] = useState<string>("");
+  const [searchByArea, setSearchByArea] = useState<string>("");
   
   const { data: categories } = useQuery<Category[]>({
     queryKey: ['/api/categories'],
   });
+
+  // Sample areas for the dropdown
+  const areas = [
+    "Cape Town", "Johannesburg", "Durban", "Pretoria", "Port Elizabeth", 
+    "Bloemfontein", "East London", "Pietermaritzburg", "Kimberley", "Polokwane"
+  ];
 
   return (
     <section className="relative h-[400px] bg-cover bg-center" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80')` }}>
@@ -25,8 +33,8 @@ export default function Hero() {
           
           
           {/* Search Form */}
-          <div className="bg-white rounded-lg shadow-lg p-3 mx-auto max-w-xl">
-            <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
+          <div className="bg-white rounded-lg shadow-lg p-3 mx-auto max-w-4xl">
+            <div className="flex flex-col lg:flex-row space-y-2 lg:space-y-0 lg:space-x-2">
               <Select value={selectedCategory} onValueChange={setSelectedCategory}>
                 <SelectTrigger className="flex-grow px-3 py-2 h-9 text-sm rounded focus:border-primary">
                   <SelectValue placeholder="What are you looking for?" />
@@ -42,12 +50,40 @@ export default function Hero() {
                   ))}
                 </SelectContent>
               </Select>
+
+              <Select value={searchByName} onValueChange={setSearchByName}>
+                <SelectTrigger className="flex-grow px-3 py-2 h-9 text-sm rounded focus:border-primary">
+                  <SelectValue placeholder="Search by name" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">All Vendors</SelectItem>
+                  <SelectItem value="a-e">A - E</SelectItem>
+                  <SelectItem value="f-j">F - J</SelectItem>
+                  <SelectItem value="k-o">K - O</SelectItem>
+                  <SelectItem value="p-t">P - T</SelectItem>
+                  <SelectItem value="u-z">U - Z</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={searchByArea} onValueChange={setSearchByArea}>
+                <SelectTrigger className="flex-grow px-3 py-2 h-9 text-sm rounded focus:border-primary">
+                  <SelectValue placeholder="Search by area" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">All Areas</SelectItem>
+                  {areas.map((area) => (
+                    <SelectItem key={area} value={area.toLowerCase().replace(' ', '-')}>
+                      {area}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               
               <Link href={
                 selectedCategory === "all-services" ? "/services" :
                 selectedCategory === "market-vendors" ? "/market-vendors" :
                 selectedCategory === "vendor-opportunities" ? "/opportunities" :
-                selectedCategory ? `/vendors?category=${selectedCategory}` : "/services"
+                selectedCategory ? `/vendors?category=${selectedCategory}${searchByName ? `&name=${searchByName}` : ''}${searchByArea ? `&area=${searchByArea}` : ''}` : "/services"
               }>
                 <Button className="bg-primary text-white text-sm px-4 h-9 hover:bg-primary/90 whitespace-nowrap">
                   Search
