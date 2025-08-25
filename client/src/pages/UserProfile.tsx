@@ -83,47 +83,41 @@ export default function UserProfile() {
       </Helmet>
 
       <div className="container mx-auto py-4 px-4">
-        <h1 className="text-2xl font-display font-bold mb-4">My Profile</h1>
+        <h1 className="text-2xl font-display font-bold mb-6">My Profile</h1>
 
-        <div className="max-w-2xl mx-auto space-y-4">
-          {/* Profile Picture */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Camera className="h-5 w-5" />
-                Profile Picture
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="py-3">
-              <div className="flex items-center space-x-3">
-                <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center">
-                  {profileData.profilePicture ? (
-                    <img 
-                      src={profileData.profilePicture} 
-                      alt="Profile" 
-                      className="w-16 h-16 rounded-full object-cover"
-                    />
-                  ) : (
-                    <User className="h-8 w-8 text-muted-foreground" />
-                  )}
-                </div>
-                <Button variant="outline" size="sm" onClick={handleProfilePictureUpload}>
-                  <Camera className="h-4 w-4 mr-2" />
-                  Upload Picture
-                </Button>
+        <div className="max-w-2xl mx-auto bg-background p-6 rounded-lg border">
+          {/* Profile Picture Section */}
+          <div className="mb-6">
+            <h2 className="flex items-center gap-2 text-lg font-semibold mb-3">
+              <Camera className="h-5 w-5" />
+              Profile Picture
+            </h2>
+            <div className="flex items-center space-x-3">
+              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center">
+                {profileData.profilePicture ? (
+                  <img 
+                    src={profileData.profilePicture} 
+                    alt="Profile" 
+                    className="w-16 h-16 rounded-full object-cover"
+                  />
+                ) : (
+                  <User className="h-8 w-8 text-muted-foreground" />
+                )}
               </div>
-            </CardContent>
-          </Card>
+              <Button variant="outline" size="sm" onClick={handleProfilePictureUpload}>
+                <Camera className="h-4 w-4 mr-2" />
+                Upload Picture
+              </Button>
+            </div>
+          </div>
 
-          {/* Personal & Contact Information */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <User className="h-4 w-4" />
-                Personal & Contact Information
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
+          {/* Personal Information Section */}
+          <div className="mb-6">
+            <h2 className="flex items-center gap-2 text-lg font-semibold mb-3">
+              <User className="h-5 w-5" />
+              Personal Information
+            </h2>
+            <div className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <Label htmlFor="firstName" className="text-sm">First Name</Label>
@@ -146,6 +140,16 @@ export default function UserProfile() {
                   />
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Contact Information Section */}
+          <div className="mb-6">
+            <h2 className="flex items-center gap-2 text-lg font-semibold mb-3">
+              <Phone className="h-5 w-5" />
+              Contact Information
+            </h2>
+            <div className="space-y-3">
               <div>
                 <Label htmlFor="email" className="text-sm">Email Address</Label>
                 <Input 
@@ -167,18 +171,16 @@ export default function UserProfile() {
                   className="h-9"
                 />
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          {/* Social Media Details */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <Instagram className="h-4 w-4" />
-                Social Media
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
+          {/* Social Media Section */}
+          <div className="mb-6">
+            <h2 className="flex items-center gap-2 text-lg font-semibold mb-3">
+              <Instagram className="h-5 w-5" />
+              Social Media
+            </h2>
+            <div className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <Label htmlFor="instagram" className="flex items-center gap-1 text-sm">
@@ -235,18 +237,16 @@ export default function UserProfile() {
                   />
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          {/* Change Password */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <Lock className="h-4 w-4" />
-                Change Password
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
+          {/* Password Section */}
+          <div className="mb-6">
+            <h2 className="flex items-center gap-2 text-lg font-semibold mb-3">
+              <Lock className="h-5 w-5" />
+              Change Password
+            </h2>
+            <div className="space-y-3">
               <div>
                 <Label htmlFor="currentPassword" className="text-sm">Current Password</Label>
                 <Input 
@@ -271,7 +271,7 @@ export default function UserProfile() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="confirmPassword" className="text-sm">Confirm New</Label>
+                  <Label htmlFor="confirmPassword" className="text-sm">Confirm New Password</Label>
                   <Input 
                     id="confirmPassword"
                     type="password"
@@ -282,21 +282,23 @@ export default function UserProfile() {
                   />
                 </div>
               </div>
-              <div className="flex gap-3">
-                <Button variant="outline" onClick={handlePasswordChange} className="flex-1 h-9">
-                  <Lock className="h-3 w-3 mr-2" />
-                  Change Password
-                </Button>
-                <Button 
-                  onClick={handleSaveProfile}
-                  className="flex-1 h-9"
-                >
-                  <Save className="mr-2 h-3 w-3" />
-                  Save Profile
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-3 pt-4 border-t">
+            <Button variant="outline" onClick={handlePasswordChange} className="flex-1 h-9">
+              <Lock className="h-3 w-3 mr-2" />
+              Change Password
+            </Button>
+            <Button 
+              onClick={handleSaveProfile}
+              className="flex-1 h-9"
+            >
+              <Save className="mr-2 h-3 w-3" />
+              Save Profile
+            </Button>
+          </div>
         </div>
       </div>
     </>
