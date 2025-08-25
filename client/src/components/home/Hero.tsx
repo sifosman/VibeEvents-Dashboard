@@ -56,7 +56,7 @@ export default function Hero() {
                   <SelectValue placeholder="Search by name" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Vendors</SelectItem>
+                  <SelectItem value="all">All Vendors</SelectItem>
                   <SelectItem value="a-e">A - E</SelectItem>
                   <SelectItem value="f-j">F - J</SelectItem>
                   <SelectItem value="k-o">K - O</SelectItem>
@@ -70,7 +70,7 @@ export default function Hero() {
                   <SelectValue placeholder="Search by area" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Areas</SelectItem>
+                  <SelectItem value="all">All Areas</SelectItem>
                   {areas.map((area) => (
                     <SelectItem key={area} value={area.toLowerCase().replace(' ', '-')}>
                       {area}
@@ -83,7 +83,7 @@ export default function Hero() {
                 selectedCategory === "all-services" ? "/services" :
                 selectedCategory === "market-vendors" ? "/market-vendors" :
                 selectedCategory === "vendor-opportunities" ? "/opportunities" :
-                selectedCategory ? `/vendors?category=${selectedCategory}${searchByName ? `&name=${searchByName}` : ''}${searchByArea ? `&area=${searchByArea}` : ''}` : "/services"
+                selectedCategory ? `/vendors?category=${selectedCategory}${searchByName && searchByName !== 'all' ? `&name=${searchByName}` : ''}${searchByArea && searchByArea !== 'all' ? `&area=${searchByArea}` : ''}` : "/services"
               }>
                 <Button className="bg-primary text-white text-sm px-4 h-9 hover:bg-primary/90 whitespace-nowrap">
                   Search
