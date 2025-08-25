@@ -25,7 +25,8 @@ const mainCategories: MainCategory[] = [
     id: "vendors", 
     name: "Vendors",
     icon: Users,
-    subcategories: [9, 10] // Market Vendors, Vendor Opportunities
+    // All the new comprehensive vendor categories
+    subcategories: [76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101]
   },
   {
     id: "service-providers",
