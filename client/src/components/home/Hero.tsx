@@ -23,14 +23,6 @@ export default function Hero() {
           <h1 className="text-2xl md:text-3xl font-display font-bold text-white mb-3">Venues, Vendors, Vibes</h1>
           <p className="text-white text-sm md:text-base mb-5 max-w-xl mx-auto">Discover and book the best service providers for all your events - wedding and party celebrations, corporate functions, market days, expos, fundraisers, live concerts...and much more</p>
           
-          {/* Vendor Registration CTA */}
-          <div className="mb-5">
-            <Link href="/vendor-registration">
-              <Button className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 text-sm font-semibold rounded-lg shadow-lg">
-                Become a Vendor - Join Our Platform
-              </Button>
-            </Link>
-          </div>
           
           {/* Search Form */}
           <div className="bg-white rounded-lg shadow-lg p-3 mx-auto max-w-xl">
