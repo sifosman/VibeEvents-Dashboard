@@ -70,7 +70,7 @@ const LikedItems: React.FC = () => {
     return (
       <div className="container mx-auto p-6">
         <div className="bg-destructive/20 p-4 rounded-md text-center">
-          <h2 className="text-xl font-bold text-destructive">Error loading your liked items</h2>
+          <h2 className="text-xl font-bold text-destructive">Error loading your favourites</h2>
           <p>Please try again later</p>
           <Button onClick={() => refetch()} className="mt-4">Retry</Button>
         </div>
@@ -81,7 +81,7 @@ const LikedItems: React.FC = () => {
   return (
     <div className="container mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Your Liked Items</h1>
+        <h1 className="text-3xl font-bold">My Favourites</h1>
         <div className="flex space-x-2">
           <Button variant="outline" asChild>
             <Link to="/">Explore More</Link>
@@ -155,9 +155,9 @@ const LikedItems: React.FC = () => {
           ) : (
             <div className="text-center py-12 bg-muted/50 rounded-lg">
               <Heart className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-              <h2 className="text-2xl font-bold mb-2">No Liked Items Yet</h2>
+              <h2 className="text-2xl font-bold mb-2">No Favourites Yet</h2>
               <p className="text-muted-foreground mb-6">
-                As you explore vendors, click the heart icon to add them to your likes
+                As you explore vendors, click the heart icon to add them to your favourites
               </p>
               <Button asChild>
                 <Link to="/">Discover Vendors</Link>

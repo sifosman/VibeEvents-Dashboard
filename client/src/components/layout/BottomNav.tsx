@@ -18,7 +18,7 @@ export function BottomNav() {
       icon: Search
     },
     {
-      name: "My Shortlist",
+      name: "My Favourites",
       href: "/LikedItems",
       icon: Heart
     },
