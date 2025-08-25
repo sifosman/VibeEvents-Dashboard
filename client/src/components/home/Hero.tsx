@@ -38,6 +38,7 @@ export default function Hero() {
     { value: "under_200", label: "Under 200" },
     { value: "under_500", label: "Under 500" },
     { value: "under_1000", label: "Under 1000" },
+    { value: "under_2000", label: "Under 2000" },
     { value: "2000_and_more", label: "2000 and More" }
   ];
 
