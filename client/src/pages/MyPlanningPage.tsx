@@ -1,187 +1,245 @@
 import React, { useState } from "react";
 import { Helmet } from "react-helmet";
-import { useAuth } from "@/context/AuthContext";
 import { Link, useLocation } from "wouter";
 import { 
   CalendarDays, 
-  FileText, 
   CheckSquare, 
-  Wallet, 
-  ChevronRight,
-  Plus 
+  DollarSign, 
+  Plus,
+  Trash2,
+  Edit
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const planningLinks = [
-  {
-    id: "events-diary",
-    name: "Events Diary",
-    description: "Manage your event timeline and key dates",
-    icon: <CalendarDays className="h-5 w-5 mr-2 text-primary" />,
-    href: "/planner/events-diary"
-  },
-  {
-    id: "quotes",
-    name: "Quotes",
-    description: "Track and compare vendor quotes",
-    icon: <FileText className="h-5 w-5 mr-2 text-primary" />,
-    href: "/planner/quotes"
-  },
-  {
-    id: "booking-confirmations",
-    name: "Booking Confirmations",
-    description: "Manage confirmed bookings and contracts",
-    icon: <CheckSquare className="h-5 w-5 mr-2 text-primary" />,
-    href: "/planner/bookings"
-  },
-  {
-    id: "budget-tracker",
-    name: "Budget Tracker",
-    description: "Track expenses and stay on budget",
-    icon: <Wallet className="h-5 w-5 mr-2 text-primary" />,
-    href: "/planner/budget"
-  }
-];
+interface Task {
+  id: number;
+  text: string;
+  completed: boolean;
+  dueDate: string;
+}
+
+interface BudgetItem {
+  id: number;
+  category: string;
+  budgeted: number;
+  spent: number;
+}
+
+interface CalendarEvent {
+  id: number;
+  title: string;
+  date: string;
+  time: string;
+  type: string;
+}
 
 export default function MyPlanningPage() {
-  const [, setLocation] = useLocation();
-  const { user, isLoading } = useAuth();
-  const [activeTab, setActiveTab] = useState("events-diary");
+  // Task List State
+  const [tasks, setTasks] = useState<Task[]>([
+    { id: 1, text: "Book venue", completed: false, dueDate: "2024-02-15" },
+    { id: 2, text: "Send invitations", completed: true, dueDate: "2024-02-10" },
+    { id: 3, text: "Order flowers", completed: false, dueDate: "2024-02-20" }
+  ]);
+  const [newTask, setNewTask] = useState("");
 
-  if (isLoading) {
-    return (
-      <div className="container-custom py-10 flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
-      </div>
-    );
-  }
+  // Budget State
+  const [budgetItems, setBudgetItems] = useState<BudgetItem[]>([
+    { id: 1, category: "Venue", budgeted: 5000, spent: 4500 },
+    { id: 2, category: "Catering", budgeted: 3000, spent: 2800 },
+    { id: 3, category: "Photography", budgeted: 2000, spent: 0 },
+    { id: 4, category: "Flowers", budgeted: 800, spent: 0 }
+  ]);
 
-  if (!user) {
-    setLocation("/login");
-    return null;
-  }
+  // Calendar Events State
+  const [calendarEvents, setCalendarEvents] = useState<CalendarEvent[]>([
+    { id: 1, title: "Venue Visit", date: "2024-02-15", time: "2:00 PM", type: "meeting" },
+    { id: 2, title: "Catering Tasting", date: "2024-02-18", time: "12:00 PM", type: "appointment" },
+    { id: 3, title: "Final Dress Fitting", date: "2024-02-25", time: "10:00 AM", type: "appointment" }
+  ]);
+
+  // Task Functions
+  const addTask = () => {
+    if (newTask.trim()) {
+      const task: Task = {
+        id: Date.now(),
+        text: newTask,
+        completed: false,
+        dueDate: new Date().toISOString().split('T')[0]
+      };
+      setTasks([...tasks, task]);
+      setNewTask("");
+    }
+  };
+
+  const toggleTask = (id: number) => {
+    setTasks(tasks.map(task => 
+      task.id === id ? { ...task, completed: !task.completed } : task
+    ));
+  };
+
+  const deleteTask = (id: number) => {
+    setTasks(tasks.filter(task => task.id !== id));
+  };
+
+  const totalBudget = budgetItems.reduce((sum, item) => sum + item.budgeted, 0);
+  const totalSpent = budgetItems.reduce((sum, item) => sum + item.spent, 0);
 
   return (
     <>
       <Helmet>
-        <title>My Planning | HowzEventz</title>
-        <meta name="description" content="Manage your event planning tools and resources" />
+        <title>My Planner | HowzEventz</title>
+        <meta name="description" content="Manage your event planning tasks, budget, and calendar" />
       </Helmet>
 
-      <div className="container-custom py-8">
-        <div className="flex justify-between items-start mb-6">
-          <div>
-            <h1 className="text-3xl font-display font-bold">My Planning</h1>
-            <p className="text-muted-foreground mt-1">Organize your event planning journey</p>
-          </div>
-          <Button className="bg-primary text-white">
-            <Plus className="h-4 w-4 mr-2" /> New Event
-          </Button>
-        </div>
+      <div className="container mx-auto py-4 px-4">
+        <h1 className="text-2xl font-display font-bold mb-6">My Planner</h1>
 
-        {/* Mobile planning navigation tabs */}
-        <div className="block md:hidden mb-6">
-          <Tabs defaultValue={activeTab} value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="w-full overflow-auto">
-              {planningLinks.map((item) => (
-                <TabsTrigger key={item.id} value={item.id} className="flex-1">
-                  {item.name}
-                </TabsTrigger>
-              ))}
-            </TabsList>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          {/* Task List */}
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2">
+                <CheckSquare className="h-5 w-5" />
+                Task List
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {/* Add new task */}
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Add new task..."
+                  value={newTask}
+                  onChange={(e) => setNewTask(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && addTask()}
+                  className="h-9"
+                />
+                <Button onClick={addTask} size="sm">
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
 
-            {planningLinks.map((item) => (
-              <TabsContent key={item.id} value={item.id}>
-                <div className="text-center py-4">
-                  <div className="flex justify-center mb-2">
-                    {item.icon}
-                  </div>
-                  <h2 className="text-xl font-semibold mb-2">{item.name}</h2>
-                  <p className="text-muted-foreground mb-4">{item.description}</p>
-                  <Link href={item.href}>
-                    <Button>
-                      Go to {item.name} <ChevronRight className="h-4 w-4 ml-1" />
+              {/* Task list */}
+              <div className="space-y-2 max-h-80 overflow-y-auto">
+                {tasks.map((task) => (
+                  <div key={task.id} className="flex items-center gap-2 p-2 border rounded">
+                    <input
+                      type="checkbox"
+                      checked={task.completed}
+                      onChange={() => toggleTask(task.id)}
+                      className="w-4 h-4"
+                    />
+                    <span className={`flex-1 text-sm ${task.completed ? 'line-through text-muted-foreground' : ''}`}>
+                      {task.text}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {task.dueDate}
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => deleteTask(task.id)}
+                    >
+                      <Trash2 className="h-3 w-3" />
                     </Button>
-                  </Link>
-                </div>
-              </TabsContent>
-            ))}
-          </Tabs>
-        </div>
+                  </div>
+                ))}
+              </div>
 
-        {/* Planning tools grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {planningLinks.map((item) => (
-            <Link
-              key={item.id}
-              href={item.href}
-              className="block"
-            >
-              <div className="border rounded-lg p-5 hover:shadow-md transition-shadow h-full bg-background">
-                <div className="flex items-center mb-3">
-                  {item.icon}
-                  <h3 className="font-semibold text-lg">{item.name}</h3>
-                </div>
-                <p className="text-muted-foreground text-sm mb-4">{item.description}</p>
-                <div className="flex justify-end">
-                  <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                </div>
+              <div className="text-sm text-muted-foreground">
+                {tasks.filter(t => !t.completed).length} remaining of {tasks.length} tasks
               </div>
-            </Link>
-          ))}
-        </div>
+            </CardContent>
+          </Card>
 
-        {/* Recent activity section */}
-        <div className="mt-10">
-          <h2 className="text-xl font-semibold mb-4">Recent Activity</h2>
-          <div className="border rounded-lg overflow-hidden">
-            <div className="p-5 flex items-center border-b">
-              <CalendarDays className="h-10 w-10 p-2 bg-primary/10 rounded-full text-primary mr-3" />
-              <div>
-                <h3 className="font-medium">Added new event: Summer Wedding</h3>
-                <p className="text-sm text-muted-foreground">2 days ago</p>
+          {/* Budget */}
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2">
+                <DollarSign className="h-5 w-5" />
+                Budget
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {/* Budget summary */}
+              <div className="bg-muted/50 p-3 rounded">
+                <div className="flex justify-between text-sm">
+                  <span>Total Budget:</span>
+                  <span className="font-medium">${totalBudget.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span>Total Spent:</span>
+                  <span className="font-medium">${totalSpent.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-sm font-semibold">
+                  <span>Remaining:</span>
+                  <span className={totalBudget - totalSpent >= 0 ? 'text-green-600' : 'text-red-600'}>
+                    ${(totalBudget - totalSpent).toLocaleString()}
+                  </span>
+                </div>
               </div>
-            </div>
-            <div className="p-5 flex items-center border-b">
-              <FileText className="h-10 w-10 p-2 bg-primary/10 rounded-full text-primary mr-3" />
-              <div>
-                <h3 className="font-medium">Received quote from Sunset Venue</h3>
-                <p className="text-sm text-muted-foreground">3 days ago</p>
-              </div>
-            </div>
-            <div className="p-5 flex items-center">
-              <Wallet className="h-10 w-10 p-2 bg-primary/10 rounded-full text-primary mr-3" />
-              <div>
-                <h3 className="font-medium">Updated budget for catering services</h3>
-                <p className="text-sm text-muted-foreground">1 week ago</p>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        {/* Quick tips section */}
-        <div className="mt-8 bg-accent/20 rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-2">Planning Tips</h2>
-          <p className="text-muted-foreground mb-4">Make the most of your event planning journey</p>
-          <ul className="space-y-2">
-            <li className="flex items-start">
-              <span className="text-primary font-bold mr-2">•</span>
-              <span>Use the Events Diary to track important dates and deadlines</span>
-            </li>
-            <li className="flex items-start">
-              <span className="text-primary font-bold mr-2">•</span>
-              <span>Compare quotes from multiple vendors before making decisions</span>
-            </li>
-            <li className="flex items-start">
-              <span className="text-primary font-bold mr-2">•</span>
-              <span>Keep all your booking confirmations in one place for easy reference</span>
-            </li>
-            <li className="flex items-start">
-              <span className="text-primary font-bold mr-2">•</span>
-              <span>Regularly update your budget tracker to avoid overspending</span>
-            </li>
-          </ul>
+              {/* Budget items */}
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {budgetItems.map((item) => (
+                  <div key={item.id} className="p-2 border rounded">
+                    <div className="flex justify-between text-sm font-medium">
+                      <span>{item.category}</span>
+                      <span>${item.spent} / ${item.budgeted}</span>
+                    </div>
+                    <div className="w-full bg-muted rounded-full h-2 mt-1">
+                      <div 
+                        className={`h-2 rounded-full ${
+                          item.spent > item.budgeted ? 'bg-red-500' : 'bg-primary'
+                        }`}
+                        style={{ width: `${Math.min((item.spent / item.budgeted) * 100, 100)}%` }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Calendar Items */}
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2">
+                <CalendarDays className="h-5 w-5" />
+                Calendar Items
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {/* Upcoming events */}
+              <div className="space-y-2 max-h-80 overflow-y-auto">
+                {calendarEvents.map((event) => (
+                  <div key={event.id} className="p-3 border rounded hover:bg-muted/50">
+                    <div className="font-medium text-sm">{event.title}</div>
+                    <div className="text-xs text-muted-foreground flex justify-between">
+                      <span>{event.date}</span>
+                      <span>{event.time}</span>
+                    </div>
+                    <div className="text-xs">
+                      <span className={`inline-block px-2 py-1 rounded-full text-white text-xs ${
+                        event.type === 'meeting' ? 'bg-blue-500' : 'bg-green-500'
+                      }`}>
+                        {event.type}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <Button variant="outline" className="w-full h-9">
+                <Plus className="h-4 w-4 mr-2" />
+                Add Event
+              </Button>
+            </CardContent>
+          </Card>
+
         </div>
       </div>
     </>
