@@ -156,7 +156,7 @@ export default function VendorSearch({ categoryId }: VendorSearchProps) {
               <div className="relative">
                 <button
                   onClick={() => setShowProvinceDropdown(!showProvinceDropdown)}
-                  className="w-full p-2 border border-gray-300 rounded-md text-left flex items-center justify-between"
+                  className="search-dropdown-button"
                 >
                   <span className="text-sm">
                     {selectedProvinces.length === 0 
@@ -171,7 +171,7 @@ export default function VendorSearch({ categoryId }: VendorSearchProps) {
                     {Object.keys(PROVINCES_CITIES).map(province => (
                       <label
                         key={province}
-                        className="flex items-center p-2 hover:bg-gray-50 cursor-pointer"
+                        className="search-dropdown-item"
                       >
                         <Checkbox
                           checked={selectedProvinces.includes(province)}
@@ -192,7 +192,7 @@ export default function VendorSearch({ categoryId }: VendorSearchProps) {
               <div className="relative">
                 <button
                   onClick={() => setShowCityDropdown(!showCityDropdown)}
-                  className="w-full p-2 border border-gray-300 rounded-md text-left flex items-center justify-between"
+                  className="search-dropdown-button"
                 >
                   <span className="text-sm">
                     {selectedCities.length === 0 
@@ -207,7 +207,7 @@ export default function VendorSearch({ categoryId }: VendorSearchProps) {
                     {getAvailableCities().map(city => (
                       <label
                         key={city}
-                        className="flex items-center p-2 hover:bg-gray-50 cursor-pointer"
+                        className="search-dropdown-item"
                       >
                         <Checkbox
                           checked={selectedCities.includes(city)}
