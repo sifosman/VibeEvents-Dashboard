@@ -15,7 +15,7 @@ export default function FeaturedVendors() {
   });
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-20 bg-white mt-8">
       <div className="container-custom">
         <div className="flex justify-between items-center mb-10">
           <h2 className="text-3xl font-display font-bold">Featured Vendors</h2>
