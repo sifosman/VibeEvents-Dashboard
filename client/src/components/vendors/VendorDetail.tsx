@@ -88,36 +88,35 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
 
   return (
     <div className="space-y-8">
-      <div className="space-y-4">
-        <div className="flex justify-between items-start">
-          <div>
-            <h1 className="text-3xl font-display font-bold mb-2">{vendor.name}</h1>
-            <div className="flex items-center gap-2 mb-2">
-              {category && (
-                <div className="category-badge inline-block">
-                  {category.name}
-                </div>
-              )}
-              {vendor.subscriptionTier === 'premium' && (
-                <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                  Premium Vendor
-                </div>
-              )}
-              {vendor.subscriptionTier === 'premium pro' && (
-                <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-amber-300 to-amber-500 text-amber-900">
-                  Premium Pro
-                </div>
-              )}
-            </div>
-            {vendor.location && (
-              <div className="flex items-center text-muted-foreground">
-                <MapPin className="h-4 w-4 mr-1" />
-                <span>{vendor.location}</span>
+      <div className="space-y-3">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-3 flex-wrap">
+            <h1 className="text-3xl font-display font-bold">{vendor.name}</h1>
+            {category && (
+              <div className="category-badge">
+                {category.name}
+              </div>
+            )}
+            {vendor.subscriptionTier === 'premium' && (
+              <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                Premium Vendor
+              </div>
+            )}
+            {vendor.subscriptionTier === 'premium pro' && (
+              <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-amber-300 to-amber-500 text-amber-900">
+                Premium Pro
               </div>
             )}
           </div>
           <LikeButton vendorId={vendor.id} className="bg-white border shadow-sm hover:bg-accent" />
         </div>
+        
+        {vendor.location && (
+          <div className="flex items-center text-muted-foreground">
+            <MapPin className="h-4 w-4 mr-1" />
+            <span>{vendor.location}</span>
+          </div>
+        )}
         
         <div className="flex items-center justify-between">
           <StarRating 
@@ -132,8 +131,8 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
               size="sm" 
               className="bg-primary text-white hover:bg-primary/90"
             >
-              <Star className="mr-2 h-4 w-4" />
-              Click to Rate & Review
+              <Star className="mr-1 h-4 w-4" />
+              Rate & Review
             </Button>
           </Link>
         </div>
