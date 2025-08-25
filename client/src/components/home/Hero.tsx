@@ -168,6 +168,11 @@ export default function Hero() {
                       Area
                     </Link>
                   </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/vendors?sort=most-reviewed" className="w-full">
+                      Most Reviewed
+                    </Link>
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
               
