@@ -8,7 +8,7 @@ import {
   CardHeader, 
   CardTitle 
 } from "@/components/ui/card";
-import { MapPin, Globe, Instagram, MessageSquare, Phone, Calendar, Map, Star } from "lucide-react";
+import { MapPin, Globe, Instagram, MessageSquare, Phone, Calendar, Map, Star, Mail } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import StarRating from "../ui/star-rating";
@@ -278,6 +278,16 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
                 >
                   <MessageSquare className="h-5 w-5 mr-2" />
                   Contact via WhatsApp
+                </a>
+              )}
+              
+              {vendor.email && (
+                <a 
+                  href={`mailto:${vendor.email}`}
+                  className="flex w-full bg-blue-500 text-white justify-center py-3 rounded-md hover:bg-blue-600 transition"
+                >
+                  <Mail className="h-5 w-5 mr-2" />
+                  Contact via Email
                 </a>
               )}
               

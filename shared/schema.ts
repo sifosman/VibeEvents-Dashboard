@@ -62,6 +62,7 @@ export const vendors = pgTable("vendors", {
   instagramUrl: text("instagram_url"),
   websiteUrl: text("website_url"),
   whatsappNumber: text("whatsapp_number"),
+  email: text("email"),
   location: text("location"),
   // Vendor type and tags
   vendorTags: text("vendor_tags").array(),          // service provider, vendor, premium, etc.
