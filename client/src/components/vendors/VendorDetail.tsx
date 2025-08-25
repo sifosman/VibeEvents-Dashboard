@@ -19,6 +19,7 @@ import Reviews from "./Reviews";
 import { VendorCatalog } from "./VendorCatalog";
 import { RatingReviews } from "./RatingReviews";
 import { ImageViewer } from "../ui/image-viewer";
+import { PhotoGallery } from "./PhotoGallery";
 
 interface VendorDetailProps {
   vendorId: number;
@@ -87,14 +88,13 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
 
   return (
     <div className="space-y-8">
-      <div className="relative h-64 md:h-96 rounded-lg overflow-hidden">
-        <ImageViewer 
-          imageUrl={vendor.imageUrl} 
-          alt={`${vendor.name} Banner Image`}
-          className="w-full h-full object-cover"
+      <div className="relative">
+        <PhotoGallery 
+          mainImage={vendor.imageUrl}
+          additionalPhotos={vendor.additionalPhotos || []}
+          vendorName={vendor.name}
         />
-        <div className="absolute inset-0 bg-black bg-opacity-20"></div>
-        <div className="absolute top-4 right-4">
+        <div className="absolute top-4 right-4 z-10">
           <LikeButton vendorId={vendor.id} className="bg-white bg-opacity-90 hover:bg-opacity-100" />
         </div>
       </div>
