@@ -102,8 +102,8 @@ export default function VenueSearch({ categoryId }: VenueSearchProps) {
   return (
     <>
       <Helmet>
-        <title>{category?.name} Search | HowzEventz</title>
-        <meta name="description" content={`Find ${category?.name?.toLowerCase()} for your event`} />
+        <title>{category?.name ? `${category.name} Search` : 'Venue Search'} | HowzEventz</title>
+        <meta name="description" content={`Find ${category?.name?.toLowerCase() || 'venues'} for your event`} />
       </Helmet>
 
       <div className="container-custom py-8">
