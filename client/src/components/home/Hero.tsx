@@ -33,82 +33,98 @@ export default function Hero() {
           
           
           {/* Search Form */}
-          <div className="bg-white rounded-lg shadow-lg p-3 mx-auto max-w-4xl">
-            <div className="flex flex-col lg:flex-row space-y-2 lg:space-y-0 lg:space-x-2">
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="flex-grow px-3 py-2 h-9 text-sm rounded focus:border-primary">
-                  <SelectValue placeholder="What are you looking for?" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all-services">All Services</SelectItem>
-                  {categories?.filter((category) => 
-                    (category.id >= 22 && category.id <= 74) ||  // Service Providers
-                    (category.id >= 76 && category.id <= 101) || // Vendors
-                    (category.id >= 102 && category.id <= 131)   // Venues
-                  ).map((category) => (
-                    <SelectItem key={category.id} value={category.slug || `category-${category.id}`}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          <div className="bg-white rounded-lg shadow-lg p-4 mx-auto max-w-5xl" style={{ display: "block", visibility: "visible" }}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+              {/* What are you looking for */}
+              <div className="lg:col-span-1">
+                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <SelectTrigger className="w-full px-3 py-2 h-10 text-sm border border-gray-300 rounded focus:border-primary bg-white">
+                    <SelectValue placeholder="What are you looking for?" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border border-gray-300 rounded shadow-lg">
+                    <SelectItem value="all-services">All Services</SelectItem>
+                    {categories?.filter((category) => 
+                      (category.id >= 22 && category.id <= 74) ||  // Service Providers
+                      (category.id >= 76 && category.id <= 101) || // Vendors
+                      (category.id >= 102 && category.id <= 131)   // Venues
+                    ).map((category) => (
+                      <SelectItem key={category.id} value={category.slug || `category-${category.id}`}>
+                        {category.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-              <Select value={searchByName} onValueChange={setSearchByName}>
-                <SelectTrigger className="flex-grow px-3 py-2 h-9 text-sm rounded focus:border-primary">
-                  <SelectValue placeholder="Search by name" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Vendors</SelectItem>
-                  <SelectItem value="a-e">A - E</SelectItem>
-                  <SelectItem value="f-j">F - J</SelectItem>
-                  <SelectItem value="k-o">K - O</SelectItem>
-                  <SelectItem value="p-t">P - T</SelectItem>
-                  <SelectItem value="u-z">U - Z</SelectItem>
-                </SelectContent>
-              </Select>
+              {/* Province */}
+              <div className="lg:col-span-1">
+                <Select value={searchByArea} onValueChange={setSearchByArea}>
+                  <SelectTrigger className="w-full px-3 py-2 h-10 text-sm border border-gray-300 rounded focus:border-primary bg-white">
+                    <SelectValue placeholder="Province" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border border-gray-300 rounded shadow-lg">
+                    <SelectItem value="all">All Provinces</SelectItem>
+                    <SelectItem value="gauteng">Gauteng</SelectItem>
+                    <SelectItem value="western-cape">Western Cape</SelectItem>
+                    <SelectItem value="kwazulu-natal">KwaZulu-Natal</SelectItem>
+                    <SelectItem value="eastern-cape">Eastern Cape</SelectItem>
+                    <SelectItem value="limpopo">Limpopo</SelectItem>
+                    <SelectItem value="mpumalanga">Mpumalanga</SelectItem>
+                    <SelectItem value="north-west">North West</SelectItem>
+                    <SelectItem value="northern-cape">Northern Cape</SelectItem>
+                    <SelectItem value="free-state">Free State</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
 
-              <Select value={searchByArea} onValueChange={setSearchByArea}>
-                <SelectTrigger className="flex-grow px-3 py-2 h-9 text-sm rounded focus:border-primary">
-                  <SelectValue placeholder="Search by area" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Areas</SelectItem>
-                  {areas.map((area) => (
-                    <SelectItem key={area} value={area.toLowerCase().replace(' ', '-')}>
-                      {area}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              
-              <Link href={
-                selectedCategory === "all-services" ? "/services" :
-                selectedCategory ? `/vendors?category=${selectedCategory}${searchByName && searchByName !== 'all' ? `&name=${searchByName}` : ''}${searchByArea && searchByArea !== 'all' ? `&area=${searchByArea}` : ''}` : "/services"
-              }>
-                <Button className="bg-primary text-white text-sm px-4 h-9 hover:bg-primary/90 whitespace-nowrap">
-                  Search
-                </Button>
-              </Link>
+              {/* City */}
+              <div className="lg:col-span-1">
+                <Select value={searchByName} onValueChange={setSearchByName}>
+                  <SelectTrigger className="w-full px-3 py-2 h-10 text-sm border border-gray-300 rounded focus:border-primary bg-white">
+                    <SelectValue placeholder="City" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border border-gray-300 rounded shadow-lg">
+                    <SelectItem value="all">All Cities</SelectItem>
+                    {areas.map((area) => (
+                      <SelectItem key={area} value={area.toLowerCase().replace(' ', '-')}>
+                        {area}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Search Button */}
+              <div className="lg:col-span-1">
+                <Link href={
+                  selectedCategory === "all-services" ? "/vendors" :
+                  selectedCategory ? `/vendors?category=${selectedCategory}${searchByName && searchByName !== 'all' ? `&name=${searchByName}` : ''}${searchByArea && searchByArea !== 'all' ? `&area=${searchByArea}` : ''}` : "/vendors"
+                }>
+                  <Button className="w-full bg-primary text-white text-sm px-4 h-10 hover:bg-primary/90 font-medium">
+                    Search
+                  </Button>
+                </Link>
+              </div>
             </div>
             
             {/* Filter/Sort/Map strip */}
-            <div className="flex gap-1 mt-2">
-              <Link href="/vendors?filter=true">
-                <Button variant="outline" className="flex-1 h-7 text-xs flex items-center justify-center gap-1 bg-white/90 hover:bg-white">
+            <div className="flex gap-2 mt-4">
+              <Link href="/vendors?filter=true" className="flex-1">
+                <Button variant="outline" className="w-full h-8 text-xs flex items-center justify-center gap-1 bg-white border-gray-300">
                   <Filter className="h-3 w-3" />
                   Filter
                 </Button>
               </Link>
               
-              <Link href="/vendors?sort=popular">
-                <Button variant="outline" className="flex-1 h-7 text-xs flex items-center justify-center gap-1 bg-white/90 hover:bg-white">
+              <Link href="/vendors?sort=popular" className="flex-1">
+                <Button variant="outline" className="w-full h-8 text-xs flex items-center justify-center gap-1 bg-white border-gray-300">
                   <SortDesc className="h-3 w-3" />
                   Sort
                 </Button>
               </Link>
               
-              <Link href="/map">
-                <Button variant="outline" className="flex-1 h-7 text-xs flex items-center justify-center gap-1 bg-white/90 hover:bg-white">
+              <Link href="/map" className="flex-1">
+                <Button variant="outline" className="w-full h-8 text-xs flex items-center justify-center gap-1 bg-white border-gray-300">
                   <Map className="h-3 w-3" />
                   Map
                 </Button>
