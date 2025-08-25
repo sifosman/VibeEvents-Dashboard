@@ -28,8 +28,8 @@ export default function Hero() {
       <div className="absolute inset-0 bg-black bg-opacity-40"></div>
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="text-center px-4 max-w-3xl">
-          <h1 className="text-2xl md:text-3xl font-display font-bold text-white mb-3">🏠 HOME PAGE - Venues, Vendors, Vibes</h1>
-          <p className="text-white text-sm md:text-base mb-5 max-w-xl mx-auto">🔍 SEARCH FORM BELOW - Discover and book the best service providers for all your events - wedding and party celebrations, corporate functions, market days, expos, fundraisers, live concerts...and much more</p>
+          <h1 className="text-2xl md:text-3xl font-display font-bold text-white mb-3">Venues, Vendors, Vibes</h1>
+          <p className="text-white text-sm md:text-base mb-5 max-w-xl mx-auto">Discover and book the best service providers for all your events - wedding and party celebrations, corporate functions, market days, expos, fundraisers, live concerts...and much more</p>
           
           
           {/* Search Form */}

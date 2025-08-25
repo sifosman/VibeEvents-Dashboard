@@ -9,7 +9,7 @@ export function BottomNav() {
   const navItems = [
     {
       name: "Home",
-      href: "/vendors",
+      href: "/",
       icon: Home
     },
     {
