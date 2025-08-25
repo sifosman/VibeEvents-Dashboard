@@ -410,20 +410,102 @@ export class DatabaseStorage implements IStorage {
 
   // Shortlist operations
   async getShortlists(userId: number): Promise<(Shortlist & { vendor: Vendor })[]> {
-    const shortlistsWithVendors = await db
+    const results = await db
       .select({
         id: shortlists.id,
         userId: shortlists.userId,
         vendorId: shortlists.vendorId,
+        cost: shortlists.cost,
         notes: shortlists.notes,
+        status: shortlists.status,
         createdAt: shortlists.createdAt,
-        vendor: vendors
+        updatedAt: shortlists.updatedAt,
+        vendorId_v: vendors.id,
+        vendorName: vendors.name,
+        vendorDescription: vendors.description,
+        vendorImageUrl: vendors.imageUrl,
+        vendorLogoUrl: vendors.logoUrl,
+        vendorCategoryId: vendors.categoryId,
+        vendorPriceRange: vendors.priceRange,
+        vendorRating: vendors.rating,
+        vendorReviewCount: vendors.reviewCount,
+        vendorLocation: vendors.location,
+        vendorInstagramUrl: vendors.instagramUrl,
+        vendorWebsiteUrl: vendors.websiteUrl,
+        vendorWhatsappNumber: vendors.whatsappNumber,
+        vendorEmail: vendors.email
       })
       .from(shortlists)
       .innerJoin(vendors, eq(shortlists.vendorId, vendors.id))
       .where(eq(shortlists.userId, userId));
     
-    return shortlistsWithVendors;
+    return results.map(row => ({
+      id: row.id,
+      userId: row.userId,
+      vendorId: row.vendorId,
+      cost: row.cost,
+      notes: row.notes,
+      status: row.status,
+      createdAt: row.createdAt,
+      updatedAt: row.updatedAt,
+      vendor: {
+        id: row.vendorId_v,
+        name: row.vendorName,
+        description: row.vendorDescription,
+        imageUrl: row.vendorImageUrl,
+        logoUrl: row.vendorLogoUrl,
+        categoryId: row.vendorCategoryId,
+        priceRange: row.vendorPriceRange,
+        rating: row.vendorRating,
+        reviewCount: row.vendorReviewCount,
+        location: row.vendorLocation,
+        instagramUrl: row.vendorInstagramUrl,
+        websiteUrl: row.vendorWebsiteUrl,
+        whatsappNumber: row.vendorWhatsappNumber,
+        email: row.vendorEmail,
+        // Default values for required fields not selected
+        subscriptionTier: 'basic',
+        isActive: true,
+        featured: false,
+        profileViews: 0,
+        leadCount: 0,
+        conversionRate: 0,
+        avgResponseTime: 0,
+        totalBookings: 0,
+        totalRevenue: 0,
+        lastActiveAt: null,
+        subscriptionStartDate: null,
+        subscriptionEndDate: null,
+        stripeCustomerId: null,
+        stripeSubscriptionId: null,
+        isThemed: false,
+        servesAlcohol: false,
+        dietaryOptions: [],
+        cuisineTypes: [],
+        themeTypes: [],
+        venueCapacity: null,
+        province: null,
+        city: null,
+        address: null,
+        googleMapsLink: null,
+        calendarView: false,
+        onlineBooking: false,
+        paymentIntegration: false,
+        onlineContracts: false,
+        leadNotifications: false,
+        featuredListing: false,
+        paymentProviders: [],
+        stripeConnectId: null,
+        paypalMerchantId: null,
+        payfastMerchantId: null,
+        acceptedPaymentMethods: [],
+        facebookUrl: null,
+        twitterUrl: null,
+        youtubeUrl: null,
+        travelDistance: null,
+        vendorTags: []
+      }
+    }));
   }
 
   async addToShortlist(shortlist: InsertShortlist): Promise<Shortlist> {
