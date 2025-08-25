@@ -54,20 +54,21 @@ export function VendorCard({ vendor }: VendorCardProps) {
         {/* Right side - Content */}
         <CardContent className="flex-grow p-3 w-2/3">
           <div className="flex items-start justify-between mb-1">
-            <h3 className="font-semibold text-base tracking-tight whitespace-nowrap overflow-hidden text-ellipsis flex-1 pr-2">{vendor.name}</h3>
-            <div className="flex items-center gap-2">
-              <div className="flex items-center bg-primary/10 px-2 py-0.5 rounded text-xs">
-                <StarIcon className="h-3 w-3 mr-1 text-primary" />
-                <span className="font-medium">{vendor.rating.toFixed(1)}</span>
-                <span className="text-muted-foreground text-xs ml-1">({vendor.reviewCount})</span>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 hover:bg-primary/10"
-              >
-                <Heart className="h-4 w-4 text-muted-foreground hover:text-primary hover:fill-primary transition-colors" />
-              </Button>
+            <h3 className="font-semibold text-base tracking-tight">{vendor.name}</h3>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 hover:bg-primary/10 flex-shrink-0"
+            >
+              <Heart className="h-4 w-4 text-muted-foreground hover:text-primary hover:fill-primary transition-colors" />
+            </Button>
+          </div>
+          
+          <div className="flex items-center mb-2">
+            <div className="flex items-center bg-primary/10 px-2 py-0.5 rounded text-xs">
+              <StarIcon className="h-3 w-3 mr-1 text-primary" />
+              <span className="font-medium">{vendor.rating.toFixed(1)}</span>
+              <span className="text-muted-foreground text-xs ml-1">({vendor.reviewCount})</span>
             </div>
           </div>
           
