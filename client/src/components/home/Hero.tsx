@@ -2,6 +2,12 @@ import React from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Category } from "@shared/schema";
@@ -12,6 +18,8 @@ export default function Hero() {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [searchByName, setSearchByName] = useState<string>("");
   const [searchByArea, setSearchByArea] = useState<string>("");
+  const [selectedFilter, setSelectedFilter] = useState<string>("");
+  const [selectedSort, setSelectedSort] = useState<string>("");
   
   const { data: categories } = useQuery<Category[]>({
     queryKey: ['/api/categories'],
@@ -109,20 +117,91 @@ export default function Hero() {
             
             {/* Filter/Sort/Map strip */}
             <div className="flex gap-2 mt-4">
-              <Link href="/vendors?filter=true" className="flex-1">
-                <Button variant="outline" className="w-full h-8 text-xs flex items-center justify-center gap-1 bg-white border-gray-300">
-                  <Filter className="h-3 w-3" />
-                  Filter
-                </Button>
-              </Link>
+              {/* Filter Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild className="flex-1">
+                  <Button variant="outline" className="w-full h-8 text-xs flex items-center justify-center gap-1 bg-white border-gray-300">
+                    <Filter className="h-3 w-3" />
+                    Filter
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-48">
+                  <DropdownMenuItem asChild>
+                    <Link href="/vendors?priceRange=budget" className="w-full">
+                      Budget Friendly (Under R1000)
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/vendors?priceRange=mid" className="w-full">
+                      Mid Range (R1000 - R5000)
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/vendors?priceRange=premium" className="w-full">
+                      Premium (R5000+)
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/vendors?isThemed=true" className="w-full">
+                      Themed Events Only
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/vendors?eventType=wedding" className="w-full">
+                      Wedding Specialists
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/vendors?eventType=corporate" className="w-full">
+                      Corporate Events
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               
-              <Link href="/vendors?sort=popular" className="flex-1">
-                <Button variant="outline" className="w-full h-8 text-xs flex items-center justify-center gap-1 bg-white border-gray-300">
-                  <SortDesc className="h-3 w-3" />
-                  Sort
-                </Button>
-              </Link>
+              {/* Sort Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild className="flex-1">
+                  <Button variant="outline" className="w-full h-8 text-xs flex items-center justify-center gap-1 bg-white border-gray-300">
+                    <SortDesc className="h-3 w-3" />
+                    Sort
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-48">
+                  <DropdownMenuItem asChild>
+                    <Link href="/vendors?sort=popular" className="w-full">
+                      Most Popular
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/vendors?sort=rating" className="w-full">
+                      Highest Rated
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/vendors?sort=price-low" className="w-full">
+                      Price: Low to High
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/vendors?sort=price-high" className="w-full">
+                      Price: High to Low
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/vendors?sort=newest" className="w-full">
+                      Newest First
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/vendors?sort=name" className="w-full">
+                      Alphabetical
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               
+              {/* Map Link */}
               <Link href="/map" className="flex-1">
                 <Button variant="outline" className="w-full h-8 text-xs flex items-center justify-center gap-1 bg-white border-gray-300">
                   <Map className="h-3 w-3" />
