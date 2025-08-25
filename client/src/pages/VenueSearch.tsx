@@ -222,15 +222,15 @@ export default function VenueSearch({ categoryId }: VenueSearchProps) {
               </div>
             </div>
 
-            {/* Travel Distance */}
+            {/* Willing to Travel */}
             <div>
-              <label className="block text-sm font-medium mb-2">Travel Distance</label>
+              <label className="block text-sm font-medium mb-2">Willing to Travel</label>
               <select
                 value={travelDistance}
                 onChange={(e) => setTravelDistance(e.target.value)}
                 className="w-full p-2 border border-gray-300 rounded-md"
               >
-                <option value="">Any Distance</option>
+                <option value="">Any</option>
                 {TRAVEL_OPTIONS.map(option => (
                   <option key={option.value} value={option.value}>
                     {option.label}
