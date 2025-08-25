@@ -54,18 +54,8 @@ export function VendorCard({ vendor }: VendorCardProps) {
         {/* Right side - Content */}
         <CardContent className="flex-grow p-3 w-2/3">
           <div className="flex items-start justify-between mb-1">
-            <h3 className="font-semibold text-base tracking-tight flex-grow pr-2">{vendor.name}</h3>
+            <h3 className="font-semibold text-base tracking-tight flex-grow pr-2 whitespace-nowrap">{vendor.name}</h3>
             <div className="flex items-center gap-2 flex-shrink-0">
-              {vendor.logoUrl && (
-                <div className="bg-white rounded-full p-0.5 shadow-sm">
-                  <ImageViewer
-                    imageUrl={vendor.logoUrl}
-                    alt={`${vendor.name} logo`}
-                    className="h-8 w-8 object-contain rounded-full"
-                    fallbackUrl="https://placehold.co/100x100?text=Logo"
-                  />
-                </div>
-              )}
               <Button
                 variant="ghost"
                 size="icon"
