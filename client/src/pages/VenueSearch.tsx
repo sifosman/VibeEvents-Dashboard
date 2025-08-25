@@ -139,7 +139,7 @@ export default function VenueSearch({ categoryId }: VenueSearchProps) {
               <select
                 value={selectedCapacity}
                 onChange={(e) => setSelectedCapacity(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-md font-display font-medium text-gray-700 bg-white shadow-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
+                className="search-dropdown"
               >
                 <option value="">Any Capacity</option>
                 {CAPACITY_OPTIONS.map(option => (
@@ -228,7 +228,7 @@ export default function VenueSearch({ categoryId }: VenueSearchProps) {
               <select
                 value={travelDistance}
                 onChange={(e) => setTravelDistance(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-md font-display font-medium text-gray-700 bg-white shadow-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
+                className="search-dropdown"
               >
                 <option value="">Nationally</option>
                 {TRAVEL_OPTIONS.map(option => (

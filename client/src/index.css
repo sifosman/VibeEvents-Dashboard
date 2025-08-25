@@ -106,4 +106,29 @@
   .category-badge {
     @apply text-xs bg-accent text-primary px-2 py-1 rounded;
   }
+  
+  /* Search page dropdown styling */
+  .search-dropdown {
+    font-family: 'Playfair Display', serif !important;
+    font-weight: 500 !important;
+    font-size: 1rem !important;
+    color: #374151 !important;
+    padding: 0.75rem !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 0.375rem !important;
+    background-color: white !important;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+    width: 100% !important;
+  }
+  
+  .search-dropdown:focus {
+    border-color: hsl(var(--primary)) !important;
+    box-shadow: 0 0 0 1px hsl(var(--primary)) !important;
+    outline: none !important;
+  }
+  
+  .search-dropdown option {
+    font-family: 'Playfair Display', serif !important;
+    font-weight: 500 !important;
+  }
 }
