@@ -99,72 +99,18 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-8">
-        <div className="md:w-2/3">
-          <div className="flex justify-between items-start mb-3">
-            <div>
-              <h1 className="text-3xl font-display font-bold mb-2">{vendor.name}</h1>
-              {category && (
-                <div className="category-badge inline-block">
-                  {category.name}
-                </div>
-              )}
-              {vendor.subscriptionTier === 'premium' && (
-                <div className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                  Premium Vendor
-                </div>
-              )}
-              {vendor.subscriptionTier === 'premium pro' && (
-                <div className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-amber-300 to-amber-500 text-amber-900">
-                  Premium Pro
-                </div>
-              )}
-              {vendor.location && (
-                <div className="flex items-center mt-3 text-muted-foreground">
-                  <MapPin className="h-4 w-4 mr-1" />
-                  <span>{vendor.location}</span>
-                </div>
-              )}
-            </div>
-            <div className="text-center">
-              <div className="price-badge text-base mb-2">
-                {vendor.priceRange}
-              </div>
-              <StarRating 
-                rating={vendor.rating} 
-                reviewCount={vendor.reviewCount} 
-                size="md"
-                showText 
-              />
-              <Link href={`/vendors/${vendor.id}/review`}>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="mt-3 w-full bg-primary text-white hover:bg-primary/90"
-                >
-                  <Star className="mr-2 h-4 w-4" />
-                  Click to Rate & Review
-                </Button>
-              </Link>
-            </div>
-          </div>
-
-          <Separator className="my-6" />
-
-          <Tabs defaultValue="about" className="w-full">
-            <TabsList className="mb-6">
-              <TabsTrigger value="about">About</TabsTrigger>
-              <TabsTrigger value="services">Services</TabsTrigger>
-              <TabsTrigger value="catalog">Catalog</TabsTrigger>
-              <TabsTrigger value="rating-reviews">Rating & Reviews</TabsTrigger>
-              <TabsTrigger value="calendar">Calendar</TabsTrigger>
-              <TabsTrigger value="map">Map</TabsTrigger>
-              {hasReviewFeature && (
-                <TabsTrigger value="reviews">
-                  Reviews ({vendor.reviewCount || 0})
-                </TabsTrigger>
-              )}
-            </TabsList>
+      <Tabs defaultValue="about" className="w-full">
+        <TabsList className="mb-6">
+          <TabsTrigger value="about">About</TabsTrigger>
+          <TabsTrigger value="catalog">Catalog</TabsTrigger>
+          <TabsTrigger value="rating-reviews">Rating & Reviews</TabsTrigger>
+          <TabsTrigger value="calendar">Calendar</TabsTrigger>
+          {hasReviewFeature && (
+            <TabsTrigger value="reviews">
+              Reviews ({vendor.reviewCount || 0})
+            </TabsTrigger>
+          )}
+        </TabsList>
 
             <TabsContent value="about">
               <div>
@@ -209,48 +155,6 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
                       </Button>
                     </CardContent>
                   </Card>
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="services">
-              <div>
-                <h2 className="font-display text-xl font-semibold mb-4">Services</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-lg font-semibold">Standard Services</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <ul className="list-disc pl-5 space-y-1">
-                        <li>Full service event planning</li>
-                        <li>Day-of coordination</li>
-                        <li>Custom event design</li>
-                        <li>Vendor management</li>
-                      </ul>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-lg font-semibold">Add-on Services</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <ul className="list-disc pl-5 space-y-1">
-                        <li>Guest management</li>
-                        <li>Budget tracking</li>
-                        <li>Custom timeline creation</li>
-                        <li>On-site management</li>
-                      </ul>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                <div className="mt-6">
-                  <h3 className="font-medium mb-2">Service Area</h3>
-                  <p className="text-muted-foreground">
-                    Primarily serving the greater Cape Town area. Available for destination events with additional travel fees.
-                  </p>
                 </div>
               </div>
             </TabsContent>
@@ -301,76 +205,62 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
               </div>
             </TabsContent>
 
-            <TabsContent value="map">
-              <div>
-                <h2 className="font-display text-xl font-semibold mb-4 flex items-center">
-                  <Map className="h-5 w-5 mr-2" />
-                  Location & Service Area
-                </h2>
-                <Card>
-                  <CardContent className="p-6">
-                    <div className="space-y-6">
-                      <div>
-                        <h3 className="font-medium mb-3 flex items-center">
-                          <MapPin className="h-4 w-4 mr-2" />
-                          Primary Location
-                        </h3>
-                        <div className="bg-gray-100 rounded-lg p-4">
-                          <p className="font-medium">{vendor.location || 'Cape Town, South Africa'}</p>
-                          <p className="text-sm text-muted-foreground mt-1">
-                            Main service area with no additional travel fees
-                          </p>
-                        </div>
-                      </div>
-
-                      <div>
-                        <h3 className="font-medium mb-3">Service Coverage</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <Card className="border-blue-200 bg-blue-50">
-                            <CardContent className="p-4">
-                              <div className="text-blue-600 font-semibold mb-2">Local Service Area</div>
-                              <p className="text-sm text-blue-700">
-                                Greater Cape Town metropolitan area
-                              </p>
-                            </CardContent>
-                          </Card>
-                          <Card className="border-orange-200 bg-orange-50">
-                            <CardContent className="p-4">
-                              <div className="text-orange-600 font-semibold mb-2">Extended Coverage</div>
-                              <p className="text-sm text-orange-700">
-                                Destination events with travel fees
-                              </p>
-                            </CardContent>
-                          </Card>
-                        </div>
-                      </div>
-
-                      <div className="border-t pt-4">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h4 className="font-medium">Travel Policy</h4>
-                            <p className="text-sm text-muted-foreground">
-                              Additional fees may apply for events outside primary service area
-                            </p>
-                          </div>
-                          <Button variant="outline">
-                            <MessageSquare className="h-4 w-4 mr-2" />
-                            Discuss Location
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-
             {hasReviewFeature && (
               <TabsContent value="reviews">
                 <Reviews vendorId={vendorId} userId={userId} vendor={vendor} />
               </TabsContent>
             )}
-          </Tabs>
+      </Tabs>
+
+      <div className="flex flex-col md:flex-row gap-8">
+        <div className="md:w-2/3">
+          <div className="flex justify-between items-start mb-3">
+            <div>
+              <h1 className="text-3xl font-display font-bold mb-2">{vendor.name}</h1>
+              {category && (
+                <div className="category-badge inline-block">
+                  {category.name}
+                </div>
+              )}
+              {vendor.subscriptionTier === 'premium' && (
+                <div className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                  Premium Vendor
+                </div>
+              )}
+              {vendor.subscriptionTier === 'premium pro' && (
+                <div className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-amber-300 to-amber-500 text-amber-900">
+                  Premium Pro
+                </div>
+              )}
+              {vendor.location && (
+                <div className="flex items-center mt-3 text-muted-foreground">
+                  <MapPin className="h-4 w-4 mr-1" />
+                  <span>{vendor.location}</span>
+                </div>
+              )}
+            </div>
+            <div className="text-center">
+              <div className="price-badge text-base mb-2">
+                {vendor.priceRange}
+              </div>
+              <StarRating 
+                rating={vendor.rating} 
+                reviewCount={vendor.reviewCount} 
+                size="md"
+                showText 
+              />
+              <Link href={`/vendors/${vendor.id}/review`}>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="mt-3 w-full bg-primary text-white hover:bg-primary/90"
+                >
+                  <Star className="mr-2 h-4 w-4" />
+                  Click to Rate & Review
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
         
         <div className="md:w-1/3">
