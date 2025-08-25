@@ -103,7 +103,7 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
         <TabsList className="mb-6">
           <TabsTrigger value="about">About</TabsTrigger>
           <TabsTrigger value="catalog">Catalog</TabsTrigger>
-          <TabsTrigger value="rating-reviews">Rating & Reviews</TabsTrigger>
+          <TabsTrigger value="rating-reviews">Reviews</TabsTrigger>
           <TabsTrigger value="calendar">Calendar</TabsTrigger>
           {hasReviewFeature && (
             <TabsTrigger value="reviews">
