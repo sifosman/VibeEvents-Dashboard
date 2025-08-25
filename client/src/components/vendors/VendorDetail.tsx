@@ -108,6 +108,7 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
               </div>
             )}
           </div>
+          <LikeButton vendorId={vendor.id} className="bg-white border shadow-sm hover:bg-accent" />
         </div>
         
         {vendor.location && (
@@ -163,7 +164,7 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
                 <h2 className="font-display text-xl font-semibold mb-4">About {vendor.name}</h2>
                 <p className="text-muted-foreground mb-6">{vendor.description}</p>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                <div className="grid grid-cols-1 gap-6 mt-8">
                   <Card>
                     <CardHeader className="pb-2">
                       <CardTitle className="text-lg font-semibold">Features</CardTitle>
@@ -179,26 +180,6 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
                         <li>Event types: Weddings, Corporate, Private celebrations</li>
                         <li>Available year-round</li>
                       </ul>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-lg font-semibold">Availability</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-muted-foreground mb-2">Contact for availability details</p>
-                      <p className="text-sm">Popular dates book quickly - reach out early!</p>
-                      <Button 
-                        className="mt-4 w-full" 
-                        variant="outline" 
-                        onClick={() => {
-                          const catalogTab = document.querySelector('[data-value="catalog"]') as HTMLElement;
-                          if (catalogTab) catalogTab.click();
-                        }}
-                      >
-                        View Catalog
-                      </Button>
                     </CardContent>
                   </Card>
                 </div>
