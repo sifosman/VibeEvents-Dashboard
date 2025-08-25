@@ -66,7 +66,7 @@ function AppRouter() {
       <Route path="/support" component={Support} />
       <Route path="/vendor-dashboard" component={VendorDashboard} />
       <Route path="/gift-registry" component={GiftRegistry} />
-      <Route path="/likes" component={LikedItems} />
+      <Route path="/LikedItems" component={LikedItems} />
       <Route path="/planner" component={MyPlanningPage} />
       <Route path="/profile/customize" component={ProfileCustomization} />
       <Route path="/vendors/tracking" component={VendorTracking} />
