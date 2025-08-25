@@ -8,17 +8,21 @@ import {
   DropdownMenuItem, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Category } from "@shared/schema";
 import SouthAfricanBadge from "../shared/SouthAfricanBadge";
-import { Filter, Map, SortDesc } from "lucide-react";
+import { Filter, Map, SortDesc, CalendarIcon } from "lucide-react";
 
 export default function Hero() {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [searchByName, setSearchByName] = useState<string>("");
   const [searchByArea, setSearchByArea] = useState<string>("");
   const [selectedCapacity, setSelectedCapacity] = useState<string>("");
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [selectedFilter, setSelectedFilter] = useState<string>("");
   const [selectedSort, setSelectedSort] = useState<string>("");
   
@@ -134,12 +138,48 @@ export default function Hero() {
               <div className="lg:col-span-1">
                 <Link href={
                   selectedCategory === "all-services" ? "/vendors" :
-                  selectedCategory ? `/vendors?category=${selectedCategory}${searchByName && searchByName !== 'all' ? `&name=${searchByName}` : ''}${searchByArea && searchByArea !== 'all' ? `&area=${searchByArea}` : ''}${selectedCapacity && selectedCapacity !== 'all' ? `&capacity=${selectedCapacity}` : ''}` : "/vendors"
+                  selectedCategory ? `/vendors?category=${selectedCategory}${searchByName && searchByName !== 'all' ? `&name=${searchByName}` : ''}${searchByArea && searchByArea !== 'all' ? `&area=${searchByArea}` : ''}${selectedCapacity && selectedCapacity !== 'all' ? `&capacity=${selectedCapacity}` : ''}${selectedDate ? `&date=${format(selectedDate, 'yyyy-MM-dd')}` : ''}` : "/vendors"
                 }>
                   <Button className="w-full bg-primary text-white text-sm px-4 h-10 hover:bg-primary/90 font-medium">
                     Search
                   </Button>
                 </Link>
+              </div>
+            </div>
+            
+            {/* Date Picker Row - Only show when date filter is needed */}
+            <div className="mt-3 border-t pt-3">
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-gray-600 whitespace-nowrap">Event Date:</span>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="w-48 h-8 px-3 justify-start text-left font-normal bg-white border-gray-300"
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {selectedDate ? format(selectedDate, "PPP") : "Select event date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={selectedDate}
+                      onSelect={setSelectedDate}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                {selectedDate && (
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => setSelectedDate(undefined)}
+                    className="h-8 px-2 text-xs text-gray-500 hover:text-gray-700"
+                  >
+                    Clear
+                  </Button>
+                )}
               </div>
             </div>
             
@@ -162,6 +202,11 @@ export default function Hero() {
                   <DropdownMenuItem asChild>
                     <Link href="/vendors?filter=rating" className="w-full">
                       By Rating
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/vendors?filter=date" className="w-full">
+                      By Date
                     </Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
