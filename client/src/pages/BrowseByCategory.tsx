@@ -90,7 +90,7 @@ export default function BrowseByCategory() {
         {!selectedCategoryId ? (
           <div className="max-w-2xl mx-auto">
             {/* Main Categories */}
-            <div className="space-y-2">
+            <div className="space-y-1">
               {mainCategories.map((mainCat) => {
                 const isExpanded = expandedCategory === mainCat.id;
                 const subcategories = getSubcategoriesForMain(mainCat);
@@ -101,7 +101,7 @@ export default function BrowseByCategory() {
                     {/* Main Category Header */}
                     <button
                       onClick={() => toggleCategory(mainCat.id)}
-                      className="w-full flex items-center justify-between p-4 bg-white hover:bg-gray-50 transition-colors"
+                      className="w-full flex items-center justify-between py-3 px-4 bg-white hover:bg-gray-50 transition-colors"
                     >
                       <div className="flex items-center space-x-3">
                         <IconComponent className="h-5 w-5 text-primary" />
@@ -121,12 +121,12 @@ export default function BrowseByCategory() {
                           <button
                             key={subcategory.id}
                             onClick={() => selectSubcategory(subcategory.id)}
-                            className="w-full text-left p-4 hover:bg-gray-100 transition-colors border-b border-gray-100 last:border-b-0"
+                            className="w-full text-left py-2 px-4 hover:bg-gray-100 transition-colors border-b border-gray-100 last:border-b-0"
                           >
                             <div className="flex items-center justify-between">
                               <div>
                                 <h3 className="font-medium text-gray-900">{subcategory.name}</h3>
-                                <p className="text-sm text-gray-600 mt-1">{subcategory.description}</p>
+                                <p className="text-sm text-gray-600">{subcategory.description}</p>
                               </div>
                               <ChevronRight className="h-4 w-4 text-gray-400" />
                             </div>
