@@ -6,11 +6,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Category } from "@shared/schema";
 import SouthAfricanBadge from "../shared/SouthAfricanBadge";
-import { Filter, Map, SortDesc, ChevronDown } from "lucide-react";
+import { Filter, Map, SortDesc } from "lucide-react";
 
 export default function Hero() {
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [searchByName, setSearchByName] = useState<string>("");
   const [searchByArea, setSearchByArea] = useState<string>("");
   
@@ -36,63 +35,23 @@ export default function Hero() {
           {/* Search Form */}
           <div className="bg-white rounded-lg shadow-lg p-3 mx-auto max-w-4xl">
             <div className="flex flex-col lg:flex-row space-y-2 lg:space-y-0 lg:space-x-2">
-              <div className="relative flex-grow">
-                <button
-                  onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
-                  className="w-full px-3 py-2 h-9 text-sm rounded border border-gray-300 bg-white text-left flex items-center justify-between focus:border-primary focus:outline-none"
-                >
-                  <span className="text-sm text-gray-700">
-                    {selectedCategories.length === 0 
-                      ? "What are you looking for?" 
-                      : selectedCategories.length === 1 && selectedCategories.includes('all-services')
-                      ? "All Services"
-                      : `${selectedCategories.length} selected`}
-                  </span>
-                  <ChevronDown className="h-4 w-4" />
-                </button>
-                
-                {showCategoryDropdown && (
-                  <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
-                    <label className="flex items-center p-2 hover:bg-gray-50 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={selectedCategories.includes('all-services')}
-                        onChange={() => {
-                          if (selectedCategories.includes('all-services')) {
-                            setSelectedCategories(selectedCategories.filter(cat => cat !== 'all-services'));
-                          } else {
-                            setSelectedCategories([...selectedCategories, 'all-services']);
-                          }
-                        }}
-                        className="mr-2"
-                      />
-                      <span className="text-sm">All Services</span>
-                    </label>
-                    {categories?.filter((category) => 
-                      (category.id >= 22 && category.id <= 74) ||  // Service Providers
-                      (category.id >= 76 && category.id <= 101) || // Vendors
-                      (category.id >= 102 && category.id <= 131)   // Venues
-                    ).map((category) => (
-                      <label key={category.id} className="flex items-center p-2 hover:bg-gray-50 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={selectedCategories.includes(category.slug || '')}
-                          onChange={() => {
-                            const categorySlug = category.slug || '';
-                            if (selectedCategories.includes(categorySlug)) {
-                              setSelectedCategories(selectedCategories.filter(cat => cat !== categorySlug));
-                            } else {
-                              setSelectedCategories([...selectedCategories, categorySlug]);
-                            }
-                          }}
-                          className="mr-2"
-                        />
-                        <span className="text-sm">{category.name}</span>
-                      </label>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger className="flex-grow px-3 py-2 h-9 text-sm rounded focus:border-primary">
+                  <SelectValue placeholder="What are you looking for?" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all-services">All Services</SelectItem>
+                  {categories?.filter((category) => 
+                    (category.id >= 22 && category.id <= 74) ||  // Service Providers
+                    (category.id >= 76 && category.id <= 101) || // Vendors
+                    (category.id >= 102 && category.id <= 131)   // Venues
+                  ).map((category) => (
+                    <SelectItem key={category.id} value={category.slug || ''}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
               <Select value={searchByName} onValueChange={setSearchByName}>
                 <SelectTrigger className="flex-grow px-3 py-2 h-9 text-sm rounded focus:border-primary">
@@ -123,9 +82,8 @@ export default function Hero() {
               </Select>
               
               <Link href={
-                selectedCategories.length === 0 ? "/services" :
-                selectedCategories.includes("all-services") ? "/services" :
-                `/vendors?category=${selectedCategories.join(',')}${searchByName && searchByName !== 'all' ? `&name=${searchByName}` : ''}${searchByArea && searchByArea !== 'all' ? `&area=${searchByArea}` : ''}`
+                selectedCategory === "all-services" ? "/services" :
+                selectedCategory ? `/vendors?category=${selectedCategory}${searchByName && searchByName !== 'all' ? `&name=${searchByName}` : ''}${searchByArea && searchByArea !== 'all' ? `&area=${searchByArea}` : ''}` : "/services"
               }>
                 <Button className="bg-primary text-white text-sm px-4 h-9 hover:bg-primary/90 whitespace-nowrap">
                   Search
