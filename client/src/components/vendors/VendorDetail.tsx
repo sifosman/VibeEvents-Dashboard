@@ -47,18 +47,17 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
     enabled: !!vendor && !!vendor.categoryId,
   });
 
-  // Fetch similar vendors in the same category
-  const { data: similarVendors = [], isLoading: similarVendorsLoading } = useQuery<Vendor[]>({
-    queryKey: ['similar-vendors', vendor?.categoryId, vendorId],
+  // Fetch more vendors for continuous list
+  const { data: moreVendors = [], isLoading: moreVendorsLoading } = useQuery<Vendor[]>({
+    queryKey: ['more-vendors', vendorId],
     queryFn: async () => {
-      if (!vendor?.categoryId) return [];
-      const response = await fetch(`/api/vendors?categoryId=${vendor.categoryId}&limit=8`);
-      if (!response.ok) throw new Error('Failed to fetch similar vendors');
+      const response = await fetch(`/api/vendors?limit=12`);
+      if (!response.ok) throw new Error('Failed to fetch vendors');
       const allVendors = await response.json();
-      // Filter out the current vendor and limit to 4 vendors
-      return allVendors.filter((v: Vendor) => v.id !== vendorId).slice(0, 4);
+      // Filter out the current vendor and return the rest
+      return allVendors.filter((v: Vendor) => v.id !== vendorId);
     },
-    enabled: !!vendor?.categoryId && vendorId > 0,
+    enabled: vendorId > 0,
   });
 
   // Temporary hard-coded user ID for demos (will be replaced with actual auth)
@@ -278,16 +277,12 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
       {/* Similar Vendors Section */}
       <div className="mt-12 pt-8 border-t border-border">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="font-display text-2xl font-bold">Similar Vendors</h2>
-          {category && (
-            <p className="text-muted-foreground">
-              More {category.name.toLowerCase()} in your area
-            </p>
-          )}
+          <h2 className="font-display text-2xl font-bold">More Vendors</h2>
+          <p className="text-muted-foreground">Continue browsing</p>
         </div>
         
 
-        {similarVendorsLoading ? (
+        {moreVendorsLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[...Array(4)].map((_, i) => (
               <div key={i} className="animate-pulse">
@@ -297,23 +292,23 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
               </div>
             ))}
           </div>
-        ) : similarVendors.length > 0 ? (
+        ) : moreVendors.length > 0 ? (
           <div className="space-y-4">
-            {similarVendors.map((similarVendor) => (
-              <Card key={similarVendor.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
+            {moreVendors.map((vendor) => (
+              <Card key={vendor.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
                 <div className="flex flex-row">
                   {/* Left side - Image */}
                   <div className="relative w-1/3 overflow-hidden">
                     <div className="h-full w-full">
                       <ImageViewer
-                        imageUrl={similarVendor.imageUrl}
-                        alt={similarVendor.name}
+                        imageUrl={vendor.imageUrl}
+                        alt={vendor.name}
                         className="h-full w-full object-cover transition-transform duration-500 ease-in-out transform hover:scale-105"
                         fallbackUrl="https://placehold.co/300x200?text=No+Image"
                       />
                     </div>
                     
-                    {similarVendor.subscriptionTier === 'premium' && (
+                    {vendor.subscriptionTier === 'premium' && (
                       <div className="absolute top-2 left-2 bg-primary text-primary-foreground z-10 text-xs px-2 py-0.5 rounded">
                         Featured
                       </div>
@@ -323,19 +318,19 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
                   {/* Right side - Content */}
                   <CardContent className="flex-grow p-3 w-2/3">
                     <div className="flex items-start justify-between mb-1">
-                      <h3 className="font-semibold text-base tracking-tight">{similarVendor.name}</h3>
+                      <h3 className="font-semibold text-base tracking-tight">{vendor.name}</h3>
                       <div className="flex items-center bg-primary/10 px-2 py-0.5 rounded text-xs">
                         <div className="h-3 w-3 mr-1 text-primary">★</div>
-                        <span className="font-medium">{similarVendor.rating.toFixed(1)}</span>
-                        <span className="text-muted-foreground text-xs ml-1">({similarVendor.reviewCount})</span>
+                        <span className="font-medium">{vendor.rating.toFixed(1)}</span>
+                        <span className="text-muted-foreground text-xs ml-1">({vendor.reviewCount})</span>
                       </div>
                     </div>
                     
-                    {similarVendor.logoUrl && (
+                    {vendor.logoUrl && (
                       <div className="float-right ml-2 mb-1 bg-white rounded-full p-0.5 shadow-sm">
                         <ImageViewer
-                          imageUrl={similarVendor.logoUrl}
-                          alt={`${similarVendor.name} logo`}
+                          imageUrl={vendor.logoUrl}
+                          alt={`${vendor.name} logo`}
                           className="h-8 w-8 object-contain rounded-full"
                           fallbackUrl="https://placehold.co/100x100?text=Logo"
                         />
@@ -343,13 +338,13 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
                     )}
                     
                     <p className="text-muted-foreground text-xs mb-2 line-clamp-4">
-                      {similarVendor.description.length > 150 ? `${similarVendor.description.slice(0, 150).trim()}...` : similarVendor.description}
+                      {vendor.description.length > 150 ? `${vendor.description.slice(0, 150).trim()}...` : vendor.description}
                     </p>
                     
                     <div className="flex flex-wrap gap-1 mt-1">
-                      {similarVendor.location && (
+                      {vendor.location && (
                         <div className="text-xs py-0 px-1.5 h-5 border border-gray-300 rounded bg-white">
-                          {similarVendor.location}
+                          {vendor.location}
                         </div>
                       )}
                     </div>
@@ -360,7 +355,7 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
                   <button 
                     className="w-full inline-flex justify-center py-1.5 px-3 border border-transparent shadow-sm text-xs font-medium rounded-md text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50 transition-colors"
                     onClick={() => {
-                      window.location.href = `/vendors/${similarVendor.id}`;
+                      window.location.href = `/vendors/${vendor.id}`;
                     }}
                   >
                     View Details

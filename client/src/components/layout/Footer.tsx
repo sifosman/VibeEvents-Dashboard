@@ -12,55 +12,14 @@ export default function Footer() {
               <Heart className="text-primary mr-2" />
               <h3 className="text-primary font-display font-bold text-xl">HowzEvent</h3>
             </div>
-            <p className="text-muted-foreground text-sm mb-4">
-              Your comprehensive event planning platform to find and book the best service providers for all your special occasions.
-            </p>
-            <div className="flex space-x-4">
-              <a href="#" className="text-muted-foreground hover:text-primary transition">
-                <Instagram size={18} />
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition">
-                <Facebook size={18} />
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition">
-                <Globe size={18} />
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition">
-                <MessageCircle size={18} />
-              </a>
-            </div>
           </div>
           
           <div>
-            <h4 className="font-display font-bold text-lg mb-4">For Event Hosts</h4>
+            <h4 className="font-display font-bold text-lg mb-4">Quick Links</h4>
             <ul className="space-y-2">
-              <li><Link href="#" className="text-muted-foreground hover:text-primary transition">How It Works</Link></li>
               <li><Link href="/vendors" className="text-muted-foreground hover:text-primary transition">Browse Vendors</Link></li>
-              <li><Link href="/planner" className="text-muted-foreground hover:text-primary transition">Event Planner Tools</Link></li>
-              <li><Link href="#" className="text-muted-foreground hover:text-primary transition">Event Inspiration</Link></li>
-              <li><Link href="#" className="text-muted-foreground hover:text-primary transition">Success Stories</Link></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h4 className="font-display font-bold text-lg mb-4">For Vendors</h4>
-            <ul className="space-y-2">
-              <li><Link href="#" className="text-muted-foreground hover:text-primary transition">Join as Vendor</Link></li>
-              <li><Link href="#" className="text-muted-foreground hover:text-primary transition">Vendor Benefits</Link></li>
-              <li><Link href="#" className="text-muted-foreground hover:text-primary transition">Vendor Dashboard</Link></li>
-              <li><Link href="#" className="text-muted-foreground hover:text-primary transition">Success Stories</Link></li>
-              <li><Link href="#" className="text-muted-foreground hover:text-primary transition">Advertising Options</Link></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h4 className="font-display font-bold text-lg mb-4">Support</h4>
-            <ul className="space-y-2">
-              <li><Link href="#" className="text-muted-foreground hover:text-primary transition">Contact Us</Link></li>
-              <li><Link href="#" className="text-muted-foreground hover:text-primary transition">FAQs</Link></li>
-              <li><Link href="#" className="text-muted-foreground hover:text-primary transition">Terms of Service</Link></li>
-              <li><Link href="#" className="text-muted-foreground hover:text-primary transition">Privacy Policy</Link></li>
-              <li><Link href="#" className="text-muted-foreground hover:text-primary transition">About Us</Link></li>
+              <li><Link href="/planner" className="text-muted-foreground hover:text-primary transition">Event Planner</Link></li>
+              <li><Link href="/support" className="text-muted-foreground hover:text-primary transition">Contact Us</Link></li>
             </ul>
           </div>
         </div>
