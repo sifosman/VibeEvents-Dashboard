@@ -186,7 +186,31 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
             </TabsContent>
 
             <TabsContent value="catalog">
-              <VendorCatalog vendorId={vendorId} />
+              <div className="space-y-6">
+                <div>
+                  <h2 className="font-display text-xl font-semibold mb-4">View Catalogue</h2>
+                  <VendorCatalog vendorId={vendorId} />
+                </div>
+                
+                <div className="border-t pt-6">
+                  <h3 className="font-display text-lg font-semibold mb-4">Quote Options</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Button 
+                      className="w-full bg-primary text-white hover:bg-primary/90"
+                      size="lg"
+                    >
+                      Request Quote
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      className="w-full border-primary text-primary hover:bg-primary/10"
+                      size="lg"
+                    >
+                      Amend Quote
+                    </Button>
+                  </div>
+                </div>
+              </div>
             </TabsContent>
 
             <TabsContent value="rating-reviews">
