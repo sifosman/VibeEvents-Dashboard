@@ -64,7 +64,14 @@ export default function BrowseByCategory() {
   };
 
   const selectSubcategory = (categoryId: number) => {
-    setSelectedCategoryId(categoryId);
+    // Check if this is a venue category (venue category IDs are 102-131)
+    if (categoryId >= 102 && categoryId <= 131) {
+      // Navigate to venue search page
+      window.location.href = `/venue-search/${categoryId}`;
+    } else {
+      // Show vendors for non-venue categories
+      setSelectedCategoryId(categoryId);
+    }
   };
 
   const getSubcategoriesForMain = (mainCat: MainCategory) => {

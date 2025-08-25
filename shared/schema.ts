@@ -101,6 +101,11 @@ export const vendors = pgTable("vendors", {
   facebookUrl: text("facebook_url"),
   twitterUrl: text("twitter_url"),
   youtubeUrl: text("youtube_url"),
+  // Venue-specific fields
+  venueCapacity: integer("venue_capacity"),           // For venues: capacity limits
+  province: text("province"),                         // South African provinces
+  city: text("city"),                                // City/town within province
+  willingToTravel: boolean("willing_to_travel").default(false), // Can provide services outside their area
 });
 
 export const insertVendorSchema = createInsertSchema(vendors).omit({

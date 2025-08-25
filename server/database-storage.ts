@@ -936,4 +936,85 @@ export class DatabaseStorage implements IStorage {
         )
       );
   }
+
+  // Venue search operations
+  async searchVenues(params: {
+    categoryId: number;
+    capacity: string;
+    provinces: string[];
+    cities: string[];
+    willingToTravel: boolean;
+  }): Promise<Vendor[]> {
+    try {
+      let query = db.select().from(vendors);
+      
+      const conditions = [];
+      
+      // Filter by category
+      if (params.categoryId) {
+        conditions.push(eq(vendors.categoryId, params.categoryId));
+      }
+      
+      // Filter by capacity
+      if (params.capacity) {
+        switch (params.capacity) {
+          case 'under_50':
+            conditions.push(lte(vendors.venueCapacity, 50));
+            break;
+          case 'under_200':
+            conditions.push(lte(vendors.venueCapacity, 200));
+            break;
+          case 'under_500':
+            conditions.push(lte(vendors.venueCapacity, 500));
+            break;
+          case 'under_1000':
+            conditions.push(lte(vendors.venueCapacity, 1000));
+            break;
+          case '2000_and_more':
+            conditions.push(gte(vendors.venueCapacity, 2000));
+            break;
+        }
+      }
+      
+      // Filter by provinces
+      if (params.provinces.length > 0) {
+        const provinceConditions = params.provinces.map(province => 
+          eq(vendors.province, province)
+        );
+        if (provinceConditions.length === 1) {
+          conditions.push(provinceConditions[0]);
+        } else if (provinceConditions.length > 1) {
+          conditions.push(sql`${vendors.province} IN (${params.provinces.map(p => `'${p}'`).join(',')})`);
+        }
+      }
+      
+      // Filter by cities
+      if (params.cities.length > 0) {
+        const cityConditions = params.cities.map(city => 
+          eq(vendors.city, city)
+        );
+        if (cityConditions.length === 1) {
+          conditions.push(cityConditions[0]);
+        } else if (cityConditions.length > 1) {
+          conditions.push(sql`${vendors.city} IN (${params.cities.map(c => `'${c}'`).join(',')})`);
+        }
+      }
+      
+      // Filter by willing to travel
+      if (params.willingToTravel) {
+        conditions.push(eq(vendors.willingToTravel, true));
+      }
+      
+      // Apply all conditions
+      if (conditions.length > 0) {
+        query = query.where(and(...conditions));
+      }
+      
+      const results = await query;
+      return results;
+    } catch (error) {
+      console.error('Error searching venues:', error);
+      return [];
+    }
+  }
 }

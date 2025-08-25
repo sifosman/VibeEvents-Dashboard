@@ -43,6 +43,15 @@ export interface IStorage {
   updateVendorStripeCustomerId(id: number, customerId: string): Promise<Vendor>;
   updateVendorSubscription(id: number, subscriptionId: string, subscriptionTier: string): Promise<Vendor>;
   updateVendorSubscriptionStatus(subscriptionId: string, status: string): Promise<Vendor | undefined>;
+  
+  // Venue search operations
+  searchVenues(params: {
+    categoryId: number;
+    capacity: string;
+    provinces: string[];
+    cities: string[];
+    willingToTravel: boolean;
+  }): Promise<Vendor[]>;
 
   // Vendor Registration operations
   getVendorRegistrations(): Promise<VendorRegistration[]>;
