@@ -127,33 +127,13 @@ export default function Hero() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-48">
                   <DropdownMenuItem asChild>
-                    <Link href="/vendors?priceRange=budget" className="w-full">
-                      Budget Friendly (Under R1000)
+                    <Link href="/vendors?filter=capacity" className="w-full">
+                      By Capacity
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/vendors?priceRange=mid" className="w-full">
-                      Mid Range (R1000 - R5000)
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/vendors?priceRange=premium" className="w-full">
-                      Premium (R5000+)
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/vendors?isThemed=true" className="w-full">
-                      Themed Events Only
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/vendors?eventType=wedding" className="w-full">
-                      Wedding Specialists
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/vendors?eventType=corporate" className="w-full">
-                      Corporate Events
+                    <Link href="/vendors?filter=rating" className="w-full">
+                      By Rating
                     </Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -169,33 +149,23 @@ export default function Hero() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-48">
                   <DropdownMenuItem asChild>
-                    <Link href="/vendors?sort=popular" className="w-full">
-                      Most Popular
+                    <Link href="/vendors?sort=type" className="w-full">
+                      Type
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/vendors?sort=alphabetically" className="w-full">
+                      Alphabetically
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/vendors?sort=rating" className="w-full">
-                      Highest Rated
+                      Rating
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/vendors?sort=price-low" className="w-full">
-                      Price: Low to High
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/vendors?sort=price-high" className="w-full">
-                      Price: High to Low
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/vendors?sort=newest" className="w-full">
-                      Newest First
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/vendors?sort=name" className="w-full">
-                      Alphabetical
+                    <Link href="/vendors?sort=area" className="w-full">
+                      Area
                     </Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
