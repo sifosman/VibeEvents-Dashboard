@@ -18,6 +18,7 @@ export default function Hero() {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [searchByName, setSearchByName] = useState<string>("");
   const [searchByArea, setSearchByArea] = useState<string>("");
+  const [selectedCapacity, setSelectedCapacity] = useState<string>("");
   const [selectedFilter, setSelectedFilter] = useState<string>("");
   const [selectedSort, setSelectedSort] = useState<string>("");
   
@@ -31,6 +32,15 @@ export default function Hero() {
     "Bloemfontein", "East London", "Pietermaritzburg", "Kimberley", "Polokwane"
   ];
 
+  // Event capacity options
+  const capacityOptions = [
+    { value: "under_50", label: "Under 50" },
+    { value: "under_200", label: "Under 200" },
+    { value: "under_500", label: "Under 500" },
+    { value: "under_1000", label: "Under 1000" },
+    { value: "2000_and_more", label: "2000 and More" }
+  ];
+
   return (
     <section className="relative h-[400px] bg-cover bg-center" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80')` }}>
       <div className="absolute inset-0 bg-black bg-opacity-40"></div>
@@ -41,8 +51,8 @@ export default function Hero() {
           
           
           {/* Search Form */}
-          <div className="bg-white rounded-lg shadow-lg p-4 mx-auto max-w-5xl" style={{ display: "block", visibility: "visible" }}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="bg-white rounded-lg shadow-lg p-4 mx-auto max-w-6xl" style={{ display: "block", visibility: "visible" }}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
               {/* What are you looking for */}
               <div className="lg:col-span-1">
                 <Select value={selectedCategory} onValueChange={setSelectedCategory}>
@@ -102,11 +112,28 @@ export default function Hero() {
                 </Select>
               </div>
 
+              {/* Event Capacity */}
+              <div className="lg:col-span-1">
+                <Select value={selectedCapacity} onValueChange={setSelectedCapacity}>
+                  <SelectTrigger className="w-full px-3 py-2 h-10 text-sm border border-gray-300 rounded focus:border-primary bg-white">
+                    <SelectValue placeholder="Event Capacity" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border border-gray-300 rounded shadow-lg">
+                    <SelectItem value="all">All Capacities</SelectItem>
+                    {capacityOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
               {/* Search Button */}
               <div className="lg:col-span-1">
                 <Link href={
                   selectedCategory === "all-services" ? "/vendors" :
-                  selectedCategory ? `/vendors?category=${selectedCategory}${searchByName && searchByName !== 'all' ? `&name=${searchByName}` : ''}${searchByArea && searchByArea !== 'all' ? `&area=${searchByArea}` : ''}` : "/vendors"
+                  selectedCategory ? `/vendors?category=${selectedCategory}${searchByName && searchByName !== 'all' ? `&name=${searchByName}` : ''}${searchByArea && searchByArea !== 'all' ? `&area=${searchByArea}` : ''}${selectedCapacity && selectedCapacity !== 'all' ? `&capacity=${selectedCapacity}` : ''}` : "/vendors"
                 }>
                   <Button className="w-full bg-primary text-white text-sm px-4 h-10 hover:bg-primary/90 font-medium">
                     Search
