@@ -1,7 +1,6 @@
 import { Switch, Route, useLocation } from "wouter";
 import { Toaster } from "@/components/ui/toaster";
 import Header from "./components/layout/Header";
-import Footer from "./components/layout/Footer";
 import Home from "./pages/Home";
 import VendorListing from "./pages/VendorListing";
 import VendorDetail from "./pages/VendorDetail";
@@ -89,7 +88,6 @@ function App() {
           {/* Floating back/history navigation - adjusted to avoid bottom nav on mobile */}
           <NavigationControls mode="floating" position="top-left" />
         </main>
-        <Footer />
         <BottomNav />
         <Toaster />
         {/* Automatically scroll to top on page transitions */}
