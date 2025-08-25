@@ -46,7 +46,7 @@ export default function Hero() {
                     (category.id >= 76 && category.id <= 101) || // Vendors
                     (category.id >= 102 && category.id <= 131)   // Venues
                   ).map((category) => (
-                    <SelectItem key={category.id} value={category.slug || ''}>
+                    <SelectItem key={category.id} value={category.slug || `category-${category.id}`}>
                       {category.name}
                     </SelectItem>
                   ))}
