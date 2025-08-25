@@ -13,25 +13,25 @@ export function BottomNav() {
       icon: Home
     },
     {
-      name: "Search by Category",
+      name: "Search",
       href: "/BrowseByCategory",
       icon: Search
     },
     {
-      name: "My Favourites",
+      name: "Favourites",
       href: "/LikedItems",
       icon: Heart
     },
     {
-      name: "My Account",
+      name: "Account",
       href: "/account",
       icon: User
     }
   ];
   
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border md:hidden z-50">
-      <div className="grid grid-cols-4 h-16">
+    <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border md:hidden z-50 w-full">
+      <div className="grid grid-cols-4 h-16 w-full px-1">
         {navItems.map((item) => {
           const isActive = location === item.href;
           return (
@@ -39,15 +39,15 @@ export function BottomNav() {
               key={item.name}
               href={item.href}
               className={cn(
-                "flex flex-col items-center justify-center text-xs space-y-1",
+                "flex flex-col items-center justify-center text-xs space-y-1 px-1",
                 isActive ? "text-primary" : "text-muted-foreground"
               )}
             >
               <item.icon className={cn(
-                "h-6 w-6",
+                "h-5 w-5",
                 isActive ? "text-primary" : "text-muted-foreground"
               )} />
-              <span className="text-[10px]">{item.name}</span>
+              <span className="text-[9px] text-center leading-tight whitespace-nowrap">{item.name}</span>
             </Link>
           );
         })}
