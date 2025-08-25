@@ -139,7 +139,7 @@ export default function ServiceProviderSearch({ categoryId }: ServiceProviderSea
               <select
                 value={selectedCapacity}
                 onChange={(e) => setSelectedCapacity(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-300 rounded-md font-display font-medium text-gray-700 bg-white shadow-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
               >
                 <option value="">Any Capacity</option>
                 {CAPACITY_OPTIONS.map(option => (
@@ -228,7 +228,7 @@ export default function ServiceProviderSearch({ categoryId }: ServiceProviderSea
               <select
                 value={travelDistance}
                 onChange={(e) => setTravelDistance(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-300 rounded-md font-display font-medium text-gray-700 bg-white shadow-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
               >
                 <option value="">Nationally</option>
                 {TRAVEL_OPTIONS.map(option => (
