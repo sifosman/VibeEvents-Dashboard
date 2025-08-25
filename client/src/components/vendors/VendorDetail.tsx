@@ -281,11 +281,6 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
                 </a>
               )}
               
-              <Button className="w-full bg-primary text-white hover:bg-primary/90">
-                <Phone className="h-5 w-5 mr-2" />
-                Request a Call
-              </Button>
-              
               
               <Separator className="my-4" />
               
