@@ -118,7 +118,7 @@ export default function BrowseByCategory() {
                     >
                       <div className="flex items-center space-x-3">
                         <IconComponent className="h-5 w-5 text-primary" />
-                        <span className="text-lg font-semibold text-left">{mainCat.name}</span>
+                        <span className="text-lg font-display font-semibold text-left">{mainCat.name}</span>
                       </div>
                       {isExpanded ? (
                         <ChevronDown className="h-5 w-5 text-gray-400" />
@@ -137,7 +137,7 @@ export default function BrowseByCategory() {
                             className="w-full text-left py-2 px-4 hover:bg-gray-100 transition-colors border-b border-gray-100 last:border-b-0"
                           >
                             <div className="flex items-center justify-between">
-                              <h3 className="font-medium text-gray-900">{subcategory.name}</h3>
+                              <h3 className="font-display font-medium text-gray-900">{subcategory.name}</h3>
                               <ChevronRight className="h-4 w-4 text-gray-400" />
                             </div>
                           </button>
