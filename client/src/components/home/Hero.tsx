@@ -22,7 +22,8 @@ export default function Hero() {
   const [searchByName, setSearchByName] = useState<string>("");
   const [searchByArea, setSearchByArea] = useState<string>("");
   const [selectedCapacity, setSelectedCapacity] = useState<string>("");
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [fromDate, setFromDate] = useState<Date | undefined>(undefined);
+  const [toDate, setToDate] = useState<Date | undefined>(undefined);
   const [selectedFilter, setSelectedFilter] = useState<string>("");
   const [selectedSort, setSelectedSort] = useState<string>("");
   
@@ -133,55 +134,92 @@ export default function Hero() {
                   </SelectContent>
                 </Select>
               </div>
+            </div>
+            
+            {/* Event Date Range */}
+            <div className="mt-3 border-t pt-3">
+              <div className="flex items-center gap-3 flex-wrap">
+                <span className="text-sm text-gray-600 whitespace-nowrap">Event Date:</span>
+                
+                {/* From Date */}
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-500">From:</span>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-40 h-8 px-3 justify-start text-left font-normal bg-white border-gray-300"
+                      >
+                        <CalendarIcon className="mr-2 h-3 w-3" />
+                        {fromDate ? format(fromDate, "MMM dd") : "Start date"}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={fromDate}
+                        onSelect={setFromDate}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
 
+                {/* To Date */}
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-500">To:</span>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-40 h-8 px-3 justify-start text-left font-normal bg-white border-gray-300"
+                      >
+                        <CalendarIcon className="mr-2 h-3 w-3" />
+                        {toDate ? format(toDate, "MMM dd") : "End date"}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={toDate}
+                        onSelect={setToDate}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
+                {/* Clear Dates */}
+                {(fromDate || toDate) && (
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => {
+                      setFromDate(undefined);
+                      setToDate(undefined);
+                    }}
+                    className="h-8 px-2 text-xs text-gray-500 hover:text-gray-700"
+                  >
+                    Clear dates
+                  </Button>
+                )}
+              </div>
+            </div>
+
+            <div className="mt-3">
               {/* Search Button */}
-              <div className="lg:col-span-1">
+              <div className="flex justify-center">
                 <Link href={
                   selectedCategory === "all-services" ? "/vendors" :
-                  selectedCategory ? `/vendors?category=${selectedCategory}${searchByName && searchByName !== 'all' ? `&name=${searchByName}` : ''}${searchByArea && searchByArea !== 'all' ? `&area=${searchByArea}` : ''}${selectedCapacity && selectedCapacity !== 'all' ? `&capacity=${selectedCapacity}` : ''}${selectedDate ? `&date=${format(selectedDate, 'yyyy-MM-dd')}` : ''}` : "/vendors"
+                  selectedCategory ? `/vendors?category=${selectedCategory}${searchByName && searchByName !== 'all' ? `&name=${searchByName}` : ''}${searchByArea && searchByArea !== 'all' ? `&area=${searchByArea}` : ''}${selectedCapacity && selectedCapacity !== 'all' ? `&capacity=${selectedCapacity}` : ''}${fromDate ? `&fromDate=${format(fromDate, 'yyyy-MM-dd')}` : ''}${toDate ? `&toDate=${format(toDate, 'yyyy-MM-dd')}` : ''}` : "/vendors"
                 }>
-                  <Button className="w-full bg-primary text-white text-sm px-4 h-10 hover:bg-primary/90 font-medium">
+                  <Button className="w-48 bg-primary text-white text-sm px-4 h-10 hover:bg-primary/90 font-medium">
                     Search
                   </Button>
                 </Link>
               </div>
             </div>
             
-            {/* Date Picker Row - Only show when date filter is needed */}
-            <div className="mt-3 border-t pt-3">
-              <div className="flex items-center gap-3">
-                <span className="text-sm text-gray-600 whitespace-nowrap">Event Date:</span>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className="w-48 h-8 px-3 justify-start text-left font-normal bg-white border-gray-300"
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {selectedDate ? format(selectedDate, "PPP") : "Select event date"}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={selectedDate}
-                      onSelect={setSelectedDate}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-                {selectedDate && (
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={() => setSelectedDate(undefined)}
-                    className="h-8 px-2 text-xs text-gray-500 hover:text-gray-700"
-                  >
-                    Clear
-                  </Button>
-                )}
-              </div>
-            </div>
             
             {/* Filter/Sort/Map strip */}
             <div className="flex gap-2 mt-4">
@@ -249,13 +287,6 @@ export default function Hero() {
                 </DropdownMenuContent>
               </DropdownMenu>
               
-              {/* Map Link */}
-              <Link href="/map" className="flex-1">
-                <Button variant="outline" className="w-full h-8 text-xs flex items-center justify-center gap-1 bg-white border-gray-300">
-                  <Map className="h-3 w-3" />
-                  Map
-                </Button>
-              </Link>
             </div>
           </div>
         </div>
