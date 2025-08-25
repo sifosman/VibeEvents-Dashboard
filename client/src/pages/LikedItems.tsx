@@ -80,16 +80,8 @@ const LikedItems: React.FC = () => {
 
   return (
     <div className="container mx-auto p-6">
-      <div className="flex justify-between items-center mb-6">
+      <div className="mb-6">
         <h1 className="text-3xl font-bold">My Favourites</h1>
-        <div className="flex space-x-2">
-          <Button variant="outline" asChild>
-            <Link to="/">Explore More</Link>
-          </Button>
-          <Button variant="outline" asChild>
-            <Link to="/planner-dashboard">Go to Planner</Link>
-          </Button>
-        </div>
       </div>
 
       <Tabs defaultValue="all" className="w-full">
