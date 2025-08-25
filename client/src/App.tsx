@@ -20,6 +20,8 @@ import VendorProfileManagement from "./pages/VendorProfileManagement";
 import ServiceCategories from "./pages/ServiceCategories";
 import BrowseByCategory from "./pages/BrowseByCategory";
 import VenueSearch from "./pages/VenueSearch";
+import VendorSearch from "./pages/VendorSearch";
+import ServiceProviderSearch from "./pages/ServiceProviderSearch";
 import MyAccount from "./pages/MyAccount";
 import VendorRegistration from "./pages/vendor-registration";
 import UserDashboard from "./pages/UserDashboard";
@@ -49,6 +51,12 @@ function AppRouter() {
       <Route path="/BrowseByCategory" component={BrowseByCategory} />
       <Route path="/venue-search/:categoryId">
         {params => <VenueSearch categoryId={parseInt(params.categoryId)} />}
+      </Route>
+      <Route path="/vendor-search/:categoryId">
+        {params => <VendorSearch categoryId={parseInt(params.categoryId)} />}
+      </Route>
+      <Route path="/service-provider-search/:categoryId">
+        {params => <ServiceProviderSearch categoryId={parseInt(params.categoryId)} />}
       </Route>
       <Route path="/login" component={Login} />
       <Route path="/register" component={Register} />

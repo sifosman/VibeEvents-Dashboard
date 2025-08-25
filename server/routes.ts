@@ -558,6 +558,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Vendor search endpoint
+  app.get('/api/vendors/search', async (req: Request, res: Response) => {
+    try {
+      const { categoryId, capacity, provinces, cities, travelDistance } = req.query;
+      
+      const searchParams = {
+        categoryId: Number(categoryId),
+        capacity: capacity as string,
+        provinces: provinces ? (provinces as string).split(',').filter(p => p.trim()) : [],
+        cities: cities ? (cities as string).split(',').filter(c => c.trim()) : [],
+        travelDistance: travelDistance as string
+      };
+      
+      const vendors = await storage.searchVenues(searchParams);
+      res.json(vendors);
+    } catch (error) {
+      console.error("Error searching vendors:", error);
+      res.status(500).json({ message: "Failed to search vendors" });
+    }
+  });
+
+  // Service provider search endpoint
+  app.get('/api/service-providers/search', async (req: Request, res: Response) => {
+    try {
+      const { categoryId, capacity, provinces, cities, travelDistance } = req.query;
+      
+      const searchParams = {
+        categoryId: Number(categoryId),
+        capacity: capacity as string,
+        provinces: provinces ? (provinces as string).split(',').filter(p => p.trim()) : [],
+        cities: cities ? (cities as string).split(',').filter(c => c.trim()) : [],
+        travelDistance: travelDistance as string
+      };
+      
+      const serviceProviders = await storage.searchVenues(searchParams);
+      res.json(serviceProviders);
+    } catch (error) {
+      console.error("Error searching service providers:", error);
+      res.status(500).json({ message: "Failed to search service providers" });
+    }
+  });
+
   app.get('/api/vendors/featured', async (req: Request, res: Response) => {
     try {
       // Provide hardcoded sample vendor data to ensure something appears
