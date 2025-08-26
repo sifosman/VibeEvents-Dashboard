@@ -7,12 +7,17 @@ import {
   DollarSign, 
   Plus,
   Trash2,
-  Edit
+  Edit,
+  Calendar,
+  Tag,
+  Type,
+  Palette
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Task {
   id: number;
@@ -37,6 +42,12 @@ interface CalendarEvent {
 }
 
 export default function MyPlanningPage() {
+  // Event Details State
+  const [eventName, setEventName] = useState("");
+  const [eventTheme, setEventTheme] = useState("");
+  const [eventType, setEventType] = useState("");
+  const [eventDate, setEventDate] = useState("");
+
   // Task List State
   const [tasks, setTasks] = useState<Task[]>([
     { id: 1, text: "Book venue", completed: false, dueDate: "2024-02-15" },
@@ -96,6 +107,84 @@ export default function MyPlanningPage() {
 
       <div className="container mx-auto py-4 px-4">
         <h1 className="text-2xl font-display font-bold mb-6">My Planner</h1>
+
+        {/* Event Details Section */}
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Calendar className="h-5 w-5" />
+              Event Details
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* My Event Name */}
+              <div className="space-y-2">
+                <Label htmlFor="eventName" className="flex items-center gap-2">
+                  <Type className="h-4 w-4" />
+                  My Event Name
+                </Label>
+                <Input
+                  id="eventName"
+                  placeholder="Enter event name"
+                  value={eventName}
+                  onChange={(e) => setEventName(e.target.value)}
+                />
+              </div>
+
+              {/* My Event Theme */}
+              <div className="space-y-2">
+                <Label htmlFor="eventTheme" className="flex items-center gap-2">
+                  <Palette className="h-4 w-4" />
+                  My Event Theme
+                </Label>
+                <Input
+                  id="eventTheme"
+                  placeholder="Enter event theme"
+                  value={eventTheme}
+                  onChange={(e) => setEventTheme(e.target.value)}
+                />
+              </div>
+
+              {/* My Event Type */}
+              <div className="space-y-2">
+                <Label htmlFor="eventType" className="flex items-center gap-2">
+                  <Tag className="h-4 w-4" />
+                  My Event Type
+                </Label>
+                <Select value={eventType} onValueChange={setEventType}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select event type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="wedding">Wedding</SelectItem>
+                    <SelectItem value="birthday">Birthday Party</SelectItem>
+                    <SelectItem value="corporate">Corporate Event</SelectItem>
+                    <SelectItem value="anniversary">Anniversary</SelectItem>
+                    <SelectItem value="graduation">Graduation</SelectItem>
+                    <SelectItem value="baby-shower">Baby Shower</SelectItem>
+                    <SelectItem value="engagement">Engagement Party</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* My Event Date */}
+              <div className="space-y-2">
+                <Label htmlFor="eventDate" className="flex items-center gap-2">
+                  <CalendarDays className="h-4 w-4" />
+                  My Event Date
+                </Label>
+                <Input
+                  id="eventDate"
+                  type="date"
+                  value={eventDate}
+                  onChange={(e) => setEventDate(e.target.value)}
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
