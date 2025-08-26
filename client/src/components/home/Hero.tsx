@@ -306,9 +306,9 @@ export default function Hero() {
               {/* Filter Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild className="flex-1">
-                  <Button variant="outline" className="w-full h-8 text-xs flex items-center justify-center gap-1 bg-white border-gray-300">
+                  <Button variant="outline" className="w-full h-8 text-xs flex flex-col items-center justify-center gap-0 bg-white border-gray-300">
                     <Filter className="h-3 w-3" />
-                    Filter
+                    <span className="text-[10px] leading-tight">Search Category</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-48">
