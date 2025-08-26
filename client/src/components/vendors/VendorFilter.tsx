@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Search } from "lucide-react";
 import { eventTypes } from "@/lib/eventTypes";
 import {
@@ -33,8 +34,8 @@ interface VendorFilterProps {
     dietary?: string;
     cuisine?: string;
     country?: string;
-    province?: string;
-    city?: string;
+    provinces?: string[];
+    cities?: string[];
     vendorTag?: string;
   }) => void;
   initialFilters?: {
@@ -47,8 +48,8 @@ interface VendorFilterProps {
     dietary?: string;
     cuisine?: string;
     country?: string;
-    province?: string;
-    city?: string;
+    provinces?: string[];
+    cities?: string[];
     vendorTag?: string;
   };
 }
@@ -64,8 +65,8 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
   const [dietary, setDietary] = useState(initialFilters.dietary || "");
   const [cuisine, setCuisine] = useState(initialFilters.cuisine || "");
   const [country, setCountry] = useState(initialFilters.country || "");
-  const [province, setProvince] = useState(initialFilters.province || "");
-  const [city, setCity] = useState(initialFilters.city || "");
+  const [selectedProvinces, setSelectedProvinces] = useState<string[]>(initialFilters.provinces || []);
+  const [selectedCities, setSelectedCities] = useState<string[]>(initialFilters.cities || []);
   const [vendorTag, setVendorTag] = useState(initialFilters.vendorTag || "");
 
   const { data: categories } = useQuery<Category[]>({
@@ -135,8 +136,8 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
     if (dietary) filters.dietary = dietary;
     if (cuisine) filters.cuisine = cuisine;
     if (country) filters.country = country;
-    if (province) filters.province = province;
-    if (city) filters.city = city;
+    if (selectedProvinces.length > 0) filters.provinces = selectedProvinces.join(',');
+    if (selectedCities.length > 0) filters.cities = selectedCities.join(',');
     if (vendorTag) filters.vendorTag = vendorTag;
     
     onFilter({ 
@@ -149,8 +150,8 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
       dietary,
       cuisine,
       country,
-      province,
-      city,
+      provinces: selectedProvinces,
+      cities: selectedCities,
       vendorTag
     });
     
@@ -164,6 +165,33 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
     setLocation(`/vendors${queryString ? `?${queryString}` : ''}`);
   };
 
+  const handleProvinceChange = (province: string, checked: boolean) => {
+    if (checked) {
+      setSelectedProvinces([...selectedProvinces, province]);
+    } else {
+      setSelectedProvinces(selectedProvinces.filter(p => p !== province));
+      // Remove cities from the deselected province
+      const citiesToRemove = citiesByProvince[province] || [];
+      setSelectedCities(selectedCities.filter(city => !citiesToRemove.includes(city)));
+    }
+  };
+
+  const handleCityChange = (city: string, checked: boolean) => {
+    if (checked) {
+      setSelectedCities([...selectedCities, city]);
+    } else {
+      setSelectedCities(selectedCities.filter(c => c !== city));
+    }
+  };
+
+  // Get available cities based on selected provinces
+  const getAvailableCities = () => {
+    if (selectedProvinces.length === 0) return [];
+    return selectedProvinces.reduce((cities: string[], province) => {
+      return [...cities, ...(citiesByProvince[province] || [])];
+    }, []);
+  };
+
   const handleReset = () => {
     setSearch("");
     setCategory("");
@@ -174,8 +202,8 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
     setDietary("");
     setCuisine("");
     setCountry("");
-    setProvince("");
-    setCity("");
+    setSelectedProvinces([]);
+    setSelectedCities([]);
     setVendorTag("");
     onFilter({});
     setLocation("/vendors");
@@ -370,13 +398,13 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
             <AccordionItem value="location" className="border-b-0">
               <AccordionTrigger className="py-2">Location</AccordionTrigger>
               <AccordionContent className="pt-1 pb-2">
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <div>
                     <Label htmlFor="country" className="text-xs mb-1 block">Country</Label>
                     <Select value={country} onValueChange={(value) => {
                       setCountry(value);
-                      setProvince("");
-                      setCity("");
+                      setSelectedProvinces([]);
+                      setSelectedCities([]);
                     }}>
                       <SelectTrigger id="country" className="h-8">
                         <SelectValue placeholder="Select country" />
@@ -397,46 +425,55 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
                   
                   {country === "South Africa" && (
                     <div>
-                      <Label htmlFor="province" className="text-xs mb-1 block">Province</Label>
-                      <Select value={province} onValueChange={(value) => {
-                        setProvince(value);
-                        setCity("");
-                      }}>
-                        <SelectTrigger id="province" className="h-8">
-                          <SelectValue placeholder="Select province" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="">Any Province</SelectItem>
-                          {provinces.map((prov) => (
-                            <SelectItem key={prov} value={prov}>
-                              {prov}
-                            </SelectItem>
+                      <Label className="text-xs mb-2 block">Provinces ({selectedProvinces.length} selected)</Label>
+                      <div className="max-h-32 overflow-y-auto border border-border rounded-md p-2">
+                        <div className="space-y-1">
+                          {provinces.map((province) => (
+                            <div key={province} className="flex items-center space-x-2">
+                              <Checkbox
+                                id={`province-${province}`}
+                                checked={selectedProvinces.includes(province)}
+                                onCheckedChange={(checked) => 
+                                  handleProvinceChange(province, checked as boolean)
+                                }
+                              />
+                              <Label 
+                                htmlFor={`province-${province}`}
+                                className="text-xs font-normal cursor-pointer"
+                              >
+                                {province}
+                              </Label>
+                            </div>
                           ))}
-                        </SelectContent>
-                      </Select>
+                        </div>
+                      </div>
                     </div>
                   )}
                   
-                  {province && citiesByProvince[province] && (
+                  {selectedProvinces.length > 0 && (
                     <div>
-                      <Label htmlFor="city" className="text-xs mb-1 block">City</Label>
-                      <Select 
-                        value={city} 
-                        onValueChange={setCity}
-                        disabled={!province}
-                      >
-                        <SelectTrigger id="city" className="h-8">
-                          <SelectValue placeholder="Select city" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="">Any City</SelectItem>
-                          {citiesByProvince[province].map((cityName) => (
-                            <SelectItem key={cityName} value={cityName}>
-                              {cityName}
-                            </SelectItem>
+                      <Label className="text-xs mb-2 block">Cities ({selectedCities.length} selected)</Label>
+                      <div className="max-h-40 overflow-y-auto border border-border rounded-md p-2">
+                        <div className="space-y-1">
+                          {getAvailableCities().map((city) => (
+                            <div key={city} className="flex items-center space-x-2">
+                              <Checkbox
+                                id={`city-${city}`}
+                                checked={selectedCities.includes(city)}
+                                onCheckedChange={(checked) => 
+                                  handleCityChange(city, checked as boolean)
+                                }
+                              />
+                              <Label 
+                                htmlFor={`city-${city}`}
+                                className="text-xs font-normal cursor-pointer"
+                              >
+                                {city}
+                              </Label>
+                            </div>
                           ))}
-                        </SelectContent>
-                      </Select>
+                        </div>
+                      </div>
                     </div>
                   )}
                 </div>

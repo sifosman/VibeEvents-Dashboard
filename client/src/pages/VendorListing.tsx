@@ -29,10 +29,8 @@ export default function VendorListing() {
     dietary: "",
     cuisine: "",
     country: "",
-    region: "",
-    province: "",
-    area: "",
-    town: "",
+    provinces: [] as string[],
+    cities: [] as string[],
     vendorTag: "",
   });
   const [showMobileFilters, setShowMobileFilters] = useState(false);
@@ -50,10 +48,8 @@ export default function VendorListing() {
     const dietaryParam = params.get("dietary") || "";
     const cuisineParam = params.get("cuisine") || "";
     const countryParam = params.get("country") || "";
-    const regionParam = params.get("region") || "";
-    const provinceParam = params.get("province") || "";
-    const areaParam = params.get("area") || "";
-    const townParam = params.get("town") || "";
+    const provincesParam = params.get("provinces")?.split(',').filter(p => p) || [];
+    const citiesParam = params.get("cities")?.split(',').filter(c => c) || [];
     const vendorTagParam = params.get("vendorTag") || "";
     
     setFilters({
@@ -66,10 +62,8 @@ export default function VendorListing() {
       dietary: dietaryParam,
       cuisine: cuisineParam,
       country: countryParam,
-      region: regionParam,
-      province: provinceParam,
-      area: areaParam,
-      town: townParam,
+      provinces: provincesParam,
+      cities: citiesParam,
       vendorTag: vendorTagParam,
     });
   }, [location]);
@@ -129,18 +123,16 @@ export default function VendorListing() {
       queryParts.push(`cuisine=${encodeURIComponent(filters.cuisine)}`);
     }
     
-    if (filters.country || filters.region || filters.province || filters.area || filters.town) {
-      // Combine location filters
-      const locationParts = [];
-      if (filters.country) locationParts.push(filters.country);
-      if (filters.region) locationParts.push(filters.region);
-      if (filters.province) locationParts.push(filters.province);
-      if (filters.area) locationParts.push(filters.area);
-      if (filters.town) locationParts.push(filters.town);
-      
-      if (locationParts.length > 0) {
-        queryParts.push(`location=${encodeURIComponent(locationParts.join(', '))}`);
-      }
+    if (filters.country) {
+      queryParts.push(`country=${encodeURIComponent(filters.country)}`);
+    }
+    
+    if (filters.provinces && filters.provinces.length > 0) {
+      queryParts.push(`provinces=${encodeURIComponent(filters.provinces.join(','))}`);
+    }
+    
+    if (filters.cities && filters.cities.length > 0) {
+      queryParts.push(`cities=${encodeURIComponent(filters.cities.join(','))}`);
     }
     
     return queryParts.length > 0 ? `?${queryParts.join('&')}` : '';
