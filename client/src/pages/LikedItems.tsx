@@ -16,8 +16,13 @@ const LikedItems: React.FC = () => {
   // Get current user
   useEffect(() => {
     // Temporary solution until auth is fully implemented
-    // In a real implementation, this would come from auth context
-    setUserId(1); // Using a placeholder user ID
+    // For now, generate a consistent user ID based on browser session
+    let sessionUserId = localStorage.getItem('sessionUserId');
+    if (!sessionUserId) {
+      sessionUserId = Math.floor(Math.random() * 1000) + 1;
+      localStorage.setItem('sessionUserId', sessionUserId.toString());
+    }
+    setUserId(parseInt(sessionUserId));
   }, []);
   
   // Fetch liked items (shortlisted items)

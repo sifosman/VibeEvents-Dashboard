@@ -54,8 +54,10 @@ export default function Hero() {
   const [selectedFilter, setSelectedFilter] = useState<string>("");
   const [selectedSort, setSelectedSort] = useState<string>("");
   
-  const { data: categories } = useQuery<Category[]>({
+  const { data: categories, isLoading: categoriesLoading, error: categoriesError } = useQuery<Category[]>({
     queryKey: ['/api/categories'],
+    retry: 3,
+    retryDelay: 1000,
   });
 
   // Filter categories based on selected service type
@@ -219,7 +221,9 @@ export default function Hero() {
                     className="w-full px-3 py-2 h-10 text-sm border border-gray-300 rounded focus:border-primary bg-white flex items-center justify-between text-left"
                   >
                     <span className="text-gray-900">
-                      {selectedCategories.length === 0 
+                      {categoriesLoading ? "Loading..." : 
+                       categoriesError ? "Error loading categories" :
+                       selectedCategories.length === 0 
                         ? "What are you looking for?" 
                         : selectedCategories.length === 1
                         ? getFilteredCategories()?.find(cat => (cat.slug || `category-${cat.id}`) === selectedCategories[0])?.name || selectedCategories[0]
@@ -228,7 +232,7 @@ export default function Hero() {
                     <ChevronDown className="h-4 w-4 text-gray-400" />
                   </button>
                   
-                  {showCategoryDropdown && (
+                  {showCategoryDropdown && !categoriesLoading && !categoriesError && (
                     <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
                       <label className="flex items-center px-3 py-2 hover:bg-gray-50 cursor-pointer">
                         <Checkbox
