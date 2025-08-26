@@ -143,7 +143,7 @@ export default function Hero() {
   ];
 
   return (
-    <section className="relative min-h-[600px] pb-8 bg-teal-600">
+    <section className="relative min-h-[600px] pb-8 bg-primary">
       <div className="relative z-10 flex flex-col items-center justify-center min-h-[600px] pt-8">
         <div className="text-center px-4 max-w-4xl w-full">
           <h1 className="text-xl md:text-2xl font-display font-bold text-white mb-4 drop-shadow-lg whitespace-nowrap">Connect, Collaborate, Celebrate</h1>
