@@ -5,18 +5,14 @@ import {
   Shield, 
   CreditCard, 
   LogOut, 
-  ChevronRight 
+  ChevronRight,
+  ChevronDown
 } from "lucide-react";
 import { Helmet } from "react-helmet";
 import { Link } from "wouter";
+import { useState } from "react";
 
 const accountSections = [
-  {
-    id: "profile",
-    label: "My Profile",
-    icon: <User className="h-5 w-5" />,
-    href: "/profile"
-  },
   {
     id: "planner",
     label: "My Planner",
@@ -43,11 +39,30 @@ const accountSections = [
   }
 ];
 
+const profileOptions = [
+  {
+    id: "free",
+    label: "Free",
+    href: "/profile/free"
+  },
+  {
+    id: "subscribers", 
+    label: "Subscribers",
+    href: "/profile/subscribers"
+  }
+];
+
 export default function MyAccount() {
+  const [isProfileExpanded, setIsProfileExpanded] = useState(false);
+  
   const handleLogout = () => {
     // Simple logout functionality
     alert("Logging out...");
     // In a real app, you would clear authentication state here
+  };
+  
+  const toggleProfile = () => {
+    setIsProfileExpanded(!isProfileExpanded);
   };
 
   return (
@@ -64,6 +79,43 @@ export default function MyAccount() {
           <div className="bg-background rounded-lg border shadow-sm">
             {/* Account menu options */}
             <div className="divide-y divide-border">
+              {/* My Profile Section with Expandable Options */}
+              <div>
+                <button
+                  onClick={toggleProfile}
+                  className="w-full flex items-center justify-between p-4 hover:bg-accent transition-colors"
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className="text-primary">
+                      <User className="h-5 w-5" />
+                    </div>
+                    <span className="font-medium">My Profile</span>
+                  </div>
+                  {isProfileExpanded ? (
+                    <ChevronDown className="h-5 w-5 text-muted-foreground" />
+                  ) : (
+                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                  )}
+                </button>
+                
+                {/* Profile Sub-options */}
+                {isProfileExpanded && (
+                  <div className="bg-muted/30">
+                    {profileOptions.map((option) => (
+                      <Link
+                        key={option.id}
+                        href={option.href}
+                        className="flex items-center justify-between py-3 px-4 pl-12 hover:bg-accent transition-colors border-t border-border/50"
+                      >
+                        <span className="font-medium text-sm">{option.label}</span>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+              
+              {/* Other Account Sections */}
               {accountSections.map((section) => (
                 <Link
                   key={section.id}
