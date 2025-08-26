@@ -271,8 +271,8 @@ export default function Hero() {
             </div>
 
             <div className="mt-3">
-              {/* Search Button */}
-              <div className="flex justify-center">
+              {/* Search and Clear Buttons */}
+              <div className="flex justify-center gap-3">
                 <Link href={
                   selectedCategories.includes("all-services") || selectedCategories.length === 0 ? "/vendors" :
                   selectedCategories.length > 0 ? `/vendors?category=${selectedCategories.join(',')}${searchByName && searchByName !== 'all' ? `&name=${searchByName}` : ''}${searchByArea && searchByArea !== 'all' ? `&area=${searchByArea}` : ''}${selectedCapacity && selectedCapacity !== 'all' ? `&capacity=${selectedCapacity}` : ''}${fromDate ? `&fromDate=${format(fromDate, 'yyyy-MM-dd')}` : ''}${toDate ? `&toDate=${format(toDate, 'yyyy-MM-dd')}` : ''}` : "/vendors"
@@ -281,6 +281,22 @@ export default function Hero() {
                     Search
                   </Button>
                 </Link>
+                
+                <Button 
+                  variant="outline"
+                  onClick={() => {
+                    setSelectedCategories([]);
+                    setSearchByName("");
+                    setSearchByArea("");
+                    setSelectedCapacity("");
+                    setFromDate(undefined);
+                    setToDate(undefined);
+                    setShowCategoryDropdown(false);
+                  }}
+                  className="w-32 bg-white text-gray-600 text-sm px-4 h-10 border-gray-300 hover:bg-gray-50 font-medium"
+                >
+                  Clear All
+                </Button>
               </div>
             </div>
             
