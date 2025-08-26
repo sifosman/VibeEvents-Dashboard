@@ -37,6 +37,7 @@ export default function VendorRegistration() {
     instagramUrl: "",
     tiktokUrl: "",
     availability: [],
+    serviceOptions: [] as string[],
     termsAccepted: false
   });
   
@@ -69,6 +70,7 @@ export default function VendorRegistration() {
         instagramUrl: "https://instagram.com/elegantevents",
         tiktokUrl: "https://tiktok.com/@elegantevents",
         availability: [],
+        serviceOptions: ["Halaal", "Vegetarian", "Buffet Style", "Custom Menus"],
         termsAccepted: true
       });
       
@@ -91,6 +93,69 @@ export default function VendorRegistration() {
     "Security Services",
     "Cleaning Services"
   ];
+
+  const serviceOptionsCategories = {
+    "Food & Catering Requirements": [
+      "Halaal",
+      "Kosher",
+      "Vegetarian",
+      "Vegan",
+      "Pescatarian",
+      "Plant Based",
+      "Organic",
+      "Gluten Free",
+      "Lactose Free",
+      "Nut Free",
+      "Sugar Free",
+      "Low Carb",
+      "Keto Friendly",
+      "Diabetic Friendly",
+      "Child Friendly Meals",
+      "Senior Friendly Meals"
+    ],
+    "Beverage Service Requirements": [
+      "Alcohol Free",
+      "Serves Alcohol",
+      "Non Alcoholic Options",
+      "Mocktails Available",
+      "Licensed Bar",
+      "BYOB (Bring Your Own Bottle) Allowed",
+      "Coffee Barista",
+      "Fresh Juice Bar",
+      "Tea Service",
+      "Health Shakes Smoothies"
+    ],
+    "Confectionery & Desserts": [
+      "Egg Free",
+      "Dairy Free",
+      "Nut Free Desserts",
+      "Custom Cakes",
+      "Themed Desserts",
+      "Traditional Sweets (e.g. Indian mithai, Middle Eastern baklava)",
+      "Sugar Free Desserts",
+      "Chocolate Only",
+      "Ice Cream Service"
+    ],
+    "Cultural / Religious Considerations": [
+      "Halaal Certified",
+      "Kosher Certified",
+      "Jain Food",
+      "Ayurvedic Meals",
+      "Cultural Cuisine Available (e.g. Indian, African, Italian, Mediterranean, Asian)",
+      "No Beef",
+      "No Pork"
+    ],
+    "Service Style Options": [
+      "Buffet Style",
+      "Plated Service",
+      "Food Trucks",
+      "Street Food Style",
+      "Family Style Dining",
+      "Finger Foods Canapés",
+      "Live Cooking Stations",
+      "Custom Menus"
+    ]
+  };
 
   const provinces = [
     "Western Cape",
@@ -149,6 +214,20 @@ export default function VendorRegistration() {
       } else {
         setUploadedCatalogues(prev => [...prev, newFile]);
       }
+    }
+  };
+
+  const handleServiceOptionChange = (option: string, checked: boolean) => {
+    if (checked) {
+      setFormData({
+        ...formData,
+        serviceOptions: [...formData.serviceOptions, option]
+      });
+    } else {
+      setFormData({
+        ...formData,
+        serviceOptions: formData.serviceOptions.filter((o) => o !== option)
+      });
     }
   };
 
@@ -423,6 +502,31 @@ export default function VendorRegistration() {
                   onChange={(e) => setFormData({...formData, portfolio: e.target.value})}
                   placeholder="Link to your portfolio or previous work"
                 />
+              </div>
+
+              {/* Service Options & Specializations */}
+              <div className="space-y-6">
+                <Label className="text-lg font-semibold">Service Options & Specializations</Label>
+                <p className="text-sm text-muted-foreground">Select all options that apply to your services (especially relevant for catering & food service vendors)</p>
+                {Object.entries(serviceOptionsCategories).map(([category, options]) => (
+                  <div key={category} className="space-y-3">
+                    <h4 className="font-medium text-primary">{category}</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 pl-4">
+                      {options.map((option) => (
+                        <div key={option} className="flex items-center space-x-2">
+                          <Checkbox
+                            id={option}
+                            checked={formData.serviceOptions.includes(option)}
+                            onCheckedChange={(checked) => handleServiceOptionChange(option, checked as boolean)}
+                          />
+                          <Label htmlFor={option} className="text-sm leading-none">
+                            {option}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
 
               {/* Social Media & Online Presence */}
