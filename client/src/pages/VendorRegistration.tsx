@@ -280,10 +280,12 @@ export default function VendorRegistration() {
                       <SelectValue placeholder="Select your service coverage" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="local">Local (within city)</SelectItem>
-                      <SelectItem value="regional">Regional (within province)</SelectItem>
-                      <SelectItem value="national">National (across South Africa)</SelectItem>
-                      <SelectItem value="international">International</SelectItem>
+                      <SelectItem value="nationally">Nationally</SelectItem>
+                      <SelectItem value="no">No</SelectItem>
+                      <SelectItem value="local">Local</SelectItem>
+                      <SelectItem value="major-cities-only">Major cities only</SelectItem>
+                      <SelectItem value="province">Province</SelectItem>
+                      <SelectItem value="regional">Regional</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
