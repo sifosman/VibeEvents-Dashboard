@@ -196,10 +196,7 @@ export default function BrowseByCategory() {
                                   className="mr-3"
                                 />
                                 <div className="flex-1">
-                                  <h3 className="font-medium text-gray-900">{subcategory.name}</h3>
-                                  {subcategory.description && (
-                                    <p className="text-xs text-gray-500 mt-1">{subcategory.description}</p>
-                                  )}
+                                  <h3 className="font-medium text-gray-900" style={{ fontFamily: 'Calibri, sans-serif' }}>{subcategory.name}</h3>
                                 </div>
                               </label>
                             );
