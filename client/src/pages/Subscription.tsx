@@ -78,7 +78,7 @@ export default function Subscription() {
                 className="mt-4 w-full"
                 onClick={() => setLocation("/vendor-registration")}
               >
-                Register as Service Provider
+                Register as Vendor/Service Provider
               </Button>
             </CardContent>
           </Card>
