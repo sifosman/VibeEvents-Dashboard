@@ -32,6 +32,7 @@ import UserProfile from "./pages/UserProfile";
 import VendorReview from "./pages/VendorReview";
 import Support from "./pages/Support";
 import VendorDashboard from "./pages/VendorDashboard";
+import BrowserProfile from "./pages/BrowserProfile";
 import NotFound from "@/pages/not-found";
 import { Loader2 } from "lucide-react";
 // import { useAuth } from "./context/AuthContext";
@@ -68,6 +69,7 @@ function AppRouter() {
       <Route path="/subscription" component={Subscription} />
       <Route path="/dashboard" component={UserDashboard} />
       <Route path="/profile" component={UserProfile} />
+      <Route path="/profile/free" component={BrowserProfile} />
       <Route path="/support" component={Support} />
       <Route path="/vendor-dashboard" component={VendorDashboard} />
       <Route path="/gift-registry" component={GiftRegistry} />
