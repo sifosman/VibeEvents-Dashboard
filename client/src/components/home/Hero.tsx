@@ -143,8 +143,7 @@ export default function Hero() {
   ];
 
   return (
-    <section className="relative min-h-[600px] bg-cover bg-center pb-8" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80')` }}>
-      <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+    <section className="relative min-h-[600px] pb-8 bg-teal-600">
       <div className="relative z-10 flex flex-col items-center justify-center min-h-[600px] pt-8">
         <div className="text-center px-4 max-w-4xl w-full">
           <h1 className="text-xl md:text-2xl font-display font-bold text-white mb-4 drop-shadow-lg whitespace-nowrap">Connect, Collaborate, Celebrate</h1>
