@@ -166,19 +166,142 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
                 <div className="grid grid-cols-1 gap-6 mt-8">
                   <Card>
                     <CardHeader className="pb-2">
-                      <CardTitle className="text-lg font-semibold">Features</CardTitle>
+                      <CardTitle className="text-lg font-semibold">Features & Amenities</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <ul className="list-disc pl-5 space-y-1">
-                        {vendor.dietaryOptions && vendor.dietaryOptions.length > 0 && (
-                          <li>Dietary options: {vendor.dietaryOptions.join(', ')}</li>
-                        )}
-                        {vendor.cuisineTypes && vendor.cuisineTypes.length > 0 && (
-                          <li>Cuisine types: {vendor.cuisineTypes.join(', ')}</li>
-                        )}
-                        <li>Event types: Weddings, Corporate, Private celebrations</li>
-                        <li>Available year-round</li>
-                      </ul>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Column 1 */}
+                        <div className="space-y-3">
+                          {/* Venue Amenities */}
+                          {vendor.amenities && vendor.amenities.length > 0 && (
+                            <div>
+                              <h4 className="font-medium text-primary mb-2">Venue Amenities</h4>
+                              <ul className="text-sm space-y-1">
+                                {vendor.amenities.slice(0, Math.ceil(vendor.amenities.length / 2)).map((amenity) => (
+                                  <li key={amenity} className="flex items-center">
+                                    <span className="w-2 h-2 bg-primary rounded-full mr-2 flex-shrink-0"></span>
+                                    {amenity}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                          
+                          {/* Service Options */}
+                          {vendor.serviceOptions && vendor.serviceOptions.length > 0 && (
+                            <div>
+                              <h4 className="font-medium text-primary mb-2">Service Options</h4>
+                              <ul className="text-sm space-y-1">
+                                {vendor.serviceOptions.slice(0, Math.ceil(vendor.serviceOptions.length / 2)).map((option) => (
+                                  <li key={option} className="flex items-center">
+                                    <span className="w-2 h-2 bg-primary rounded-full mr-2 flex-shrink-0"></span>
+                                    {option}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          {/* Dietary Options */}
+                          {vendor.dietaryOptions && vendor.dietaryOptions.length > 0 && (
+                            <div>
+                              <h4 className="font-medium text-primary mb-2">Dietary Options</h4>
+                              <ul className="text-sm space-y-1">
+                                {vendor.dietaryOptions.slice(0, Math.ceil(vendor.dietaryOptions.length / 2)).map((option) => (
+                                  <li key={option} className="flex items-center">
+                                    <span className="w-2 h-2 bg-primary rounded-full mr-2 flex-shrink-0"></span>
+                                    {option}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Column 2 */}
+                        <div className="space-y-3">
+                          {/* Remaining Venue Amenities */}
+                          {vendor.amenities && vendor.amenities.length > 1 && (
+                            <div>
+                              <h4 className="font-medium text-primary mb-2">&nbsp;</h4>
+                              <ul className="text-sm space-y-1">
+                                {vendor.amenities.slice(Math.ceil(vendor.amenities.length / 2)).map((amenity) => (
+                                  <li key={amenity} className="flex items-center">
+                                    <span className="w-2 h-2 bg-primary rounded-full mr-2 flex-shrink-0"></span>
+                                    {amenity}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          {/* Remaining Service Options */}
+                          {vendor.serviceOptions && vendor.serviceOptions.length > 1 && (
+                            <div>
+                              <h4 className="font-medium text-primary mb-2">&nbsp;</h4>
+                              <ul className="text-sm space-y-1">
+                                {vendor.serviceOptions.slice(Math.ceil(vendor.serviceOptions.length / 2)).map((option) => (
+                                  <li key={option} className="flex items-center">
+                                    <span className="w-2 h-2 bg-primary rounded-full mr-2 flex-shrink-0"></span>
+                                    {option}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          {/* Remaining Dietary Options */}
+                          {vendor.dietaryOptions && vendor.dietaryOptions.length > 1 && (
+                            <div>
+                              <h4 className="font-medium text-primary mb-2">&nbsp;</h4>
+                              <ul className="text-sm space-y-1">
+                                {vendor.dietaryOptions.slice(Math.ceil(vendor.dietaryOptions.length / 2)).map((option) => (
+                                  <li key={option} className="flex items-center">
+                                    <span className="w-2 h-2 bg-primary rounded-full mr-2 flex-shrink-0"></span>
+                                    {option}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          {/* Cuisine Types */}
+                          {vendor.cuisineTypes && vendor.cuisineTypes.length > 0 && (
+                            <div>
+                              <h4 className="font-medium text-primary mb-2">Cuisine Types</h4>
+                              <ul className="text-sm space-y-1">
+                                {vendor.cuisineTypes.map((cuisine) => (
+                                  <li key={cuisine} className="flex items-center">
+                                    <span className="w-2 h-2 bg-primary rounded-full mr-2 flex-shrink-0"></span>
+                                    {cuisine}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          {/* Default Features */}
+                          <div>
+                            <h4 className="font-medium text-primary mb-2">General Features</h4>
+                            <ul className="text-sm space-y-1">
+                              <li className="flex items-center">
+                                <span className="w-2 h-2 bg-primary rounded-full mr-2 flex-shrink-0"></span>
+                                Weddings, Corporate & Private Events
+                              </li>
+                              <li className="flex items-center">
+                                <span className="w-2 h-2 bg-primary rounded-full mr-2 flex-shrink-0"></span>
+                                Available Year-Round
+                              </li>
+                              {vendor.venueCapacity && (
+                                <li className="flex items-center">
+                                  <span className="w-2 h-2 bg-primary rounded-full mr-2 flex-shrink-0"></span>
+                                  Capacity: {vendor.venueCapacity} guests
+                                </li>
+                              )}
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
                     </CardContent>
                   </Card>
                 </div>

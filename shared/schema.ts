@@ -106,6 +106,9 @@ export const vendors = pgTable("vendors", {
   province: text("province"),                         // South African provinces
   city: text("city"),                                // City/town within province
   travelDistance: text("travel_distance").default("no"), // Travel preferences: no, local, major_cities_only, province, region
+  // Registration form selections
+  amenities: text("amenities").array(),              // For venues: wheelchair friendly, parking, elevators, etc.
+  serviceOptions: text("service_options").array(),   // For vendors: halaal, vegetarian, buffet style, custom menus, etc.
 });
 
 export const insertVendorSchema = createInsertSchema(vendors).omit({
