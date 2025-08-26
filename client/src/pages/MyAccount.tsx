@@ -53,12 +53,12 @@ const profileOptions = [
       {
         id: "vendor-service",
         label: "Vendor/Service Provider",
-        href: "/vendor-registration"
+        href: "/vendor-registration?edit=true"
       },
       {
         id: "venue",
         label: "Venue", 
-        href: "/venue-registration"
+        href: "/venue-registration?edit=true"
       }
     ]
   }

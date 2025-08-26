@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -8,10 +8,14 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ChevronLeft, Building, Upload, Users, MessageSquare, MapPin, FileImage, Video, BookOpen } from "lucide-react";
+import { ChevronLeft, Building, Upload, Users, MessageSquare, MapPin, FileImage, Video, BookOpen, Edit3, Trash2, Plus } from "lucide-react";
 
 export default function VenueRegistration() {
   const [, setLocation] = useLocation();
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [uploadedVideos, setUploadedVideos] = useState<string[]>([]);
+  const [uploadedCatalogues, setUploadedCatalogues] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     venueName: "",
     contactPerson: "",
@@ -34,6 +38,44 @@ export default function VenueRegistration() {
     website: "",
     termsAccepted: false
   });
+  
+  // Check if accessed from profile (edit mode)
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const editMode = urlParams.get('edit') === 'true';
+    setIsEditMode(editMode);
+    
+    if (editMode) {
+      // Load existing venue data (mock data for now)
+      setFormData({
+        venueName: "Grand Ballroom Venue",
+        contactPerson: "Sarah Johnson",
+        email: "sarah@grandballroom.com",
+        phone: "+27 21 555 0123",
+        whatsappNumber: "+27 21 555 0123",
+        businessRegistrationNumber: "2018/987654/07",
+        venueAddress: "456 Venue Street, Cape Town City Centre",
+        province: "Western Cape",
+        city: "Cape Town",
+        specificTown: "City Centre",
+        willingToTravel: "no",
+        areasCanServe: "local",
+        venueType: "Banquet Hall",
+        businessBio: "Elegant venue in the heart of Cape Town, perfect for weddings and corporate events with stunning city views.",
+        capacity: "150-300 guests",
+        amenities: ["Parking Available", "Catering Kitchen", "Audio Visual Equipment", "Air Conditioning"],
+        pricing: "",
+        availability: "Available year-round, booking required 3 months in advance",
+        website: "https://grandballroom.com",
+        termsAccepted: true
+      });
+      
+      // Load existing media (mock data)
+      setUploadedImages(["ballroom_main.jpg", "ceremony_space.jpg", "reception_area.jpg"]);
+      setUploadedVideos(["venue_tour.mp4"]);
+      setUploadedCatalogues(["venue_packages.pdf", "catering_menu.pdf"]);
+    }
+  }, []);
 
   const venueTypes = [
     "Wedding Venue",
@@ -87,8 +129,38 @@ export default function VenueRegistration() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Venue registration:", formData);
-    alert("Registration submitted successfully! We'll review your venue application and get back to you within 2-3 business days.");
+    console.log(isEditMode ? "Venue profile update:" : "Venue registration:", formData);
+    if (isEditMode) {
+      alert("Profile updated successfully!");
+    } else {
+      alert("Registration submitted successfully! We'll review your venue application and get back to you within 2-3 business days.");
+    }
+  };
+  
+  const handleImageDelete = (index: number) => {
+    setUploadedImages(prev => prev.filter((_, i) => i !== index));
+  };
+  
+  const handleVideoDelete = (index: number) => {
+    setUploadedVideos(prev => prev.filter((_, i) => i !== index));
+  };
+  
+  const handleCatalogueDelete = (index: number) => {
+    setUploadedCatalogues(prev => prev.filter((_, i) => i !== index));
+  };
+  
+  const handleMediaUpload = (type: 'images' | 'videos' | 'catalogues') => {
+    // Mock file upload - in real app this would handle actual file upload
+    const newFile = prompt(`Enter ${type.slice(0, -1)} name:`);
+    if (newFile) {
+      if (type === 'images') {
+        setUploadedImages(prev => [...prev, newFile]);
+      } else if (type === 'videos') {
+        setUploadedVideos(prev => [...prev, newFile]);
+      } else {
+        setUploadedCatalogues(prev => [...prev, newFile]);
+      }
+    }
   };
 
   const handleAmenityChange = (amenity: string, checked: boolean) => {
@@ -117,23 +189,23 @@ export default function VenueRegistration() {
           <Button 
             variant="ghost" 
             className="mb-4" 
-            onClick={() => setLocation("/subscription")}
+            onClick={() => setLocation(isEditMode ? "/my-account" : "/subscription")}
           >
-            <ChevronLeft className="h-4 w-4 mr-2" /> Back to Subscription
+            <ChevronLeft className="h-4 w-4 mr-2" /> Back to {isEditMode ? "My Account" : "Subscription"}
           </Button>
 
           <div>
             <h1 className="text-2xl font-display font-bold flex items-center">
-              <Building className="h-6 w-6 mr-2 text-primary" />
-              Venue Registration
+              {isEditMode ? <Edit3 className="h-6 w-6 mr-2 text-primary" /> : <Building className="h-6 w-6 mr-2 text-primary" />}
+              {isEditMode ? "Edit Venue Profile" : "Venue Registration"}
             </h1>
-            <p className="text-muted-foreground mt-1">List your venue for special events and celebrations</p>
+            <p className="text-muted-foreground mt-1">{isEditMode ? "Update your venue information and media" : "List your venue for special events and celebrations"}</p>
           </div>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Venue Information</CardTitle>
+            <CardTitle>{isEditMode ? "Update Venue Information" : "Venue Information"}</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -147,7 +219,10 @@ export default function VenueRegistration() {
                     onChange={(e) => setFormData({...formData, venueName: e.target.value})}
                     placeholder="Your venue name"
                     required
+                    disabled={isEditMode}
+                    className={isEditMode ? "bg-muted text-muted-foreground cursor-not-allowed" : ""}
                   />
+                  {isEditMode && <p className="text-xs text-muted-foreground mt-1">Venue name cannot be changed</p>}
                 </div>
                 <div>
                   <Label htmlFor="contactPerson">Contact Person *</Label>
@@ -171,7 +246,10 @@ export default function VenueRegistration() {
                     onChange={(e) => setFormData({...formData, email: e.target.value})}
                     placeholder="venue@email.com"
                     required
+                    disabled={isEditMode}
+                    className={isEditMode ? "bg-muted text-muted-foreground cursor-not-allowed" : ""}
                   />
+                  {isEditMode && <p className="text-xs text-muted-foreground mt-1">Email address cannot be changed</p>}
                 </div>
                 <div>
                   <Label htmlFor="businessRegistrationNumber">Business Registration Number</Label>
@@ -180,7 +258,10 @@ export default function VenueRegistration() {
                     value={formData.businessRegistrationNumber}
                     onChange={(e) => setFormData({...formData, businessRegistrationNumber: e.target.value})}
                     placeholder="e.g., 2019/123456/07"
+                    disabled={isEditMode}
+                    className={isEditMode ? "bg-muted text-muted-foreground cursor-not-allowed" : ""}
                   />
+                  {isEditMode && <p className="text-xs text-muted-foreground mt-1">Registration number cannot be changed</p>}
                 </div>
               </div>
 
@@ -218,7 +299,10 @@ export default function VenueRegistration() {
                   onChange={(e) => setFormData({...formData, venueAddress: e.target.value})}
                   placeholder="Complete venue address with directions if needed"
                   required
+                  disabled={isEditMode}
+                  className={isEditMode ? "bg-muted text-muted-foreground cursor-not-allowed" : ""}
                 />
+                {isEditMode && <p className="text-xs text-muted-foreground mt-1">Venue address cannot be changed</p>}
               </div>
 
               {/* Location Details */}
@@ -418,15 +502,45 @@ export default function VenueRegistration() {
                 <div>
                   <Label className="flex items-center gap-2 mb-2">
                     <FileImage className="h-4 w-4" />
-                    Upload Pictures
+                    Venue Photos
                   </Label>
+                  
+                  {/* Existing Images */}
+                  {uploadedImages.length > 0 && (
+                    <div className="space-y-2 mb-3">
+                      {uploadedImages.map((image, index) => (
+                        <div key={index} className="flex items-center justify-between bg-gray-50 p-2 rounded">
+                          <span className="text-sm truncate flex-1">{image}</span>
+                          <div className="flex gap-1">
+                            <Button size="sm" variant="outline" className="h-6 w-6 p-0">
+                              <Edit3 className="h-3 w-3" />
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="outline" 
+                              className="h-6 w-6 p-0 text-red-600 hover:text-red-700"
+                              onClick={() => handleImageDelete(index)}
+                            >
+                              <Trash2 className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
                     <FileImage className="h-6 w-6 mx-auto mb-2 text-gray-400" />
                     <p className="text-xs text-gray-600 mb-2">
-                      Upload venue photos
+                      {uploadedImages.length > 0 ? "Add more photos" : "Upload venue photos"}
                     </p>
-                    <Button variant="outline" size="sm">
-                      Choose Images
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleMediaUpload('images')}
+                    >
+                      <Plus className="h-3 w-3 mr-1" />
+                      Add Images
                     </Button>
                   </div>
                 </div>
@@ -435,37 +549,99 @@ export default function VenueRegistration() {
                 <div>
                   <Label className="flex items-center gap-2 mb-2">
                     <Video className="h-4 w-4" />
-                    Upload Videos
+                    Venue Tours
                   </Label>
+                  
+                  {/* Existing Videos */}
+                  {uploadedVideos.length > 0 && (
+                    <div className="space-y-2 mb-3">
+                      {uploadedVideos.map((video, index) => (
+                        <div key={index} className="flex items-center justify-between bg-gray-50 p-2 rounded">
+                          <span className="text-sm truncate flex-1">{video}</span>
+                          <div className="flex gap-1">
+                            <Button size="sm" variant="outline" className="h-6 w-6 p-0">
+                              <Edit3 className="h-3 w-3" />
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="outline" 
+                              className="h-6 w-6 p-0 text-red-600 hover:text-red-700"
+                              onClick={() => handleVideoDelete(index)}
+                            >
+                              <Trash2 className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
                     <Video className="h-6 w-6 mx-auto mb-2 text-gray-400" />
                     <p className="text-xs text-gray-600 mb-2">
-                      Upload venue tours
+                      {uploadedVideos.length > 0 ? "Add more videos" : "Upload venue tours"}
                     </p>
-                    <Button variant="outline" size="sm">
-                      Choose Videos
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleMediaUpload('videos')}
+                    >
+                      <Plus className="h-3 w-3 mr-1" />
+                      Add Videos
                     </Button>
                   </div>
                 </div>
 
                 {/* Catalogue Upload */}
                 <div>
-                  <div className="mb-4">
-                    <Button variant="link" className="p-0 h-auto text-primary">
-                      Download Catalogue Template
-                    </Button>
-                  </div>
+                  {!isEditMode && (
+                    <div className="mb-4">
+                      <Button variant="link" className="p-0 h-auto text-primary">
+                        Download Catalogue Template
+                      </Button>
+                    </div>
+                  )}
                   <Label className="flex items-center gap-2 mb-2">
                     <BookOpen className="h-4 w-4" />
-                    Upload Catalogue
+                    Venue Brochures
                   </Label>
+                  
+                  {/* Existing Catalogues */}
+                  {uploadedCatalogues.length > 0 && (
+                    <div className="space-y-2 mb-3">
+                      {uploadedCatalogues.map((catalogue, index) => (
+                        <div key={index} className="flex items-center justify-between bg-gray-50 p-2 rounded">
+                          <span className="text-sm truncate flex-1">{catalogue}</span>
+                          <div className="flex gap-1">
+                            <Button size="sm" variant="outline" className="h-6 w-6 p-0">
+                              <Edit3 className="h-3 w-3" />
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="outline" 
+                              className="h-6 w-6 p-0 text-red-600 hover:text-red-700"
+                              onClick={() => handleCatalogueDelete(index)}
+                            >
+                              <Trash2 className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
                     <BookOpen className="h-6 w-6 mx-auto mb-2 text-gray-400" />
                     <p className="text-xs text-gray-600 mb-2">
-                      Upload venue brochure
+                      {uploadedCatalogues.length > 0 ? "Add more brochures" : "Upload venue brochure"}
                     </p>
-                    <Button variant="outline" size="sm">
-                      Choose Files
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleMediaUpload('catalogues')}
+                    >
+                      <Plus className="h-3 w-3 mr-1" />
+                      Add Files
                     </Button>
                   </div>
                 </div>
@@ -488,7 +664,7 @@ export default function VenueRegistration() {
                 className="w-full"
                 disabled={!formData.termsAccepted}
               >
-                Submit Venue Registration
+                {isEditMode ? "Save Changes" : "Submit Venue Registration"}
               </Button>
             </form>
           </CardContent>
