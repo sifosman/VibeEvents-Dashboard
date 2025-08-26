@@ -148,7 +148,7 @@ export default function Hero() {
       <div className="relative z-10 flex flex-col items-center justify-center min-h-[600px] pt-8">
         <div className="text-center px-4 max-w-4xl w-full">
           <h1 className="text-xl md:text-2xl font-display font-bold text-white mb-4 drop-shadow-lg whitespace-nowrap">Connect, Collaborate, Celebrate</h1>
-          <p className="text-white text-base md:text-lg mb-8 max-w-2xl mx-auto drop-shadow-md">Discover and book the best service providers for all your events - wedding and party celebrations, corporate functions, market days, expos, fundraisers, live concerts...and much more</p>
+          <p className="text-white text-base md:text-lg mb-8 max-w-2xl mx-auto drop-shadow-md">Discover and book the best venues, vendors and service providers for all your events. From weddings and party celebrations, corporate functions, conferences, expos, market days, fundraisers, live concerts...and much more...</p>
           
           
           {/* Search Form */}
