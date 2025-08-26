@@ -274,14 +274,18 @@ export default function VendorRegistration() {
                 </div>
                 
                 <div>
-                  <Label htmlFor="areasCanServe">Which Areas Can You Serve?</Label>
-                  <Textarea
-                    id="areasCanServe"
-                    value={formData.areasCanServe}
-                    onChange={(e) => setFormData({...formData, areasCanServe: e.target.value})}
-                    placeholder="List the areas, cities, or regions where you provide services"
-                    rows={3}
-                  />
+                  <Label htmlFor="areasCanServe">Service Coverage Area</Label>
+                  <Select onValueChange={(value) => setFormData({...formData, areasCanServe: value})}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select your service coverage" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="local">Local (within city)</SelectItem>
+                      <SelectItem value="regional">Regional (within province)</SelectItem>
+                      <SelectItem value="national">National (across South Africa)</SelectItem>
+                      <SelectItem value="international">International</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
@@ -314,25 +318,14 @@ export default function VendorRegistration() {
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="experience">Years of Experience</Label>
-                  <Input
-                    id="experience"
-                    value={formData.experience}
-                    onChange={(e) => setFormData({...formData, experience: e.target.value})}
-                    placeholder="e.g., 5 years"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="pricing">Starting Price Range</Label>
-                  <Input
-                    id="pricing"
-                    value={formData.pricing}
-                    onChange={(e) => setFormData({...formData, pricing: e.target.value})}
-                    placeholder="e.g., R500 - R2000"
-                  />
-                </div>
+              <div>
+                <Label htmlFor="experience">Years of Experience</Label>
+                <Input
+                  id="experience"
+                  value={formData.experience}
+                  onChange={(e) => setFormData({...formData, experience: e.target.value})}
+                  placeholder="e.g., 5 years"
+                />
               </div>
 
               <div>
@@ -387,6 +380,11 @@ export default function VendorRegistration() {
                     <BookOpen className="h-4 w-4" />
                     Upload Catalogue
                   </Label>
+                  <div className="mb-2">
+                    <Button variant="link" className="p-0 h-auto text-primary">
+                      Download Catalogue Template
+                    </Button>
+                  </div>
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
                     <BookOpen className="h-6 w-6 mx-auto mb-2 text-gray-400" />
                     <p className="text-xs text-gray-600 mb-2">
