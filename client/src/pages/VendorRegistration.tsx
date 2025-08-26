@@ -27,10 +27,7 @@ export default function VendorRegistration() {
     areasCanServe: "",
     serviceCategory: "",
     businessBio: "",
-    description: "",
-    experience: "",
     portfolio: "",
-    pricing: "",
     availability: [],
     termsAccepted: false
   });
@@ -328,27 +325,6 @@ export default function VendorRegistration() {
                 </p>
               </div>
 
-              <div>
-                <Label htmlFor="description">Service Description *</Label>
-                <Textarea
-                  id="description"
-                  value={formData.description}
-                  onChange={(e) => setFormData({...formData, description: e.target.value})}
-                  placeholder="Describe your services, specialties, and what makes you unique"
-                  rows={4}
-                  required
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="experience">Years of Experience</Label>
-                <Input
-                  id="experience"
-                  value={formData.experience}
-                  onChange={(e) => setFormData({...formData, experience: e.target.value})}
-                  placeholder="e.g., 5 years"
-                />
-              </div>
 
               <div>
                 <Label htmlFor="portfolio">Portfolio/Website</Label>

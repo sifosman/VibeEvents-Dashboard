@@ -28,7 +28,6 @@ export default function VenueRegistration() {
     venueType: "",
     businessBio: "",
     capacity: "",
-    description: "",
     amenities: [] as string[],
     pricing: "",
     availability: "",
@@ -324,17 +323,6 @@ export default function VenueRegistration() {
                 </p>
               </div>
 
-              <div>
-                <Label htmlFor="description">Venue Description *</Label>
-                <Textarea
-                  id="description"
-                  value={formData.description}
-                  onChange={(e) => setFormData({...formData, description: e.target.value})}
-                  placeholder="Describe your venue, atmosphere, unique features, and what makes it special"
-                  rows={4}
-                  required
-                />
-              </div>
 
               {/* Travel & Service Areas */}
               <div className="space-y-4">
