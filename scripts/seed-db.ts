@@ -133,7 +133,7 @@ async function seedDatabase() {
       description: "Elegant garden venue with indoor and outdoor spaces, perfect for ceremonies and receptions up to 300 guests.",
       imageUrl: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
       categoryId: 1, // Venues
-      priceRange: "$$",
+      priceRange: "RR",
       rating: 4.5,
       reviewCount: 48,
       subscriptionTier: "free",
@@ -148,7 +148,7 @@ async function seedDatabase() {
       description: "Award-winning cake designer specializing in custom wedding cakes, cupcakes, and dessert tables for your special day.",
       imageUrl: "https://images.unsplash.com/photo-1547059470-3b0c7cd958a4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
       categoryId: 2, // Catering & Bakers
-      priceRange: "$$$",
+      priceRange: "RRR",
       rating: 5.0,
       reviewCount: 72,
       subscriptionTier: "basic",
@@ -164,7 +164,7 @@ async function seedDatabase() {
       description: "Professional hair and makeup team specializing in bridal styling, with services for the entire bridal party.",
       imageUrl: "https://images.unsplash.com/photo-1559599189-fe84dea4eb79?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
       categoryId: 3, // Hair & Makeup
-      priceRange: "$$",
+      priceRange: "RR",
       rating: 4.0,
       reviewCount: 36,
       subscriptionTier: "pro",
@@ -183,7 +183,7 @@ async function seedDatabase() {
       description: "Country estate with gardens and lake views, accommodating up to 200 guests.",
       imageUrl: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
       categoryId: 1, // Venues
-      priceRange: "$$$",
+      priceRange: "RRR",
       rating: 4.5,
       reviewCount: 42,
       subscriptionTier: "free",
@@ -198,7 +198,7 @@ async function seedDatabase() {
       description: "Custom menus with international cuisine options and professional service staff.",
       imageUrl: "https://images.unsplash.com/photo-1565538810643-b5bdb714032a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
       categoryId: 2, // Catering & Bakers
-      priceRange: "$$$",
+      priceRange: "RRR",
       rating: 5.0,
       reviewCount: 63,
       subscriptionTier: "basic",
@@ -214,7 +214,7 @@ async function seedDatabase() {
       description: "Stunning floral arrangements, bouquets, and venue decoration services.",
       imageUrl: "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
       categoryId: 6, // Decor & Design
-      priceRange: "$$",
+      priceRange: "RR",
       rating: 4.0,
       reviewCount: 37,
       subscriptionTier: "pro",
@@ -233,7 +233,7 @@ async function seedDatabase() {
       description: "Live band with customizable setlists and DJ services for your reception.",
       imageUrl: "https://images.unsplash.com/photo-1522673607200-164d1b3ce551?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
       categoryId: 8, // Entertainment
-      priceRange: "$$$",
+      priceRange: "RRR",
       rating: 5.0,
       reviewCount: 51,
       subscriptionTier: "free",
@@ -248,7 +248,7 @@ async function seedDatabase() {
       description: "Authentic food stalls offering a variety of international cuisines for markets and events.",
       imageUrl: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
       categoryId: 9, // Market Vendors
-      priceRange: "$",
+      priceRange: "R",
       rating: 4.8,
       reviewCount: 56,
       subscriptionTier: "basic",
@@ -264,7 +264,7 @@ async function seedDatabase() {
       description: "Vendor applications now open for the Annual Spring Festival. Limited spots available.",
       imageUrl: "https://images.unsplash.com/photo-1529586691389-4aaa1f44e8ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
       categoryId: 10, // Vendor Opportunities
-      priceRange: "$",
+      priceRange: "R",
       rating: 4.9,
       reviewCount: 124,
       subscriptionTier: "pro",
@@ -283,7 +283,7 @@ async function seedDatabase() {
       description: "Colorful jumping castles of various themes and sizes for children's entertainment at any event.",
       imageUrl: "https://images.unsplash.com/photo-1560420025-9453f02b4751?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
       categoryId: 11, // Children's Entertainment
-      priceRange: "$$",
+      priceRange: "RR",
       rating: 4.7,
       reviewCount: 68,
       subscriptionTier: "basic",
@@ -299,7 +299,7 @@ async function seedDatabase() {
       description: "Professional magician specializing in children's parties and family-friendly entertainment.",
       imageUrl: "https://images.unsplash.com/photo-1528495612343-9ca9f4a9f67c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
       categoryId: 11, // Children's Entertainment
-      priceRange: "$$",
+      priceRange: "RR",
       rating: 4.9,
       reviewCount: 42,
       subscriptionTier: "pro",
@@ -315,7 +315,7 @@ async function seedDatabase() {
       description: "Stand-up comedians providing clean, audience-appropriate humor for corporate and private events.",
       imageUrl: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
       categoryId: 12, // Specialty Performers
-      priceRange: "$$$",
+      priceRange: "RRR",
       rating: 4.8,
       reviewCount: 37,
       subscriptionTier: "pro",
@@ -331,7 +331,7 @@ async function seedDatabase() {
       description: "Professional acrobats, aerialists, and circus performers for spectacular event highlights.",
       imageUrl: "https://images.unsplash.com/photo-1605143185599-33a290154a54?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
       categoryId: 12, // Specialty Performers
-      priceRange: "$$$",
+      priceRange: "RRR",
       rating: 4.9,
       reviewCount: 28,
       subscriptionTier: "platinum",
@@ -347,7 +347,7 @@ async function seedDatabase() {
       description: "Professional servers, bartenders, and wait staff for events of all sizes with impeccable service.",
       imageUrl: "https://images.unsplash.com/photo-1566554273541-37a9ca77b91f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
       categoryId: 13, // Event Staff
-      priceRange: "$$",
+      priceRange: "RR",
       rating: 4.7,
       reviewCount: 53,
       subscriptionTier: "basic",
@@ -363,7 +363,7 @@ async function seedDatabase() {
       description: "Experienced crew specializing in event setup, breakdown, and technical support for any venue.",
       imageUrl: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
       categoryId: 14, // Event Support Crew
-      priceRange: "$$",
+      priceRange: "RR",
       rating: 4.6,
       reviewCount: 41,
       subscriptionTier: "pro",
@@ -379,7 +379,7 @@ async function seedDatabase() {
       description: "Influencers and content creators who can promote your event and create compelling content.",
       imageUrl: "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
       categoryId: 15, // Influencers & Social Media
-      priceRange: "$$$",
+      priceRange: "RRR",
       rating: 4.5,
       reviewCount: 32,
       subscriptionTier: "platinum",
@@ -395,7 +395,7 @@ async function seedDatabase() {
       description: "Engaging and professional MCs to host your events, maintain the schedule, and entertain your guests.",
       imageUrl: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
       categoryId: 16, // Event Hosts & MCs
-      priceRange: "$$",
+      priceRange: "RR",
       rating: 4.8,
       reviewCount: 47,
       subscriptionTier: "pro",
@@ -411,7 +411,7 @@ async function seedDatabase() {
       description: "Authentic cultural dances from various South African traditions to add cultural richness to your event.",
       imageUrl: "https://images.unsplash.com/photo-1504699570374-9bbddda0b29a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
       categoryId: 18, // Cultural Performers
-      priceRange: "$$",
+      priceRange: "RR",
       rating: 4.9,
       reviewCount: 56,
       subscriptionTier: "basic",
@@ -427,7 +427,7 @@ async function seedDatabase() {
       description: "Professional security personnel for events, VIP protection, and crowd management with certified staff.",
       imageUrl: "https://images.unsplash.com/photo-1617895153857-82fe79adfcd4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
       categoryId: 19, // Security Services
-      priceRange: "$$$",
+      priceRange: "RRR",
       rating: 4.7,
       reviewCount: 38,
       subscriptionTier: "pro",

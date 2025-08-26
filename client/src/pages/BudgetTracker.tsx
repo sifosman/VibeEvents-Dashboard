@@ -69,7 +69,7 @@ export default function BudgetTracker() {
                 <div>
                   <div className="flex justify-between mb-2">
                     <span className="font-medium">Total Budget</span>
-                    <span className="font-semibold">$0.00</span>
+                    <span className="font-semibold">R0.00</span>
                   </div>
                   <Progress value={0} className="h-2" />
                 </div>
@@ -77,7 +77,7 @@ export default function BudgetTracker() {
                 <div>
                   <div className="flex justify-between mb-2">
                     <span className="font-medium">Venue</span>
-                    <span>$0.00 / $0.00</span>
+                    <span>R0.00 / R0.00</span>
                   </div>
                   <Progress value={0} className="h-2" />
                 </div>
@@ -85,7 +85,7 @@ export default function BudgetTracker() {
                 <div>
                   <div className="flex justify-between mb-2">
                     <span className="font-medium">Catering</span>
-                    <span>$0.00 / $0.00</span>
+                    <span>R0.00 / R0.00</span>
                   </div>
                   <Progress value={0} className="h-2" />
                 </div>
@@ -93,7 +93,7 @@ export default function BudgetTracker() {
                 <div>
                   <div className="flex justify-between mb-2">
                     <span className="font-medium">Decorations</span>
-                    <span>$0.00 / $0.00</span>
+                    <span>R0.00 / R0.00</span>
                   </div>
                   <Progress value={0} className="h-2" />
                 </div>
@@ -101,7 +101,7 @@ export default function BudgetTracker() {
                 <div>
                   <div className="flex justify-between mb-2">
                     <span className="font-medium">Entertainment</span>
-                    <span>$0.00 / $0.00</span>
+                    <span>R0.00 / R0.00</span>
                   </div>
                   <Progress value={0} className="h-2" />
                 </div>

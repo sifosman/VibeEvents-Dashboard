@@ -15,7 +15,6 @@ import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect, useRef } from "react";
 import { Category } from "@shared/schema";
-import SouthAfricanBadge from "../shared/SouthAfricanBadge";
 import { Filter, Map, SortDesc, CalendarIcon, ChevronDown } from "lucide-react";
 
 export default function Hero() {

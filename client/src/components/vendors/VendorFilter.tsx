@@ -262,10 +262,10 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="">Any Price</SelectItem>
-                      <SelectItem value="$">$ - Budget</SelectItem>
-                      <SelectItem value="$$">$$ - Moderate</SelectItem>
-                      <SelectItem value="$$$">$$$ - Premium</SelectItem>
-                      <SelectItem value="$$$$">$$$$ - Luxury</SelectItem>
+                      <SelectItem value="R">R - Budget</SelectItem>
+                      <SelectItem value="RR">RR - Moderate</SelectItem>
+                      <SelectItem value="RRR">RRR - Premium</SelectItem>
+                      <SelectItem value="RRRR">RRRR - Luxury</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

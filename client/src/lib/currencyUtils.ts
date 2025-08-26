@@ -1,7 +1,7 @@
 /**
  * Formats a number as currency with the specified currency code
  * @param amount The amount to format
- * @param currencyCode The ISO currency code (e.g., 'USD', 'ZAR', 'EUR')
+ * @param currencyCode The ISO currency code (e.g., 'ZAR', 'USD', 'EUR')
  * @param locale The locale to use for formatting (defaults to 'en-ZA' for South African format)
  * @returns Formatted currency string
  */
@@ -70,4 +70,51 @@ export function formatPriceRange(
   }
   
   return `${formatCurrency(minPrice, currencyCode)} - ${formatCurrency(maxPrice, currencyCode)}`;
+}
+
+/**
+ * Currency information lookup table
+ */
+const CURRENCY_DATA: { [key: string]: { symbol: string; name: string; code: string } } = {
+  'ZA': { symbol: 'R', name: 'South African Rand', code: 'ZAR' },
+  'DEFAULT': { symbol: 'R', name: 'South African Rand', code: 'ZAR' }
+};
+
+/**
+ * Gets currency information for a given country code
+ * @param countryCode The country code (e.g., 'ZA', 'US', 'GB')
+ * @returns Currency information object
+ */
+export function getCurrencyForCountry(countryCode: string) {
+  return CURRENCY_DATA[countryCode] || CURRENCY_DATA['DEFAULT'];
+}
+
+/**
+ * Formats a numeric value as currency input (for display in form fields)
+ * @param amount The amount to format
+ * @param countryCode The country code to determine currency
+ * @returns Formatted currency string for input fields
+ */
+export function formatCurrencyInput(amount: number, countryCode: string = 'ZA'): string {
+  const currency = getCurrencyForCountry(countryCode);
+  if (isNaN(amount) || amount === 0) return currency.symbol;
+  
+  return `${currency.symbol}${amount.toFixed(2)}`;
+}
+
+/**
+ * Parses a currency input string back to a number
+ * @param currencyString The currency string to parse (e.g., 'R150.00', 'R25.50')
+ * @returns The parsed number value
+ */
+export function parseCurrencyInput(currencyString: string): number {
+  if (!currencyString) return 0;
+  
+  // Remove currency symbols, spaces, and letters, normalize decimal commas to dots
+  const numericString = currencyString
+    .replace(/[^\d,.-]/g, '')
+    .replace(/\s/g, '')
+    .replace(/,/g, '.');
+    
+  return parseFloat(numericString) || 0;
 }

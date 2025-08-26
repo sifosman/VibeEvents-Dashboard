@@ -433,7 +433,7 @@ export class MemStorage implements IStorage {
         description: "Elegant garden venue with indoor and outdoor spaces, perfect for ceremonies and receptions up to 300 guests.",
         imageUrl: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         categoryId: 1, // Venues
-        priceRange: "$$",
+        priceRange: "RR",
         rating: 4.5,
         reviewCount: 48,
         instagramUrl: "https://instagram.com/",
@@ -446,7 +446,7 @@ export class MemStorage implements IStorage {
         description: "Award-winning cake designer specializing in custom wedding cakes, cupcakes, and dessert tables for your special day.",
         imageUrl: "https://images.unsplash.com/photo-1547059470-3b0c7cd958a4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         categoryId: 2, // Catering & Bakers
-        priceRange: "$$$",
+        priceRange: "RRR",
         rating: 5.0,
         reviewCount: 72,
         instagramUrl: "https://instagram.com/",
@@ -459,7 +459,7 @@ export class MemStorage implements IStorage {
         description: "Professional hair and makeup team specializing in bridal styling, with services for the entire bridal party.",
         imageUrl: "https://images.unsplash.com/photo-1559599189-fe84dea4eb79?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         categoryId: 3, // Hair & Makeup
-        priceRange: "$$",
+        priceRange: "RR",
         rating: 4.0,
         reviewCount: 36,
         instagramUrl: "https://instagram.com/",
@@ -472,7 +472,7 @@ export class MemStorage implements IStorage {
         description: "Country estate with gardens and lake views, accommodating up to 200 guests.",
         imageUrl: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         categoryId: 1, // Venues
-        priceRange: "$$$",
+        priceRange: "RRR",
         rating: 4.5,
         reviewCount: 42,
         instagramUrl: "https://instagram.com/",
@@ -485,7 +485,7 @@ export class MemStorage implements IStorage {
         description: "Custom menus with international cuisine options and professional service staff.",
         imageUrl: "https://images.unsplash.com/photo-1565538810643-b5bdb714032a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         categoryId: 2, // Catering & Bakers
-        priceRange: "$$$",
+        priceRange: "RRR",
         rating: 5.0,
         reviewCount: 63,
         instagramUrl: "https://instagram.com/",
@@ -498,7 +498,7 @@ export class MemStorage implements IStorage {
         description: "Expert hairstylists specializing in bridal updos, styling, and treatments.",
         imageUrl: "https://images.unsplash.com/photo-1534957753291-b8f8bee38c31?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         categoryId: 3, // Hair & Makeup
-        priceRange: "$$",
+        priceRange: "RR",
         rating: 4.0,
         reviewCount: 28,
         instagramUrl: "https://instagram.com/",
@@ -511,7 +511,7 @@ export class MemStorage implements IStorage {
         description: "Complete sound, lighting, and visual effects for ceremonies and receptions.",
         imageUrl: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         categoryId: 5, // Audio & Visual
-        priceRange: "$$",
+        priceRange: "RR",
         rating: 3.5,
         reviewCount: 19,
         instagramUrl: "https://instagram.com/",
@@ -524,7 +524,7 @@ export class MemStorage implements IStorage {
         description: "Stunning floral arrangements, bouquets, and venue decoration services.",
         imageUrl: "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         categoryId: 6, // Decor & Design
-        priceRange: "$$",
+        priceRange: "RR",
         rating: 4.0,
         reviewCount: 37,
         instagramUrl: "https://instagram.com/",
@@ -537,7 +537,7 @@ export class MemStorage implements IStorage {
         description: "Live band with customizable setlists and DJ services for your reception.",
         imageUrl: "https://images.unsplash.com/photo-1522673607200-164d1b3ce551?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         categoryId: 8, // Entertainment
-        priceRange: "$$$",
+        priceRange: "RRR",
         rating: 5.0,
         reviewCount: 51,
         instagramUrl: "https://instagram.com/",
@@ -550,7 +550,7 @@ export class MemStorage implements IStorage {
         description: "Award-winning wedding photographers capturing timeless moments and emotions.",
         imageUrl: "https://images.unsplash.com/photo-1603049489988-53ebe4cd1c38?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         categoryId: 4, // Photography & Video
-        priceRange: "$$$",
+        priceRange: "RRR",
         rating: 4.5,
         reviewCount: 47,
         instagramUrl: "https://instagram.com/",
@@ -563,7 +563,7 @@ export class MemStorage implements IStorage {
         description: "Luxury vehicles and guest shuttles for a seamless wedding day transportation.",
         imageUrl: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         categoryId: 7, // Transportation
-        priceRange: "$$",
+        priceRange: "RR",
         rating: 4.0,
         reviewCount: 23,
         instagramUrl: "https://instagram.com/",
@@ -576,7 +576,7 @@ export class MemStorage implements IStorage {
         description: "Authentic food stalls offering a variety of international cuisines for markets and events.",
         imageUrl: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         categoryId: 9, // Market Vendors
-        priceRange: "$",
+        priceRange: "R",
         rating: 4.8,
         reviewCount: 56,
         instagramUrl: "https://instagram.com/",
@@ -589,7 +589,7 @@ export class MemStorage implements IStorage {
         description: "Handmade crafts, jewelry, and unique gifts for market events and festivals.",
         imageUrl: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         categoryId: 9, // Market Vendors
-        priceRange: "$$",
+        priceRange: "RR",
         rating: 4.6,
         reviewCount: 38,
         instagramUrl: "https://instagram.com/",
@@ -602,7 +602,7 @@ export class MemStorage implements IStorage {
         description: "Vendor applications now open for the Annual Spring Festival. Limited spots available.",
         imageUrl: "https://images.unsplash.com/photo-1529586691389-4aaa1f44e8ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         categoryId: 10, // Vendor Opportunities
-        priceRange: "$",
+        priceRange: "R",
         rating: 4.9,
         reviewCount: 124,
         instagramUrl: "https://instagram.com/",
@@ -615,7 +615,7 @@ export class MemStorage implements IStorage {
         description: "Magical themed decorations and setups for your fairy tale event. Perfect for weddings and children's parties.",
         imageUrl: "https://images.unsplash.com/photo-1526653054310-70f690177e36?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         categoryId: 7, // Themed Decor
-        priceRange: "$$$",
+        priceRange: "RRR",
         rating: 4.7,
         reviewCount: 53,
         instagramUrl: "https://instagram.com/",
@@ -630,7 +630,7 @@ export class MemStorage implements IStorage {
         description: "Make a grand entrance or take a scenic tour with our luxury helicopter services.",
         imageUrl: "https://images.unsplash.com/photo-1583997064298-0cf2d6a0cb85?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         categoryId: 9, // Specialty Transportation
-        priceRange: "$$$$",
+        priceRange: "RRRR",
         rating: 4.9,
         reviewCount: 34,
         instagramUrl: "https://instagram.com/",
@@ -643,7 +643,7 @@ export class MemStorage implements IStorage {
         description: "Breathtaking drone light shows and aerial photography for your special event.",
         imageUrl: "https://images.unsplash.com/photo-1473968512647-3e447244af8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         categoryId: 23, // Aerial Services
-        priceRange: "$$$",
+        priceRange: "RRR",
         rating: 4.8,
         reviewCount: 29,
         instagramUrl: "https://instagram.com/",
@@ -656,7 +656,7 @@ export class MemStorage implements IStorage {
         description: "Exquisite bridal wear and accessories for your perfect day. Custom fittings and designs available.",
         imageUrl: "https://images.unsplash.com/photo-1550614000-4895a10e1bfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         categoryId: 21, // Costumes & Attire
-        priceRange: "$$$",
+        priceRange: "RRR",
         rating: 4.6,
         reviewCount: 87,
         instagramUrl: "https://instagram.com/",
@@ -669,7 +669,7 @@ export class MemStorage implements IStorage {
         description: "High-quality themed costumes and masks for masquerade balls and themed parties.",
         imageUrl: "https://images.unsplash.com/photo-1581346087896-982da6ea164d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         categoryId: 21, // Costumes & Attire
-        priceRange: "$$",
+        priceRange: "RR",
         rating: 4.3,
         reviewCount: 41,
         instagramUrl: "https://instagram.com/",
@@ -684,7 +684,7 @@ export class MemStorage implements IStorage {
         description: "Compassionate funeral planning services offering support during difficult times. Comprehensive arrangements including venues, catering, and remembrance items.",
         imageUrl: "https://images.unsplash.com/photo-1542856391-010fb87dcfed?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         categoryId: 24, // Memorial Services
-        priceRange: "$$$",
+        priceRange: "RRR",
         rating: 4.9,
         reviewCount: 67,
         instagramUrl: "https://instagram.com/",
@@ -697,7 +697,7 @@ export class MemStorage implements IStorage {
         description: "Custom gravestones, memorials, and commemorative plaques crafted with care. Various materials and designs available to honor your loved ones.",
         imageUrl: "https://images.unsplash.com/photo-1486825586573-7131f7991bdd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         categoryId: 24, // Memorial Services
-        priceRange: "$$",
+        priceRange: "RR",
         rating: 4.7,
         reviewCount: 43,
         instagramUrl: "https://instagram.com/",
@@ -710,7 +710,7 @@ export class MemStorage implements IStorage {
         description: "Exceptional floral arrangements for all occasions. Specializing in event floristry, bouquets, and custom arrangements.",
         imageUrl: "https://images.unsplash.com/photo-1561181286-d5ee89f677f0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         categoryId: 6, // Decor & Design
-        priceRange: "$$",
+        priceRange: "RR",
         rating: 4.8,
         reviewCount: 91,
         instagramUrl: "https://instagram.com/",
@@ -723,7 +723,7 @@ export class MemStorage implements IStorage {
         description: "Professional flower arrangers creating stunning displays for events and venues. Custom designs reflecting your style and theme.",
         imageUrl: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         categoryId: 6, // Decor & Design
-        priceRange: "$$$",
+        priceRange: "RRR",
         rating: 4.5,
         reviewCount: 58,
         instagramUrl: "https://instagram.com/",
@@ -736,7 +736,7 @@ export class MemStorage implements IStorage {
         description: "Custom gift parcels and hampers for any occasion. Personalized gift selections with elegant presentation.",
         imageUrl: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         categoryId: 25, // Gift Services
-        priceRange: "$$",
+        priceRange: "RR",
         rating: 4.6,
         reviewCount: 72,
         instagramUrl: "https://instagram.com/",
@@ -749,7 +749,7 @@ export class MemStorage implements IStorage {
         description: "High-quality portable toilets and sanitation stations for events of all sizes. Clean, modern facilities with regular servicing.",
         imageUrl: "https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         categoryId: 26, // Event Infrastructure
-        priceRange: "$$",
+        priceRange: "RR",
         rating: 4.3,
         reviewCount: 47,
         instagramUrl: "https://instagram.com/",
@@ -762,7 +762,7 @@ export class MemStorage implements IStorage {
         description: "Professional waiters and service staff for events. Well-trained, experienced, and attentive personnel to ensure smooth service.",
         imageUrl: "https://images.unsplash.com/photo-1516788875874-c5912cae7b43?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         categoryId: 27, // Staffing Services
-        priceRange: "$$",
+        priceRange: "RR",
         rating: 4.7,
         reviewCount: 83,
         instagramUrl: "https://instagram.com/",
@@ -775,7 +775,7 @@ export class MemStorage implements IStorage {
         description: "Artisanal pastries and desserts made with premium ingredients. Custom creations for special events and celebrations.",
         imageUrl: "https://images.unsplash.com/photo-1551404974-5d42d6e44401?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
         categoryId: 2, // Catering & Bakers
-        priceRange: "$$$",
+        priceRange: "RRR",
         rating: 4.9,
         reviewCount: 64,
         instagramUrl: "https://instagram.com/",

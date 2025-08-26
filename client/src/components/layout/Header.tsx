@@ -15,7 +15,6 @@ import {
   Filter,
   User
 } from "lucide-react";
-import SouthAfricanBadge from "../shared/SouthAfricanBadge";
 import { EventTypeSelector } from "@/components/ui/event-type-selector";
 import {
   DropdownMenu,
@@ -120,7 +119,6 @@ function SimpleHeader() {
               <Heart className="text-primary mr-2" />
               <h1 className="text-primary font-display font-bold text-2xl">Vibeventz</h1>
             </Link>
-            <SouthAfricanBadge className="ml-2" />
           </div>
           
           {/* Desktop Navigation */}
@@ -281,7 +279,6 @@ export default function Header() {
                 <Heart className="text-primary mr-2" />
                 <h1 className="text-primary font-display font-bold text-2xl">Vibeventz</h1>
               </Link>
-              <SouthAfricanBadge className="ml-2" />
             </div>
             
             {/* Desktop Navigation */}
