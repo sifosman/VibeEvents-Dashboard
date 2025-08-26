@@ -26,6 +26,7 @@ export default function VenueRegistration() {
     willingToTravel: "",
     areasCanServe: "",
     venueType: "",
+    businessBio: "",
     capacity: "",
     description: "",
     amenities: [] as string[],
@@ -302,6 +303,25 @@ export default function VenueRegistration() {
                     />
                   </div>
                 </div>
+              </div>
+
+              <div>
+                <Label htmlFor="businessBio">Tell us about your business/bio (200 words max)</Label>
+                <Textarea
+                  id="businessBio"
+                  value={formData.businessBio}
+                  onChange={(e) => {
+                    const words = e.target.value.split(' ').filter(word => word.length > 0);
+                    if (words.length <= 200) {
+                      setFormData({...formData, businessBio: e.target.value});
+                    }
+                  }}
+                  placeholder="Share your story, experience, and what makes your venue special..."
+                  rows={4}
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  {formData.businessBio.split(' ').filter(word => word.length > 0).length}/200 words
+                </p>
               </div>
 
               <div>
