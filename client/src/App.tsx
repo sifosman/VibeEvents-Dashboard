@@ -24,6 +24,9 @@ import VendorSearch from "./pages/VendorSearch";
 import ServiceProviderSearch from "./pages/ServiceProviderSearch";
 import MyAccount from "./pages/MyAccount";
 import VendorRegistration from "./pages/vendor-registration";
+import VendorRegistrationForm from "./pages/VendorRegistration";
+import VenueRegistration from "./pages/VenueRegistration";
+import Subscription from "./pages/Subscription";
 import UserDashboard from "./pages/UserDashboard";
 import UserProfile from "./pages/UserProfile";
 import VendorReview from "./pages/VendorReview";
@@ -60,7 +63,9 @@ function AppRouter() {
       </Route>
       <Route path="/login" component={Login} />
       <Route path="/register" component={Register} />
-      <Route path="/vendor-registration" component={VendorRegistration} />
+      <Route path="/vendor-registration" component={VendorRegistrationForm} />
+      <Route path="/venue-registration" component={VenueRegistration} />
+      <Route path="/subscription" component={Subscription} />
       <Route path="/dashboard" component={UserDashboard} />
       <Route path="/profile" component={UserProfile} />
       <Route path="/support" component={Support} />
