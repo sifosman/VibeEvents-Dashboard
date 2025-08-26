@@ -26,40 +26,10 @@ export default function Subscription() {
             <ChevronLeft className="h-4 w-4 mr-2" /> Back to My Account
           </Button>
 
-          <div className="flex justify-between items-start">
-            <div>
-              <h1 className="text-2xl font-display font-bold flex items-center">
-                <CreditCard className="h-6 w-6 mr-2 text-primary" />
-                My Subscription
-              </h1>
-              <p className="text-muted-foreground mt-1">Manage your subscription and business registration</p>
-            </div>
-            
-            {/* Registration Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button className="bg-primary text-white">
-                  Register Your Business
-                  <ChevronDown className="h-4 w-4 ml-2" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-64">
-                <DropdownMenuItem 
-                  className="cursor-pointer"
-                  onClick={() => setLocation("/vendor-registration")}
-                >
-                  <UserPlus className="h-4 w-4 mr-2" />
-                  Register as Vendor/Service Provider
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  className="cursor-pointer"
-                  onClick={() => setLocation("/venue-registration")}
-                >
-                  <Building className="h-4 w-4 mr-2" />
-                  Register as Venue
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+          <div className="flex items-center gap-4">
+            <CreditCard className="h-6 w-6 text-primary" />
+            <h1 className="text-2xl font-display font-bold">My Subscription</h1>
+            <span className="text-muted-foreground">Manage your subscription and business registration</span>
           </div>
         </div>
 
