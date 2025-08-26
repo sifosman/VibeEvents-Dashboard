@@ -58,22 +58,23 @@ export default function Hero() {
     queryKey: ['/api/categories'],
     retry: 3,
     retryDelay: 1000,
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
   });
 
   // Filter categories based on selected service type
-  const getFilteredCategories = () => {
+  const getFilteredCategories = (): Category[] => {
     if (!categories) return [];
     
     switch (selectedServiceType) {
       case "venues":
-        return categories.filter(category => category.id >= 102 && category.id <= 131);
+        return categories.filter((category: Category) => category.id >= 102 && category.id <= 131);
       case "vendors":
-        return categories.filter(category => category.id >= 76 && category.id <= 101);
+        return categories.filter((category: Category) => category.id >= 76 && category.id <= 101);
       case "service-providers":
-        return categories.filter(category => category.id >= 22 && category.id <= 74);
+        return categories.filter((category: Category) => category.id >= 22 && category.id <= 74);
       case "all":
       default:
-        return categories.filter(category => 
+        return categories.filter((category: Category) => 
           (category.id >= 22 && category.id <= 74) ||  // Service Providers
           (category.id >= 76 && category.id <= 101) || // Vendors
           (category.id >= 102 && category.id <= 131)   // Venues
@@ -226,54 +227,62 @@ export default function Hero() {
                        selectedCategories.length === 0 
                         ? "What are you looking for?" 
                         : selectedCategories.length === 1
-                        ? getFilteredCategories()?.find(cat => (cat.slug || `category-${cat.id}`) === selectedCategories[0])?.name || selectedCategories[0]
+                        ? getFilteredCategories()?.find((cat: Category) => (cat.slug || `category-${cat.id}`) === selectedCategories[0])?.name || selectedCategories[0]
                         : `${selectedCategories.length} services selected`}
                     </span>
                     <ChevronDown className="h-4 w-4 text-gray-400" />
                   </button>
                   
-                  {showCategoryDropdown && !categoriesLoading && !categoriesError && (
+                  {showCategoryDropdown && (
                     <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
-                      <label className="flex items-center px-3 py-2 hover:bg-gray-50 cursor-pointer">
-                        <Checkbox
-                          checked={selectedCategories.includes("all-services")}
-                          onCheckedChange={(checked) => {
-                            if (checked) {
-                              setSelectedCategories(["all-services"]);
-                            } else {
-                              setSelectedCategories(prev => prev.filter(cat => cat !== "all-services"));
-                            }
-                          }}
-                          className="mr-2"
-                        />
-                        <span className="text-sm">All Services</span>
-                      </label>
-                      {getFilteredCategories().map((category) => {
-                        const categoryValue = category.slug || `category-${category.id}`;
-                        return (
-                          <label
-                            key={category.id}
-                            className="flex items-center px-3 py-2 hover:bg-gray-50 cursor-pointer"
-                          >
+                      {categoriesLoading ? (
+                        <div className="px-3 py-2 text-sm text-gray-500">Loading categories...</div>
+                      ) : categoriesError ? (
+                        <div className="px-3 py-2 text-sm text-red-500">Error loading categories. Please try again.</div>
+                      ) : (
+                        <>
+                          <label className="flex items-center px-3 py-2 hover:bg-gray-50 cursor-pointer">
                             <Checkbox
-                              checked={selectedCategories.includes(categoryValue)}
+                              checked={selectedCategories.includes("all-services")}
                               onCheckedChange={(checked) => {
                                 if (checked) {
-                                  setSelectedCategories(prev => {
-                                    // Remove "all-services" if selecting specific categories
-                                    const filtered = prev.filter(cat => cat !== "all-services");
-                                    return [...filtered, categoryValue];
-                                  });
+                                  setSelectedCategories(["all-services"]);
                                 } else {
-                                  setSelectedCategories(prev => prev.filter(cat => cat !== categoryValue));
+                                  setSelectedCategories(prev => prev.filter((cat: string) => cat !== "all-services"));
                                 }
                               }}
                               className="mr-2"
                             />
-                            <span className="text-sm">{category.name}</span>
+                            <span className="text-sm">All Services</span>
                           </label>
-                        );
-                      })}
+                          {getFilteredCategories().map((category: Category) => {
+                            const categoryValue = category.slug || `category-${category.id}`;
+                            return (
+                              <label
+                                key={category.id}
+                                className="flex items-center px-3 py-2 hover:bg-gray-50 cursor-pointer"
+                              >
+                                <Checkbox
+                                  checked={selectedCategories.includes(categoryValue)}
+                                  onCheckedChange={(checked) => {
+                                    if (checked) {
+                                      setSelectedCategories(prev => {
+                                        // Remove "all-services" if selecting specific categories
+                                        const filtered = prev.filter((cat: string) => cat !== "all-services");
+                                        return [...filtered, categoryValue];
+                                      });
+                                    } else {
+                                      setSelectedCategories(prev => prev.filter((cat: string) => cat !== categoryValue));
+                                    }
+                                  }}
+                                  className="mr-2"
+                                />
+                                <span className="text-sm">{category.name}</span>
+                              </label>
+                            );
+                          })}
+                        </>
+                      )}
                     </div>
                   )}
                 </div>
