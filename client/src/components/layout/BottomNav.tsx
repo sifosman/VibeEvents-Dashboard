@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'wouter';
-import { Home, Search, Heart, Calendar, User } from 'lucide-react';
+import { Home, Heart, Calendar, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export function BottomNav() {
@@ -11,11 +11,6 @@ export function BottomNav() {
       name: "Home",
       href: "/",
       icon: Home
-    },
-    {
-      name: "Search",
-      href: "/BrowseByCategory",
-      icon: Search
     },
     {
       name: "Favourites",
