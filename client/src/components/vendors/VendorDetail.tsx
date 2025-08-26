@@ -294,46 +294,46 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
               <Separator className="my-4" />
               
               {/* Location and Map Section */}
-              <div className="space-y-4">
-                <div className="flex items-center">
-                  <MapPin className="h-5 w-5 mr-2 text-primary" />
-                  <h3 className="text-lg font-semibold">Location</h3>
-                </div>
-                
-                {vendor.location && (
+              {vendor.location && (
+                <div className="space-y-4">
+                  <div className="flex items-center">
+                    <MapPin className="h-5 w-5 mr-2 text-primary" />
+                    <h3 className="text-lg font-semibold">Location</h3>
+                  </div>
+                  
                   <div className="mb-4">
                     <p className="text-muted-foreground font-medium">{vendor.location}</p>
                   </div>
-                )}
-                
-                {vendor.googleMapsLink ? (
-                  <div className="w-full h-64 rounded-lg overflow-hidden border">
-                    <iframe
-                      src={vendor.googleMapsLink}
-                      width="100%"
-                      height="100%"
-                      style={{ border: 0 }}
-                      allowFullScreen
-                      loading="lazy"
-                      referrerPolicy="no-referrer-when-downgrade"
-                      title={`${vendor.name} Location`}
-                    ></iframe>
-                  </div>
-                ) : vendor.location && (
-                  <div className="w-full h-64 rounded-lg overflow-hidden border">
-                    <iframe
-                      src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dO5A4l8aSp1t2k&q=${encodeURIComponent(vendor.location)}`}
-                      width="100%"
-                      height="100%"
-                      style={{ border: 0 }}
-                      allowFullScreen
-                      loading="lazy"
-                      referrerPolicy="no-referrer-when-downgrade"
-                      title={`${vendor.name} Location`}
-                    ></iframe>
-                  </div>
-                )}
-              </div>
+                  
+                  {vendor.googleMapsLink ? (
+                    <div className="w-full h-64 rounded-lg overflow-hidden border">
+                      <iframe
+                        src={vendor.googleMapsLink}
+                        width="100%"
+                        height="100%"
+                        style={{ border: 0 }}
+                        allowFullScreen
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                        title={`${vendor.name} Location`}
+                      ></iframe>
+                    </div>
+                  ) : (
+                    <div className="w-full h-64 rounded-lg overflow-hidden border">
+                      <iframe
+                        src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dO5A4l8aSp1t2k&q=${encodeURIComponent(vendor.location)}`}
+                        width="100%"
+                        height="100%"
+                        style={{ border: 0 }}
+                        allowFullScreen
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                        title={`${vendor.name} Location`}
+                      ></iframe>
+                    </div>
+                  )}
+                </div>
+              )}
               
               <Separator className="my-4" />
               
