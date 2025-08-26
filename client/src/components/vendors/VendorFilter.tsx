@@ -33,10 +33,8 @@ interface VendorFilterProps {
     dietary?: string;
     cuisine?: string;
     country?: string;
-    region?: string;
     province?: string;
-    area?: string;
-    town?: string;
+    city?: string;
     vendorTag?: string;
   }) => void;
   initialFilters?: {
@@ -49,10 +47,8 @@ interface VendorFilterProps {
     dietary?: string;
     cuisine?: string;
     country?: string;
-    region?: string;
     province?: string;
-    area?: string;
-    town?: string;
+    city?: string;
     vendorTag?: string;
   };
 }
@@ -68,10 +64,8 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
   const [dietary, setDietary] = useState(initialFilters.dietary || "");
   const [cuisine, setCuisine] = useState(initialFilters.cuisine || "");
   const [country, setCountry] = useState(initialFilters.country || "");
-  const [region, setRegion] = useState(initialFilters.region || "");
   const [province, setProvince] = useState(initialFilters.province || "");
-  const [area, setArea] = useState(initialFilters.area || "");
-  const [town, setTown] = useState(initialFilters.town || "");
+  const [city, setCity] = useState(initialFilters.city || "");
   const [vendorTag, setVendorTag] = useState(initialFilters.vendorTag || "");
 
   const { data: categories } = useQuery<Category[]>({
@@ -104,6 +98,30 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
     "Rental Service", "Photo Booth", "Entertainment"
   ];
 
+  const provinces = [
+    "Western Cape",
+    "Eastern Cape",
+    "Northern Cape",
+    "Free State",
+    "KwaZulu-Natal",
+    "North West",
+    "Gauteng",
+    "Mpumalanga",
+    "Limpopo"
+  ];
+
+  const citiesByProvince: { [key: string]: string[] } = {
+    "Western Cape": ["Cape Town", "Stellenbosch", "Paarl", "George", "Mossel Bay"],
+    "Eastern Cape": ["Port Elizabeth", "East London", "Uitenhage", "Grahamstown", "King William's Town"],
+    "Northern Cape": ["Kimberley", "Upington", "Kuruman", "Springbok", "De Aar"],
+    "Free State": ["Bloemfontein", "Welkom", "Kroonstad", "Bethlehem", "Sasolburg"],
+    "KwaZulu-Natal": ["Durban", "Pietermaritzburg", "Newcastle", "Richards Bay", "Ladysmith"],
+    "North West": ["Mahikeng", "Klerksdorp", "Rustenburg", "Potchefstroom", "Vryburg"],
+    "Gauteng": ["Johannesburg", "Pretoria", "Soweto", "Vanderbijlpark", "Kempton Park"],
+    "Mpumalanga": ["Nelspruit", "Witbank", "Middelburg", "Secunda", "Standerton"],
+    "Limpopo": ["Polokwane", "Tzaneen", "Phalaborwa", "Musina", "Thohoyandou"]
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -117,10 +135,8 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
     if (dietary) filters.dietary = dietary;
     if (cuisine) filters.cuisine = cuisine;
     if (country) filters.country = country;
-    if (region) filters.region = region;
     if (province) filters.province = province;
-    if (area) filters.area = area;
-    if (town) filters.town = town;
+    if (city) filters.city = city;
     if (vendorTag) filters.vendorTag = vendorTag;
     
     onFilter({ 
@@ -133,10 +149,8 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
       dietary,
       cuisine,
       country,
-      region,
       province,
-      area,
-      town,
+      city,
       vendorTag
     });
     
@@ -160,10 +174,8 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
     setDietary("");
     setCuisine("");
     setCountry("");
-    setRegion("");
     setProvince("");
-    setArea("");
-    setTown("");
+    setCity("");
     setVendorTag("");
     onFilter({});
     setLocation("/vendors");
@@ -361,7 +373,11 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
                 <div className="space-y-2">
                   <div>
                     <Label htmlFor="country" className="text-xs mb-1 block">Country</Label>
-                    <Select value={country} onValueChange={setCountry}>
+                    <Select value={country} onValueChange={(value) => {
+                      setCountry(value);
+                      setProvince("");
+                      setCity("");
+                    }}>
                       <SelectTrigger id="country" className="h-8">
                         <SelectValue placeholder="Select country" />
                       </SelectTrigger>
@@ -379,79 +395,46 @@ export function VendorFilter({ onFilter, initialFilters = {} }: VendorFilterProp
                     </Select>
                   </div>
                   
-                  {country && (
-                    <div>
-                      <Label htmlFor="region" className="text-xs mb-1 block">Region</Label>
-                      <Select value={region} onValueChange={setRegion}>
-                        <SelectTrigger id="region" className="h-8">
-                          <SelectValue placeholder="Select region" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="">Any Region</SelectItem>
-                          {country === "South Africa" && (
-                            <>
-                              <SelectItem value="Gauteng">Gauteng</SelectItem>
-                              <SelectItem value="Western Cape">Western Cape</SelectItem>
-                              <SelectItem value="Eastern Cape">Eastern Cape</SelectItem>
-                              <SelectItem value="KwaZulu-Natal">KwaZulu-Natal</SelectItem>
-                              <SelectItem value="Free State">Free State</SelectItem>
-                              <SelectItem value="North West">North West</SelectItem>
-                              <SelectItem value="Mpumalanga">Mpumalanga</SelectItem>
-                              <SelectItem value="Limpopo">Limpopo</SelectItem>
-                              <SelectItem value="Northern Cape">Northern Cape</SelectItem>
-                            </>
-                          )}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  )}
-                  
-                  {region && (
+                  {country === "South Africa" && (
                     <div>
                       <Label htmlFor="province" className="text-xs mb-1 block">Province</Label>
-                      <Select value={province} onValueChange={setProvince}>
+                      <Select value={province} onValueChange={(value) => {
+                        setProvince(value);
+                        setCity("");
+                      }}>
                         <SelectTrigger id="province" className="h-8">
                           <SelectValue placeholder="Select province" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="">Any Province</SelectItem>
-                          {/* Province options would be dynamically loaded based on region */}
-                          <SelectItem value="Example Province 1">Example Province 1</SelectItem>
-                          <SelectItem value="Example Province 2">Example Province 2</SelectItem>
+                          {provinces.map((prov) => (
+                            <SelectItem key={prov} value={prov}>
+                              {prov}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </div>
                   )}
                   
-                  {province && (
+                  {province && citiesByProvince[province] && (
                     <div>
-                      <Label htmlFor="area" className="text-xs mb-1 block">Area</Label>
-                      <Select value={area} onValueChange={setArea}>
-                        <SelectTrigger id="area" className="h-8">
-                          <SelectValue placeholder="Select area" />
+                      <Label htmlFor="city" className="text-xs mb-1 block">City</Label>
+                      <Select 
+                        value={city} 
+                        onValueChange={setCity}
+                        disabled={!province}
+                      >
+                        <SelectTrigger id="city" className="h-8">
+                          <SelectValue placeholder="Select city" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">Any Area</SelectItem>
-                          {/* Area options would be dynamically loaded based on province */}
-                          <SelectItem value="Example Area 1">Example Area 1</SelectItem>
-                          <SelectItem value="Example Area 2">Example Area 2</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  )}
-                  
-                  {area && (
-                    <div>
-                      <Label htmlFor="town" className="text-xs mb-1 block">Town</Label>
-                      <Select value={town} onValueChange={setTown}>
-                        <SelectTrigger id="town" className="h-8">
-                          <SelectValue placeholder="Select town" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="">Any Town</SelectItem>
-                          {/* Town options would be dynamically loaded based on area */}
-                          <SelectItem value="Example Town 1">Example Town 1</SelectItem>
-                          <SelectItem value="Example Town 2">Example Town 2</SelectItem>
+                          <SelectItem value="">Any City</SelectItem>
+                          {citiesByProvince[province].map((cityName) => (
+                            <SelectItem key={cityName} value={cityName}>
+                              {cityName}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </div>
