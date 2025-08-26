@@ -3,9 +3,10 @@ import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Category, Vendor } from "@shared/schema";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { VendorCard } from "../components/vendors/VendorCard";
 import { Helmet } from "react-helmet";
-import { ChevronDown, ChevronRight, MapPin, Users, Briefcase } from "lucide-react";
+import { ChevronDown, ChevronRight, MapPin, Users, Briefcase, Search } from "lucide-react";
 
 type MainCategory = {
   id: string;
@@ -41,6 +42,7 @@ const mainCategories: MainCategory[] = [
 export default function BrowseByCategory() {
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+  const [selectedSubcategories, setSelectedSubcategories] = useState<{[key: string]: number[]}>({});
   
   const { data: categories } = useQuery<Category[]>({
     queryKey: ['/api/categories'],
@@ -63,21 +65,39 @@ export default function BrowseByCategory() {
     setSelectedCategoryId(null); // Reset selected subcategory when toggling main category
   };
 
-  const selectSubcategory = (categoryId: number) => {
-    // Route to appropriate search page based on category ID
-    if (categoryId >= 102 && categoryId <= 131) {
-      // Venue categories (102-131)
-      window.location.href = `/venue-search/${categoryId}`;
-    } else if (categoryId >= 76 && categoryId <= 101) {
-      // Vendor categories (76-101)
-      window.location.href = `/vendor-search/${categoryId}`;
-    } else if (categoryId >= 22 && categoryId <= 74) {
-      // Service provider categories (22-74)
-      window.location.href = `/service-provider-search/${categoryId}`;
-    } else {
-      // Fallback for other categories
-      setSelectedCategoryId(categoryId);
+  const toggleSubcategory = (mainCategoryId: string, subcategoryId: number) => {
+    setSelectedSubcategories(prev => {
+      const currentSelections = prev[mainCategoryId] || [];
+      const isSelected = currentSelections.includes(subcategoryId);
+      
+      return {
+        ...prev,
+        [mainCategoryId]: isSelected 
+          ? currentSelections.filter(id => id !== subcategoryId)
+          : [...currentSelections, subcategoryId]
+      };
+    });
+  };
+
+  const searchSelectedCategories = (mainCategoryId: string) => {
+    const selected = selectedSubcategories[mainCategoryId] || [];
+    if (selected.length === 0) return;
+    
+    // Determine search URL based on main category
+    if (mainCategoryId === 'venues') {
+      window.location.href = `/venue-search?categories=${selected.join(',')}`;
+    } else if (mainCategoryId === 'vendors') {
+      window.location.href = `/vendor-search?categories=${selected.join(',')}`;
+    } else if (mainCategoryId === 'service-providers') {
+      window.location.href = `/service-provider-search?categories=${selected.join(',')}`;
     }
+  };
+
+  const clearSelections = (mainCategoryId: string) => {
+    setSelectedSubcategories(prev => ({
+      ...prev,
+      [mainCategoryId]: []
+    }));
   };
 
   const getSubcategoriesForMain = (mainCat: MainCategory) => {
@@ -130,18 +150,61 @@ export default function BrowseByCategory() {
                     {/* Subcategories */}
                     {isExpanded && (
                       <div className="bg-gray-50 border-t border-gray-200">
-                        {subcategories.map((subcategory) => (
-                          <button
-                            key={subcategory.id}
-                            onClick={() => selectSubcategory(subcategory.id)}
-                            className="w-full text-left py-2 px-4 hover:bg-gray-100 transition-colors border-b border-gray-100 last:border-b-0"
-                          >
-                            <div className="flex items-center justify-between">
-                              <h3 className="font-medium text-gray-900">{subcategory.name}</h3>
-                              <ChevronRight className="h-4 w-4 text-gray-400" />
+                        {/* Selection Controls */}
+                        <div className="p-3 border-b border-gray-200 bg-gray-100">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium text-gray-700">
+                              {(selectedSubcategories[mainCat.id] || []).length} selected
+                            </span>
+                            <div className="flex gap-2">
+                              {(selectedSubcategories[mainCat.id] || []).length > 0 && (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => clearSelections(mainCat.id)}
+                                  className="h-6 px-2 text-xs"
+                                >
+                                  Clear
+                                </Button>
+                              )}
+                              {(selectedSubcategories[mainCat.id] || []).length > 0 && (
+                                <Button
+                                  size="sm"
+                                  onClick={() => searchSelectedCategories(mainCat.id)}
+                                  className="h-6 px-2 text-xs bg-primary hover:bg-primary/90"
+                                >
+                                  <Search className="h-3 w-3 mr-1" />
+                                  Search
+                                </Button>
+                              )}
                             </div>
-                          </button>
-                        ))}
+                          </div>
+                        </div>
+                        
+                        {/* Subcategory List with Checkboxes */}
+                        <div className="max-h-60 overflow-y-auto">
+                          {subcategories.map((subcategory) => {
+                            const isSelected = (selectedSubcategories[mainCat.id] || []).includes(subcategory.id);
+                            return (
+                              <label
+                                key={subcategory.id}
+                                className="flex items-center py-2 px-4 hover:bg-gray-100 transition-colors border-b border-gray-100 last:border-b-0 cursor-pointer"
+                              >
+                                <Checkbox
+                                  checked={isSelected}
+                                  onCheckedChange={() => toggleSubcategory(mainCat.id, subcategory.id)}
+                                  className="mr-3"
+                                />
+                                <div className="flex-1">
+                                  <h3 className="font-medium text-gray-900">{subcategory.name}</h3>
+                                  {subcategory.description && (
+                                    <p className="text-xs text-gray-500 mt-1">{subcategory.description}</p>
+                                  )}
+                                </div>
+                              </label>
+                            );
+                          })}
+                        </div>
                       </div>
                     )}
                   </div>
