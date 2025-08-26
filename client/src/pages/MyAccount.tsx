@@ -42,7 +42,7 @@ const accountSections = [
 const profileOptions = [
   {
     id: "free",
-    label: "Free",
+    label: "Visitor",
     href: "/profile/free"
   },
   {
