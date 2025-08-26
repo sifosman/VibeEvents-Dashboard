@@ -33,26 +33,85 @@ export default function Subscription() {
           </div>
         </div>
 
-        {/* Current Subscription Status */}
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle>Current Plan</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-lg font-medium">Free Plan</span>
-                <span className="text-2xl font-bold">R0/month</span>
-              </div>
-              <p className="text-muted-foreground">
-                You're currently on the free plan. Upgrade to access premium features and grow your business.
-              </p>
-              <Button className="mt-4">
-                Upgrade Plan
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Subscription Plans */}
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold mb-4">Choose Your Plan</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            {/* Basic/Free Plan */}
+            <Card className="border-2 border-primary">
+              <CardHeader>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <CardTitle>Basic</CardTitle>
+                    <p className="text-sm text-muted-foreground">Free</p>
+                  </div>
+                  <span className="bg-primary text-primary-foreground px-2 py-1 rounded text-xs">Current</span>
+                </div>
+                <div className="text-3xl font-bold">R0<span className="text-sm font-normal">/month</span></div>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2 text-sm mb-6">
+                  <li>• Basic business listing</li>
+                  <li>• Up to 5 photos</li>
+                  <li>• Contact information display</li>
+                  <li>• Customer reviews</li>
+                  <li>• Basic search visibility</li>
+                </ul>
+                <Button variant="outline" className="w-full" disabled>
+                  Current Plan
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Standard Plan */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Standard</CardTitle>
+                <p className="text-sm text-muted-foreground">Most Popular</p>
+                <div className="text-3xl font-bold">R299<span className="text-sm font-normal">/month</span></div>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2 text-sm mb-6">
+                  <li>• Everything in Basic</li>
+                  <li>• Up to 20 photos</li>
+                  <li>• Video portfolio (3 videos)</li>
+                  <li>• Quote request management</li>
+                  <li>• Priority search listing</li>
+                  <li>• Social media integration</li>
+                  <li>• Basic analytics</li>
+                </ul>
+                <Button className="w-full">
+                  Upgrade to Standard
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Premium Plan */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Premium</CardTitle>
+                <p className="text-sm text-muted-foreground">For Professionals</p>
+                <div className="text-3xl font-bold">R599<span className="text-sm font-normal">/month</span></div>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2 text-sm mb-6">
+                  <li>• Everything in Standard</li>
+                  <li>• Unlimited photos</li>
+                  <li>• Unlimited videos</li>
+                  <li>• Featured business badge</li>
+                  <li>• Top search placement</li>
+                  <li>• Advanced analytics</li>
+                  <li>• Custom branding</li>
+                  <li>• Priority customer support</li>
+                </ul>
+                <Button className="w-full">
+                  Upgrade to Premium
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
 
         {/* Registration Options Info */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
