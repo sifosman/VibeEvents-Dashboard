@@ -57,7 +57,7 @@ const profileOptions = [
       },
       {
         id: "venue",
-        label: "Venue Registration", 
+        label: "Venue", 
         href: "/venue-registration"
       }
     ]
