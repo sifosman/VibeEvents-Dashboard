@@ -41,121 +41,121 @@ export default function Subscription() {
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b">
-                    <th className="text-left py-4 px-2">Features</th>
-                    <th className="text-center py-4 px-2">
+                    <th className="text-left py-2 px-1 text-sm font-medium">Features</th>
+                    <th className="text-center py-2 px-1">
                       <div className="relative">
-                        <div className="text-lg font-bold">Basic</div>
-                        <div className="text-sm text-muted-foreground">Free</div>
-                        <div className="text-2xl font-bold mt-1">R0<span className="text-sm font-normal">/month</span></div>
-                        <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground px-2 py-1 rounded text-xs">Current</span>
+                        <div className="text-sm font-bold">Basic</div>
+                        <div className="text-xs text-muted-foreground">Free</div>
+                        <div className="text-lg font-bold">R0<span className="text-xs font-normal">/month</span></div>
+                        <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground px-1 py-0.5 rounded text-xs">Current</span>
                       </div>
                     </th>
-                    <th className="text-center py-4 px-2">
+                    <th className="text-center py-2 px-1">
                       <div>
-                        <div className="text-lg font-bold">Standard</div>
-                        <div className="text-sm text-muted-foreground">Most Popular</div>
-                        <div className="text-2xl font-bold mt-1">R299<span className="text-sm font-normal">/month</span></div>
+                        <div className="text-sm font-bold">Standard</div>
+                        <div className="text-xs text-muted-foreground">Most Popular</div>
+                        <div className="text-lg font-bold">R299<span className="text-xs font-normal">/month</span></div>
                       </div>
                     </th>
-                    <th className="text-center py-4 px-2">
+                    <th className="text-center py-2 px-1">
                       <div>
-                        <div className="text-lg font-bold">Premium</div>
-                        <div className="text-sm text-muted-foreground">For Professionals</div>
-                        <div className="text-2xl font-bold mt-1">R599<span className="text-sm font-normal">/month</span></div>
+                        <div className="text-sm font-bold">Premium</div>
+                        <div className="text-xs text-muted-foreground">For Professionals</div>
+                        <div className="text-lg font-bold">R599<span className="text-xs font-normal">/month</span></div>
                       </div>
                     </th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="text-xs">
                   <tr className="border-b">
-                    <td className="py-3 px-2 font-medium">Business Listing</td>
-                    <td className="text-center py-3 px-2">✓</td>
-                    <td className="text-center py-3 px-2">✓</td>
-                    <td className="text-center py-3 px-2">✓</td>
+                    <td className="py-1.5 px-1 font-medium">Business Listing</td>
+                    <td className="text-center py-1.5 px-1">✓</td>
+                    <td className="text-center py-1.5 px-1">✓</td>
+                    <td className="text-center py-1.5 px-1">✓</td>
                   </tr>
                   <tr className="border-b">
-                    <td className="py-3 px-2 font-medium">Photo Upload</td>
-                    <td className="text-center py-3 px-2">Up to 5</td>
-                    <td className="text-center py-3 px-2">Up to 20</td>
-                    <td className="text-center py-3 px-2">Unlimited</td>
+                    <td className="py-1.5 px-1 font-medium">Photo Upload</td>
+                    <td className="text-center py-1.5 px-1">Up to 5</td>
+                    <td className="text-center py-1.5 px-1">Up to 20</td>
+                    <td className="text-center py-1.5 px-1">Unlimited</td>
                   </tr>
                   <tr className="border-b">
-                    <td className="py-3 px-2 font-medium">Video Portfolio</td>
-                    <td className="text-center py-3 px-2">-</td>
-                    <td className="text-center py-3 px-2">3 videos</td>
-                    <td className="text-center py-3 px-2">Unlimited</td>
+                    <td className="py-1.5 px-1 font-medium">Video Portfolio</td>
+                    <td className="text-center py-1.5 px-1">-</td>
+                    <td className="text-center py-1.5 px-1">3 videos</td>
+                    <td className="text-center py-1.5 px-1">Unlimited</td>
                   </tr>
                   <tr className="border-b">
-                    <td className="py-3 px-2 font-medium">Contact Information</td>
-                    <td className="text-center py-3 px-2">✓</td>
-                    <td className="text-center py-3 px-2">✓</td>
-                    <td className="text-center py-3 px-2">✓</td>
+                    <td className="py-1.5 px-1 font-medium">Contact Information</td>
+                    <td className="text-center py-1.5 px-1">✓</td>
+                    <td className="text-center py-1.5 px-1">✓</td>
+                    <td className="text-center py-1.5 px-1">✓</td>
                   </tr>
                   <tr className="border-b">
-                    <td className="py-3 px-2 font-medium">Customer Reviews</td>
-                    <td className="text-center py-3 px-2">✓</td>
-                    <td className="text-center py-3 px-2">✓</td>
-                    <td className="text-center py-3 px-2">✓</td>
+                    <td className="py-1.5 px-1 font-medium">Customer Reviews</td>
+                    <td className="text-center py-1.5 px-1">✓</td>
+                    <td className="text-center py-1.5 px-1">✓</td>
+                    <td className="text-center py-1.5 px-1">✓</td>
                   </tr>
                   <tr className="border-b">
-                    <td className="py-3 px-2 font-medium">Quote Request Management</td>
-                    <td className="text-center py-3 px-2">-</td>
-                    <td className="text-center py-3 px-2">✓</td>
-                    <td className="text-center py-3 px-2">✓</td>
+                    <td className="py-1.5 px-1 font-medium">Quote Request Management</td>
+                    <td className="text-center py-1.5 px-1">-</td>
+                    <td className="text-center py-1.5 px-1">✓</td>
+                    <td className="text-center py-1.5 px-1">✓</td>
                   </tr>
                   <tr className="border-b">
-                    <td className="py-3 px-2 font-medium">Search Visibility</td>
-                    <td className="text-center py-3 px-2">Basic</td>
-                    <td className="text-center py-3 px-2">Priority</td>
-                    <td className="text-center py-3 px-2">Top Placement</td>
+                    <td className="py-1.5 px-1 font-medium">Search Visibility</td>
+                    <td className="text-center py-1.5 px-1">Basic</td>
+                    <td className="text-center py-1.5 px-1">Priority</td>
+                    <td className="text-center py-1.5 px-1">Top Placement</td>
                   </tr>
                   <tr className="border-b">
-                    <td className="py-3 px-2 font-medium">Social Media Integration</td>
-                    <td className="text-center py-3 px-2">-</td>
-                    <td className="text-center py-3 px-2">✓</td>
-                    <td className="text-center py-3 px-2">✓</td>
+                    <td className="py-1.5 px-1 font-medium">Social Media Integration</td>
+                    <td className="text-center py-1.5 px-1">-</td>
+                    <td className="text-center py-1.5 px-1">✓</td>
+                    <td className="text-center py-1.5 px-1">✓</td>
                   </tr>
                   <tr className="border-b">
-                    <td className="py-3 px-2 font-medium">Analytics</td>
-                    <td className="text-center py-3 px-2">-</td>
-                    <td className="text-center py-3 px-2">Basic</td>
-                    <td className="text-center py-3 px-2">Advanced</td>
+                    <td className="py-1.5 px-1 font-medium">Analytics</td>
+                    <td className="text-center py-1.5 px-1">-</td>
+                    <td className="text-center py-1.5 px-1">Basic</td>
+                    <td className="text-center py-1.5 px-1">Advanced</td>
                   </tr>
                   <tr className="border-b">
-                    <td className="py-3 px-2 font-medium">Featured Badge</td>
-                    <td className="text-center py-3 px-2">-</td>
-                    <td className="text-center py-3 px-2">-</td>
-                    <td className="text-center py-3 px-2">✓</td>
+                    <td className="py-1.5 px-1 font-medium">Featured Badge</td>
+                    <td className="text-center py-1.5 px-1">-</td>
+                    <td className="text-center py-1.5 px-1">-</td>
+                    <td className="text-center py-1.5 px-1">✓</td>
                   </tr>
                   <tr className="border-b">
-                    <td className="py-3 px-2 font-medium">Custom Branding</td>
-                    <td className="text-center py-3 px-2">-</td>
-                    <td className="text-center py-3 px-2">-</td>
-                    <td className="text-center py-3 px-2">✓</td>
+                    <td className="py-1.5 px-1 font-medium">Custom Branding</td>
+                    <td className="text-center py-1.5 px-1">-</td>
+                    <td className="text-center py-1.5 px-1">-</td>
+                    <td className="text-center py-1.5 px-1">✓</td>
                   </tr>
                   <tr className="border-b">
-                    <td className="py-3 px-2 font-medium">Customer Support</td>
-                    <td className="text-center py-3 px-2">Standard</td>
-                    <td className="text-center py-3 px-2">Standard</td>
-                    <td className="text-center py-3 px-2">Priority</td>
+                    <td className="py-1.5 px-1 font-medium">Customer Support</td>
+                    <td className="text-center py-1.5 px-1">Standard</td>
+                    <td className="text-center py-1.5 px-1">Standard</td>
+                    <td className="text-center py-1.5 px-1">Priority</td>
                   </tr>
                   <tr>
-                    <td className="py-4 px-2"></td>
-                    <td className="text-center py-4 px-2">
-                      <Button variant="outline" disabled className="w-full">
+                    <td className="py-2 px-1"></td>
+                    <td className="text-center py-2 px-1">
+                      <Button variant="outline" disabled className="w-full text-xs h-8">
                         Current Plan
                       </Button>
                     </td>
-                    <td className="text-center py-4 px-2">
-                      <Button className="w-full">
+                    <td className="text-center py-2 px-1">
+                      <Button className="w-full text-xs h-8">
                         Upgrade to Standard
                       </Button>
                     </td>
-                    <td className="text-center py-4 px-2">
-                      <Button className="w-full">
+                    <td className="text-center py-2 px-1">
+                      <Button className="w-full text-xs h-8">
                         Upgrade to Premium
                       </Button>
                     </td>
