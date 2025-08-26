@@ -171,10 +171,10 @@ export default function BrowseByCategory() {
                                 <Button
                                   size="sm"
                                   onClick={() => searchSelectedCategories(mainCat.id)}
-                                  className="h-6 px-2 text-xs bg-primary hover:bg-primary/90"
+                                  className="h-8 px-2 text-xs bg-primary hover:bg-primary/90 flex flex-col items-center justify-center"
                                 >
-                                  <Search className="h-3 w-3 mr-1" />
-                                  Search
+                                  <Search className="h-3 w-3" />
+                                  <span className="text-[10px] leading-tight whitespace-nowrap">Search Category</span>
                                 </Button>
                               )}
                             </div>
