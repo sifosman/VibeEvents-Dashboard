@@ -275,7 +275,7 @@ export default function VendorRegistration() {
                 </div>
                 
                 <div>
-                  <Label htmlFor="areasCanServe">Service Coverage Area</Label>
+                  <Label htmlFor="areasCanServe">How far are you willing to travel?</Label>
                   <Select onValueChange={(value) => setFormData({...formData, areasCanServe: value})}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select your service coverage" />
