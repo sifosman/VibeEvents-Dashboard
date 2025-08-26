@@ -29,13 +29,6 @@ const CAPACITY_OPTIONS = [
   { value: "2000_and_more", label: "2000 and More" }
 ];
 
-const TRAVEL_OPTIONS = [
-  { value: "no", label: "No" },
-  { value: "local", label: "Local" },
-  { value: "major_cities_only", label: "Major Cities Only" },
-  { value: "province", label: "Province" },
-  { value: "region", label: "Region" }
-];
 
 interface VenueSearchProps {
   categoryId: number;
@@ -45,7 +38,6 @@ export default function VenueSearch({ categoryId }: VenueSearchProps) {
   const [selectedCapacity, setSelectedCapacity] = useState<string>("");
   const [selectedProvinces, setSelectedProvinces] = useState<string[]>([]);
   const [selectedCities, setSelectedCities] = useState<string[]>([]);
-  const [travelDistance, setTravelDistance] = useState<string>("");
   const [showProvinceDropdown, setShowProvinceDropdown] = useState(false);
   const [showCityDropdown, setShowCityDropdown] = useState(false);
 
@@ -63,16 +55,14 @@ export default function VenueSearch({ categoryId }: VenueSearchProps) {
       categoryId,
       capacity: selectedCapacity,
       provinces: selectedProvinces,
-      cities: selectedCities,
-      travelDistance
+      cities: selectedCities
     }],
     queryFn: async () => {
       const params = new URLSearchParams({
         categoryId: categoryId.toString(),
         capacity: selectedCapacity,
         provinces: selectedProvinces.join(','),
-        cities: selectedCities.join(','),
-        travelDistance: travelDistance
+        cities: selectedCities.join(',')
       });
       
       const res = await fetch(`/api/venues/search?${params}`);
@@ -132,7 +122,7 @@ export default function VenueSearch({ categoryId }: VenueSearchProps) {
             <h3 className="font-semibold">Search Filters</h3>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Venue Capacity */}
             <div>
               <label className="block text-sm font-medium mb-2">Venue Capacity</label>
@@ -222,22 +212,6 @@ export default function VenueSearch({ categoryId }: VenueSearchProps) {
               </div>
             </div>
 
-            {/* Willing to Travel */}
-            <div>
-              <label className="block text-sm font-medium mb-2">Willing to Travel</label>
-              <select
-                value={travelDistance}
-                onChange={(e) => setTravelDistance(e.target.value)}
-                className="search-dropdown"
-              >
-                <option value="">Nationally</option>
-                {TRAVEL_OPTIONS.map(option => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
           </div>
         </div>
 
