@@ -22,13 +22,23 @@ export default function Hero() {
   const [selectedServiceType, setSelectedServiceType] = useState<string>("all");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+  const [showProvinceDropdown, setShowProvinceDropdown] = useState(false);
+  const [showCityDropdown, setShowCityDropdown] = useState(false);
   const categoryDropdownRef = useRef<HTMLDivElement>(null);
+  const provinceDropdownRef = useRef<HTMLDivElement>(null);
+  const cityDropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (categoryDropdownRef.current && !categoryDropdownRef.current.contains(event.target as Node)) {
         setShowCategoryDropdown(false);
+      }
+      if (provinceDropdownRef.current && !provinceDropdownRef.current.contains(event.target as Node)) {
+        setShowProvinceDropdown(false);
+      }
+      if (cityDropdownRef.current && !cityDropdownRef.current.contains(event.target as Node)) {
+        setShowCityDropdown(false);
       }
     };
 
@@ -37,8 +47,8 @@ export default function Hero() {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-  const [searchByName, setSearchByName] = useState<string>("");
-  const [searchByArea, setSearchByArea] = useState<string>("");
+  const [selectedProvinces, setSelectedProvinces] = useState<string[]>([]);
+  const [selectedCities, setSelectedCities] = useState<string[]>([]);
   const [selectedCapacity, setSelectedCapacity] = useState<string>("");
   const [fromDate, setFromDate] = useState<Date | undefined>(undefined);
   const [toDate, setToDate] = useState<Date | undefined>(undefined);
@@ -70,11 +80,58 @@ export default function Hero() {
     }
   };
 
-  // Sample areas for the dropdown
-  const areas = [
-    "Cape Town", "Johannesburg", "Durban", "Pretoria", "Port Elizabeth", 
-    "Bloemfontein", "East London", "Pietermaritzburg", "Kimberley", "Polokwane"
+  // Province and city data
+  const provinces = [
+    "Western Cape",
+    "Eastern Cape",
+    "Northern Cape",
+    "Free State",
+    "KwaZulu-Natal",
+    "North West",
+    "Gauteng",
+    "Mpumalanga",
+    "Limpopo"
   ];
+
+  const citiesByProvince: { [key: string]: string[] } = {
+    "Western Cape": ["Cape Town", "Stellenbosch", "Paarl", "George", "Mossel Bay"],
+    "Eastern Cape": ["Port Elizabeth", "East London", "Uitenhage", "Grahamstown", "King William's Town"],
+    "Northern Cape": ["Kimberley", "Upington", "Kuruman", "Springbok", "De Aar"],
+    "Free State": ["Bloemfontein", "Welkom", "Kroonstad", "Bethlehem", "Sasolburg"],
+    "KwaZulu-Natal": ["Durban", "Pietermaritzburg", "Newcastle", "Richards Bay", "Ladysmith"],
+    "North West": ["Mahikeng", "Klerksdorp", "Rustenburg", "Potchefstroom", "Vryburg"],
+    "Gauteng": ["Johannesburg", "Pretoria", "Soweto", "Vanderbijlpark", "Kempton Park"],
+    "Mpumalanga": ["Nelspruit", "Witbank", "Middelburg", "Secunda", "Standerton"],
+    "Limpopo": ["Polokwane", "Tzaneen", "Phalaborwa", "Musina", "Thohoyandou"]
+  };
+
+  // Helper functions for multi-select
+  const handleProvinceChange = (province: string, checked: boolean) => {
+    if (checked) {
+      setSelectedProvinces([...selectedProvinces, province]);
+    } else {
+      setSelectedProvinces(selectedProvinces.filter(p => p !== province));
+      // Remove cities from the deselected province
+      const citiesToRemove = citiesByProvince[province] || [];
+      setSelectedCities(selectedCities.filter(city => !citiesToRemove.includes(city)));
+    }
+  };
+
+  const handleCityChange = (city: string, checked: boolean) => {
+    if (checked) {
+      setSelectedCities([...selectedCities, city]);
+    } else {
+      setSelectedCities(selectedCities.filter(c => c !== city));
+    }
+  };
+
+  // Get available cities based on selected provinces
+  const getAvailableCities = () => {
+    if (selectedProvinces.length === 0) return [];
+    return selectedProvinces.reduce((cities: string[], province) => {
+      return [...cities, ...(citiesByProvince[province] || [])];
+    }, []);
+  };
 
   // Event capacity options
   const capacityOptions = [
@@ -220,42 +277,79 @@ export default function Hero() {
                 </div>
               </div>
 
-              {/* Province */}
-              <div className="lg:col-span-1">
-                <Select value={searchByArea} onValueChange={setSearchByArea}>
-                  <SelectTrigger className="w-full px-3 py-2 h-10 text-sm border border-gray-300 rounded focus:border-primary bg-white">
-                    <SelectValue placeholder="Province" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white border border-gray-300 rounded shadow-lg">
-                    <SelectItem value="all">All Provinces</SelectItem>
-                    <SelectItem value="gauteng">Gauteng</SelectItem>
-                    <SelectItem value="western-cape">Western Cape</SelectItem>
-                    <SelectItem value="kwazulu-natal">KwaZulu-Natal</SelectItem>
-                    <SelectItem value="eastern-cape">Eastern Cape</SelectItem>
-                    <SelectItem value="limpopo">Limpopo</SelectItem>
-                    <SelectItem value="mpumalanga">Mpumalanga</SelectItem>
-                    <SelectItem value="north-west">North West</SelectItem>
-                    <SelectItem value="northern-cape">Northern Cape</SelectItem>
-                    <SelectItem value="free-state">Free State</SelectItem>
-                  </SelectContent>
-                </Select>
+              {/* Province Multi-Select */}
+              <div className="lg:col-span-1 relative" ref={provinceDropdownRef}>
+                <button
+                  type="button"
+                  onClick={() => setShowProvinceDropdown(!showProvinceDropdown)}
+                  className="w-full px-3 py-2 h-10 text-sm border border-gray-300 rounded focus:border-primary bg-white text-left flex justify-between items-center"
+                >
+                  <span className="text-sm">
+                    {selectedProvinces.length === 0 
+                      ? "Select Provinces" 
+                      : `${selectedProvinces.length} province${selectedProvinces.length > 1 ? 's' : ''} selected`}
+                  </span>
+                  <ChevronDown className="h-4 w-4" />
+                </button>
+                
+                {showProvinceDropdown && (
+                  <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
+                    {provinces.map((province) => (
+                      <label
+                        key={province}
+                        className="flex items-center px-3 py-2 hover:bg-gray-50 cursor-pointer"
+                      >
+                        <Checkbox
+                          checked={selectedProvinces.includes(province)}
+                          onCheckedChange={(checked) => 
+                            handleProvinceChange(province, checked as boolean)
+                          }
+                          className="mr-2"
+                        />
+                        <span className="text-sm">{province}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
               </div>
 
-              {/* City */}
-              <div className="lg:col-span-1">
-                <Select value={searchByName} onValueChange={setSearchByName}>
-                  <SelectTrigger className="w-full px-3 py-2 h-10 text-sm border border-gray-300 rounded focus:border-primary bg-white">
-                    <SelectValue placeholder="City" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white border border-gray-300 rounded shadow-lg">
-                    <SelectItem value="all">All Cities</SelectItem>
-                    {areas.map((area) => (
-                      <SelectItem key={area} value={area.toLowerCase().replace(' ', '-')}>
-                        {area}
-                      </SelectItem>
+              {/* City Multi-Select */}
+              <div className="lg:col-span-1 relative" ref={cityDropdownRef}>
+                <button
+                  type="button"
+                  onClick={() => setShowCityDropdown(!showCityDropdown)}
+                  className="w-full px-3 py-2 h-10 text-sm border border-gray-300 rounded focus:border-primary bg-white text-left flex justify-between items-center"
+                  disabled={selectedProvinces.length === 0}
+                >
+                  <span className="text-sm">
+                    {selectedProvinces.length === 0 
+                      ? "Select provinces first"
+                      : selectedCities.length === 0 
+                        ? "Select Cities" 
+                        : `${selectedCities.length} city${selectedCities.length > 1 ? 'ies' : ''} selected`}
+                  </span>
+                  <ChevronDown className="h-4 w-4" />
+                </button>
+                
+                {showCityDropdown && selectedProvinces.length > 0 && (
+                  <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
+                    {getAvailableCities().map((city) => (
+                      <label
+                        key={city}
+                        className="flex items-center px-3 py-2 hover:bg-gray-50 cursor-pointer"
+                      >
+                        <Checkbox
+                          checked={selectedCities.includes(city)}
+                          onCheckedChange={(checked) => 
+                            handleCityChange(city, checked as boolean)
+                          }
+                          className="mr-2"
+                        />
+                        <span className="text-sm">{city}</span>
+                      </label>
                     ))}
-                  </SelectContent>
-                </Select>
+                  </div>
+                )}
               </div>
 
               {/* Event Capacity */}
@@ -351,7 +445,7 @@ export default function Hero() {
               <div className="flex justify-center gap-3">
                 <Link href={
                   selectedCategories.includes("all-services") || selectedCategories.length === 0 ? "/vendors" :
-                  selectedCategories.length > 0 ? `/vendors?category=${selectedCategories.join(',')}${searchByName && searchByName !== 'all' ? `&name=${searchByName}` : ''}${searchByArea && searchByArea !== 'all' ? `&area=${searchByArea}` : ''}${selectedCapacity && selectedCapacity !== 'all' ? `&capacity=${selectedCapacity}` : ''}${fromDate ? `&fromDate=${format(fromDate, 'yyyy-MM-dd')}` : ''}${toDate ? `&toDate=${format(toDate, 'yyyy-MM-dd')}` : ''}` : "/vendors"
+                  selectedCategories.length > 0 ? `/vendors?category=${selectedCategories.join(',')}${selectedProvinces.length > 0 ? `&provinces=${selectedProvinces.join(',')}` : ''}${selectedCities.length > 0 ? `&cities=${selectedCities.join(',')}` : ''}${selectedCapacity && selectedCapacity !== 'all' ? `&capacity=${selectedCapacity}` : ''}${fromDate ? `&fromDate=${format(fromDate, 'yyyy-MM-dd')}` : ''}${toDate ? `&toDate=${format(toDate, 'yyyy-MM-dd')}` : ''}` : "/vendors"
                 }>
                   <Button className="w-48 bg-primary text-white text-sm px-4 h-10 hover:bg-primary/90 font-medium">
                     Search
@@ -363,8 +457,8 @@ export default function Hero() {
                   onClick={() => {
                     setSelectedServiceType("all");
                     setSelectedCategories([]);
-                    setSearchByName("");
-                    setSearchByArea("");
+                    setSelectedProvinces([]);
+                    setSelectedCities([]);
                     setSelectedCapacity("");
                     setFromDate(undefined);
                     setToDate(undefined);
