@@ -96,18 +96,106 @@ export default function VenueRegistration() {
     "Historic Building"
   ];
 
-  const amenitiesList = [
-    "Parking Available",
-    "Catering Kitchen",
-    "Audio Visual Equipment",
-    "Wheelchair Accessible",
-    "Air Conditioning",
-    "Outdoor Space",
-    "Bridal Suite",
-    "Dance Floor",
-    "Bar Facilities",
-    "Accommodation"
-  ];
+  const amenitiesCategories = {
+    "Accessibility & Mobility": [
+      "Wheelchair Accessible (Ramps, Wide Doors)",
+      "Wheelchair Friendly",
+      "Braille Signage",
+      "Designated Wheelchair Seating",
+      "Elevators / Lifts",
+      "On-Site Wheelchair Availability",
+      "Disabled Parking Bay",
+      "Multiple Entrances/Exits",
+      "Multiple Vehicle Access Points"
+    ],
+    "Comfort & Amenities": [
+      "Air Conditioning / Heating",
+      "Backup Generator / Uninterrupted Power Supply",
+      "Changing Rooms / Dressing Rooms",
+      "Baby Nursing/Change Room",
+      "Kids Play Area",
+      "Cloakroom / Coat Check",
+      "Furnished Venue (Tables, Chairs)",
+      "Green Room (For Performers/Speakers)",
+      "Rest Areas / Lounges",
+      "Restrooms With Showers",
+      "Smoking Area (Designated)",
+      "Setup And Cleanup"
+    ],
+    "Cultural & Religious Facilities": [
+      "Multiculture Friendly (Allow Practice Of Rituals)",
+      "Ablution Facilities (Wudu Stations For Muslims)",
+      "Alcohol-Free Policy",
+      "Halal Kitchen / Catering Options",
+      "Kosher Kitchen / Catering Options",
+      "Multi-Faith Prayer Room",
+      "Church / Chapel On Site",
+      "No-Meat / Vegetarian Kitchen Options"
+    ],
+    "Décor & Atmosphere": [
+      "Adjustable Ambient Lighting",
+      "Dance Floor",
+      "Decor Flexibility (Draping Etc Allowed)",
+      "Garden / Outdoor Area",
+      "Pet Friendly",
+      "Scenic View (Ocean, Mountain, Cityscape, Vineyard)",
+      "Stage / Platform Availability",
+      "Water Feature (Fountain, Pond, Poolside)"
+    ],
+    "Event Facilities": [
+      "Bridal Suite / Grooms Room",
+      "Conference Equipment (Projectors, Screens)",
+      "Exhibition Hall Space",
+      "Loading Dock / Large Equipment Access",
+      "Meeting Rooms (Small Groups)",
+      "Registration Desk Area",
+      "Storage Space (Pre/Post Event)"
+    ],
+    "Food & Beverage Facilities": [
+      "Bar Facilities",
+      "Catering Staff Provided",
+      "Coffee/Tea Facilities",
+      "Cooking Equipment (Stoves/Gas Burners)",
+      "Free Parking",
+      "Full Chef's Kitchen",
+      "In-House Catering",
+      "Outside Catering Allowed",
+      "Own Catering Allowed",
+      "Paid Parking",
+      "Prep Kitchen Only",
+      "Refrigerated Cold Room",
+      "Refrigerators",
+      "Serving Stations / Buffet Space",
+      "Tableware / Glassware / Cutlery Inclusive",
+      "Water Supply"
+    ],
+    "Guest & Attendee Services": [
+      "Accommodation On-Site",
+      "ATM / Banking Facilities On-Site",
+      "Child-Friendly",
+      "Green Eco-Friendly",
+      "Public Transport Accessibility",
+      "VIP / VVIP Areas",
+      "Wi-Fi"
+    ],
+    "Safety & Security": [
+      "CCTV Surveillance",
+      "Fire Safety Compliant",
+      "First Aid Room",
+      "On-Site Security Guards"
+    ],
+    "Technical & Production": [
+      "Acoustically Treated Space",
+      "AV / Sound System (In-House)",
+      "DJ Booth / Console Area",
+      "Drones Allowed",
+      "High-Capacity Power Supply",
+      "Lighting Rigging Points",
+      "Recording Facilities",
+      "Streaming / Broadcasting Capability",
+      "Technical Staff On-Site"
+    ]
+  };
 
   const provinces = [
     "Western Cape",
@@ -462,23 +550,28 @@ export default function VenueRegistration() {
                 </div>
               </div>
 
-              {/* Amenities */}
-              <div>
-                <Label>Available Amenities</Label>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-2">
-                  {amenitiesList.map((amenity) => (
-                    <div key={amenity} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={amenity}
-                        checked={formData.amenities.includes(amenity)}
-                        onCheckedChange={(checked) => handleAmenityChange(amenity, checked as boolean)}
-                      />
-                      <Label htmlFor={amenity} className="text-sm">
-                        {amenity}
-                      </Label>
+              {/* Amenities & Facilities */}
+              <div className="space-y-6">
+                <Label className="text-lg font-semibold">Available Amenities & Facilities</Label>
+                {Object.entries(amenitiesCategories).map(([category, amenities]) => (
+                  <div key={category} className="space-y-3">
+                    <h4 className="font-medium text-primary">{category}</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 pl-4">
+                      {amenities.map((amenity) => (
+                        <div key={amenity} className="flex items-center space-x-2">
+                          <Checkbox
+                            id={amenity}
+                            checked={formData.amenities.includes(amenity)}
+                            onCheckedChange={(checked) => handleAmenityChange(amenity, checked as boolean)}
+                          />
+                          <Label htmlFor={amenity} className="text-sm leading-none">
+                            {amenity}
+                          </Label>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
               </div>
 
               {/* Social Media & Online Presence */}
