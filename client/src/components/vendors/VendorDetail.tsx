@@ -164,51 +164,6 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
                 <p className="text-muted-foreground mb-6">{vendor.description}</p>
                 
                 <div className="grid grid-cols-1 gap-6 mt-8">
-                  {/* Location and Map Section */}
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-lg font-semibold flex items-center">
-                        <MapPin className="h-5 w-5 mr-2" />
-                        Location
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      {vendor.location && (
-                        <div className="mb-4">
-                          <p className="text-muted-foreground font-medium">{vendor.location}</p>
-                        </div>
-                      )}
-                      
-                      {vendor.googleMapsLink ? (
-                        <div className="w-full h-64 rounded-lg overflow-hidden border">
-                          <iframe
-                            src={vendor.googleMapsLink}
-                            width="100%"
-                            height="100%"
-                            style={{ border: 0 }}
-                            allowFullScreen
-                            loading="lazy"
-                            referrerPolicy="no-referrer-when-downgrade"
-                            title={`${vendor.name} Location`}
-                          ></iframe>
-                        </div>
-                      ) : vendor.location && (
-                        <div className="w-full h-64 rounded-lg overflow-hidden border">
-                          <iframe
-                            src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dO5A4l8aSp1t2k&q=${encodeURIComponent(vendor.location)}`}
-                            width="100%"
-                            height="100%"
-                            style={{ border: 0 }}
-                            allowFullScreen
-                            loading="lazy"
-                            referrerPolicy="no-referrer-when-downgrade"
-                            title={`${vendor.name} Location`}
-                          ></iframe>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-
                   <Card>
                     <CardHeader className="pb-2">
                       <CardTitle className="text-lg font-semibold">Features</CardTitle>
@@ -336,6 +291,49 @@ export function VendorDetail({ vendorId }: VendorDetailProps) {
                 </a>
               )}
               
+              <Separator className="my-4" />
+              
+              {/* Location and Map Section */}
+              <div className="space-y-4">
+                <div className="flex items-center">
+                  <MapPin className="h-5 w-5 mr-2 text-primary" />
+                  <h3 className="text-lg font-semibold">Location</h3>
+                </div>
+                
+                {vendor.location && (
+                  <div className="mb-4">
+                    <p className="text-muted-foreground font-medium">{vendor.location}</p>
+                  </div>
+                )}
+                
+                {vendor.googleMapsLink ? (
+                  <div className="w-full h-64 rounded-lg overflow-hidden border">
+                    <iframe
+                      src={vendor.googleMapsLink}
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      allowFullScreen
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      title={`${vendor.name} Location`}
+                    ></iframe>
+                  </div>
+                ) : vendor.location && (
+                  <div className="w-full h-64 rounded-lg overflow-hidden border">
+                    <iframe
+                      src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dO5A4l8aSp1t2k&q=${encodeURIComponent(vendor.location)}`}
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      allowFullScreen
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      title={`${vendor.name} Location`}
+                    ></iframe>
+                  </div>
+                )}
+              </div>
               
               <Separator className="my-4" />
               
