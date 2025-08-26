@@ -147,7 +147,7 @@ export default function Hero() {
       <div className="absolute inset-0 bg-black bg-opacity-50"></div>
       <div className="relative z-10 flex flex-col items-center justify-center min-h-[600px] pt-8">
         <div className="text-center px-4 max-w-4xl w-full">
-          <h1 className="text-2xl md:text-3xl font-display font-bold text-white mb-4 drop-shadow-lg whitespace-nowrap">Connect, Collaborate, Celebrate</h1>
+          <h1 className="text-xl md:text-2xl font-display font-bold text-white mb-4 drop-shadow-lg whitespace-nowrap">Connect, Collaborate, Celebrate</h1>
           <p className="text-white text-base md:text-lg mb-8 max-w-2xl mx-auto drop-shadow-md">Discover and book the best service providers for all your events - wedding and party celebrations, corporate functions, market days, expos, fundraisers, live concerts...and much more</p>
           
           
