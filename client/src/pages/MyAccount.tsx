@@ -31,7 +31,7 @@ const accountSections = [
   },
   {
     id: "terms",
-    label: "VibeEventz Terms and Policies",
+    label: "Vibeventz Terms and Policies",
     icon: <Shield className="h-5 w-5" />,
     href: "/terms-and-policies"
   },
