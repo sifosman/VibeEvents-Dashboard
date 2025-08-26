@@ -374,15 +374,15 @@ export default function VendorRegistration() {
 
                 {/* Catalogue Upload */}
                 <div>
-                  <Label className="flex items-center gap-2 mb-2">
-                    <BookOpen className="h-4 w-4" />
-                    Upload Catalogue
-                  </Label>
-                  <div className="mb-2">
+                  <div className="mb-4">
                     <Button variant="link" className="p-0 h-auto text-primary">
                       Download Catalogue Template
                     </Button>
                   </div>
+                  <Label className="flex items-center gap-2 mb-2">
+                    <BookOpen className="h-4 w-4" />
+                    Upload Catalogue
+                  </Label>
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
                     <BookOpen className="h-6 w-6 mx-auto mb-2 text-gray-400" />
                     <p className="text-xs text-gray-600 mb-2">
