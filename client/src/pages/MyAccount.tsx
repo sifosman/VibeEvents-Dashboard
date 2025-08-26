@@ -48,12 +48,25 @@ const profileOptions = [
   {
     id: "subscribers", 
     label: "Subscribers",
-    href: "/profile/subscribers"
+    expandable: true,
+    suboptions: [
+      {
+        id: "vendor-service",
+        label: "Vendor/Service Provider",
+        href: "/vendor-registration"
+      },
+      {
+        id: "venue",
+        label: "Venue Registration", 
+        href: "/venue-registration"
+      }
+    ]
   }
 ];
 
 export default function MyAccount() {
   const [isProfileExpanded, setIsProfileExpanded] = useState(false);
+  const [isSubscribersExpanded, setIsSubscribersExpanded] = useState(false);
   
   const handleLogout = () => {
     // Simple logout functionality
@@ -63,6 +76,10 @@ export default function MyAccount() {
   
   const toggleProfile = () => {
     setIsProfileExpanded(!isProfileExpanded);
+  };
+  
+  const toggleSubscribers = () => {
+    setIsSubscribersExpanded(!isSubscribersExpanded);
   };
 
   return (
@@ -102,14 +119,47 @@ export default function MyAccount() {
                 {isProfileExpanded && (
                   <div className="bg-muted/30">
                     {profileOptions.map((option) => (
-                      <Link
-                        key={option.id}
-                        href={option.href}
-                        className="flex items-center justify-between py-3 px-4 pl-12 hover:bg-accent transition-colors border-t border-border/50"
-                      >
-                        <span className="font-medium text-sm">{option.label}</span>
-                        <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                      </Link>
+                      <div key={option.id}>
+                        {option.expandable ? (
+                          <div>
+                            <button
+                              onClick={toggleSubscribers}
+                              className="w-full flex items-center justify-between py-3 px-4 pl-12 hover:bg-accent transition-colors border-t border-border/50"
+                            >
+                              <span className="font-medium text-sm">{option.label}</span>
+                              {isSubscribersExpanded ? (
+                                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                              ) : (
+                                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                              )}
+                            </button>
+                            
+                            {/* Subscribers Sub-options */}
+                            {isSubscribersExpanded && option.suboptions && (
+                              <div className="bg-muted/50">
+                                {option.suboptions.map((suboption) => (
+                                  <Link
+                                    key={suboption.id}
+                                    href={suboption.href}
+                                    className="flex items-center justify-between py-2 px-4 pl-16 hover:bg-accent transition-colors border-t border-border/30"
+                                  >
+                                    <span className="font-medium text-xs">{suboption.label}</span>
+                                    <ChevronRight className="h-3 w-3 text-muted-foreground" />
+                                  </Link>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          <Link
+                            href={option.href!}
+                            className="flex items-center justify-between py-3 px-4 pl-12 hover:bg-accent transition-colors border-t border-border/50"
+                          >
+                            <span className="font-medium text-sm">{option.label}</span>
+                            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                          </Link>
+                        )}
+                      </div>
                     ))}
                   </div>
                 )}
