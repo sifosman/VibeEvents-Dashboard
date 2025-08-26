@@ -41,122 +41,128 @@ export default function Subscription() {
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="text-sm table-auto">
+                <colgroup>
+                  <col className="w-auto" />
+                  <col className="w-20" />
+                  <col className="w-24" />
+                  <col className="w-24" />
+                </colgroup>
                 <thead>
                   <tr className="border-b">
-                    <th className="text-left py-2 px-1 text-sm font-medium">Features</th>
-                    <th className="text-center py-2 px-1">
+                    <th className="text-left py-2 pl-1 pr-2 text-sm font-medium">Features</th>
+                    <th className="text-center py-2 px-1 w-20">
                       <div className="relative">
                         <div className="text-sm font-bold">Basic</div>
                         <div className="text-xs text-muted-foreground">Free</div>
-                        <div className="text-lg font-bold">R0<span className="text-xs font-normal">/month</span></div>
+                        <div className="text-lg font-bold">R0<span className="text-xs font-normal">/mo</span></div>
                         <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground px-1 py-0.5 rounded text-xs">Current</span>
                       </div>
                     </th>
-                    <th className="text-center py-2 px-1">
+                    <th className="text-center py-2 px-1 w-24">
                       <div>
                         <div className="text-sm font-bold">Standard</div>
-                        <div className="text-xs text-muted-foreground">Most Popular</div>
-                        <div className="text-lg font-bold">R299<span className="text-xs font-normal">/month</span></div>
+                        <div className="text-xs text-muted-foreground">Popular</div>
+                        <div className="text-lg font-bold">R299<span className="text-xs font-normal">/mo</span></div>
                       </div>
                     </th>
-                    <th className="text-center py-2 px-1">
+                    <th className="text-center py-2 px-1 w-24">
                       <div>
                         <div className="text-sm font-bold">Premium</div>
-                        <div className="text-xs text-muted-foreground">For Professionals</div>
-                        <div className="text-lg font-bold">R599<span className="text-xs font-normal">/month</span></div>
+                        <div className="text-xs text-muted-foreground">Professional</div>
+                        <div className="text-lg font-bold">R599<span className="text-xs font-normal">/mo</span></div>
                       </div>
                     </th>
                   </tr>
                 </thead>
                 <tbody className="text-xs">
                   <tr className="border-b">
-                    <td className="py-1.5 px-1 font-medium">Business Listing</td>
-                    <td className="text-center py-1.5 px-1">✓</td>
-                    <td className="text-center py-1.5 px-1">✓</td>
-                    <td className="text-center py-1.5 px-1">✓</td>
+                    <td className="py-1.5 pl-1 pr-2 font-medium">Business Listing</td>
+                    <td className="text-center py-1.5 px-0.5">✓</td>
+                    <td className="text-center py-1.5 px-0.5">✓</td>
+                    <td className="text-center py-1.5 px-0.5">✓</td>
                   </tr>
                   <tr className="border-b">
-                    <td className="py-1.5 px-1 font-medium">Photo Upload</td>
-                    <td className="text-center py-1.5 px-1">Up to 5</td>
-                    <td className="text-center py-1.5 px-1">Up to 20</td>
-                    <td className="text-center py-1.5 px-1">Unlimited</td>
+                    <td className="py-1.5 pl-1 pr-2 font-medium">Photo Upload</td>
+                    <td className="text-center py-1.5 px-0.5">5</td>
+                    <td className="text-center py-1.5 px-0.5">20</td>
+                    <td className="text-center py-1.5 px-0.5">∞</td>
                   </tr>
                   <tr className="border-b">
-                    <td className="py-1.5 px-1 font-medium">Video Portfolio</td>
-                    <td className="text-center py-1.5 px-1">-</td>
-                    <td className="text-center py-1.5 px-1">3 videos</td>
-                    <td className="text-center py-1.5 px-1">Unlimited</td>
+                    <td className="py-1.5 pl-1 pr-2 font-medium">Video Portfolio</td>
+                    <td className="text-center py-1.5 px-0.5">-</td>
+                    <td className="text-center py-1.5 px-0.5">3</td>
+                    <td className="text-center py-1.5 px-0.5">∞</td>
                   </tr>
                   <tr className="border-b">
-                    <td className="py-1.5 px-1 font-medium">Contact Information</td>
-                    <td className="text-center py-1.5 px-1">✓</td>
-                    <td className="text-center py-1.5 px-1">✓</td>
-                    <td className="text-center py-1.5 px-1">✓</td>
+                    <td className="py-1.5 pl-1 pr-2 font-medium">Contact Info</td>
+                    <td className="text-center py-1.5 px-0.5">✓</td>
+                    <td className="text-center py-1.5 px-0.5">✓</td>
+                    <td className="text-center py-1.5 px-0.5">✓</td>
                   </tr>
                   <tr className="border-b">
-                    <td className="py-1.5 px-1 font-medium">Customer Reviews</td>
-                    <td className="text-center py-1.5 px-1">✓</td>
-                    <td className="text-center py-1.5 px-1">✓</td>
-                    <td className="text-center py-1.5 px-1">✓</td>
+                    <td className="py-1.5 pl-1 pr-2 font-medium">Reviews</td>
+                    <td className="text-center py-1.5 px-0.5">✓</td>
+                    <td className="text-center py-1.5 px-0.5">✓</td>
+                    <td className="text-center py-1.5 px-0.5">✓</td>
                   </tr>
                   <tr className="border-b">
-                    <td className="py-1.5 px-1 font-medium">Quote Request Management</td>
-                    <td className="text-center py-1.5 px-1">-</td>
-                    <td className="text-center py-1.5 px-1">✓</td>
-                    <td className="text-center py-1.5 px-1">✓</td>
+                    <td className="py-1.5 pl-1 pr-2 font-medium">Quote Management</td>
+                    <td className="text-center py-1.5 px-0.5">-</td>
+                    <td className="text-center py-1.5 px-0.5">✓</td>
+                    <td className="text-center py-1.5 px-0.5">✓</td>
                   </tr>
                   <tr className="border-b">
-                    <td className="py-1.5 px-1 font-medium">Search Visibility</td>
-                    <td className="text-center py-1.5 px-1">Basic</td>
-                    <td className="text-center py-1.5 px-1">Priority</td>
-                    <td className="text-center py-1.5 px-1">Top Placement</td>
+                    <td className="py-1.5 pl-1 pr-2 font-medium">Search Visibility</td>
+                    <td className="text-center py-1.5 px-0.5">Basic</td>
+                    <td className="text-center py-1.5 px-0.5">Priority</td>
+                    <td className="text-center py-1.5 px-0.5">Top</td>
                   </tr>
                   <tr className="border-b">
-                    <td className="py-1.5 px-1 font-medium">Social Media Integration</td>
-                    <td className="text-center py-1.5 px-1">-</td>
-                    <td className="text-center py-1.5 px-1">✓</td>
-                    <td className="text-center py-1.5 px-1">✓</td>
+                    <td className="py-1.5 pl-1 pr-2 font-medium">Social Media</td>
+                    <td className="text-center py-1.5 px-0.5">-</td>
+                    <td className="text-center py-1.5 px-0.5">✓</td>
+                    <td className="text-center py-1.5 px-0.5">✓</td>
                   </tr>
                   <tr className="border-b">
-                    <td className="py-1.5 px-1 font-medium">Analytics</td>
-                    <td className="text-center py-1.5 px-1">-</td>
-                    <td className="text-center py-1.5 px-1">Basic</td>
-                    <td className="text-center py-1.5 px-1">Advanced</td>
+                    <td className="py-1.5 pl-1 pr-2 font-medium">Analytics</td>
+                    <td className="text-center py-1.5 px-0.5">-</td>
+                    <td className="text-center py-1.5 px-0.5">Basic</td>
+                    <td className="text-center py-1.5 px-0.5">Advanced</td>
                   </tr>
                   <tr className="border-b">
-                    <td className="py-1.5 px-1 font-medium">Featured Badge</td>
-                    <td className="text-center py-1.5 px-1">-</td>
-                    <td className="text-center py-1.5 px-1">-</td>
-                    <td className="text-center py-1.5 px-1">✓</td>
+                    <td className="py-1.5 pl-1 pr-2 font-medium">Featured Badge</td>
+                    <td className="text-center py-1.5 px-0.5">-</td>
+                    <td className="text-center py-1.5 px-0.5">-</td>
+                    <td className="text-center py-1.5 px-0.5">✓</td>
                   </tr>
                   <tr className="border-b">
-                    <td className="py-1.5 px-1 font-medium">Custom Branding</td>
-                    <td className="text-center py-1.5 px-1">-</td>
-                    <td className="text-center py-1.5 px-1">-</td>
-                    <td className="text-center py-1.5 px-1">✓</td>
+                    <td className="py-1.5 pl-1 pr-2 font-medium">Custom Branding</td>
+                    <td className="text-center py-1.5 px-0.5">-</td>
+                    <td className="text-center py-1.5 px-0.5">-</td>
+                    <td className="text-center py-1.5 px-0.5">✓</td>
                   </tr>
                   <tr className="border-b">
-                    <td className="py-1.5 px-1 font-medium">Customer Support</td>
-                    <td className="text-center py-1.5 px-1">Standard</td>
-                    <td className="text-center py-1.5 px-1">Standard</td>
-                    <td className="text-center py-1.5 px-1">Priority</td>
+                    <td className="py-1.5 pl-1 pr-2 font-medium">Support</td>
+                    <td className="text-center py-1.5 px-0.5">Standard</td>
+                    <td className="text-center py-1.5 px-0.5">Standard</td>
+                    <td className="text-center py-1.5 px-0.5">Priority</td>
                   </tr>
                   <tr>
-                    <td className="py-2 px-1"></td>
-                    <td className="text-center py-2 px-1">
-                      <Button variant="outline" disabled className="w-full text-xs h-8">
-                        Current Plan
+                    <td className="py-2 pl-1 pr-2"></td>
+                    <td className="text-center py-2 px-0.5">
+                      <Button variant="outline" disabled className="w-full text-xs h-7 px-1">
+                        Current
                       </Button>
                     </td>
-                    <td className="text-center py-2 px-1">
-                      <Button className="w-full text-xs h-8">
-                        Upgrade to Standard
+                    <td className="text-center py-2 px-0.5">
+                      <Button className="w-full text-xs h-7 px-1">
+                        Upgrade
                       </Button>
                     </td>
-                    <td className="text-center py-2 px-1">
-                      <Button className="w-full text-xs h-8">
-                        Upgrade to Premium
+                    <td className="text-center py-2 px-0.5">
+                      <Button className="w-full text-xs h-7 px-1">
+                        Upgrade
                       </Button>
                     </td>
                   </tr>
