@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -12,13 +13,29 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Category } from "@shared/schema";
 import SouthAfricanBadge from "../shared/SouthAfricanBadge";
-import { Filter, Map, SortDesc, CalendarIcon } from "lucide-react";
+import { Filter, Map, SortDesc, CalendarIcon, ChevronDown } from "lucide-react";
 
 export default function Hero() {
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+  const categoryDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (categoryDropdownRef.current && !categoryDropdownRef.current.contains(event.target as Node)) {
+        setShowCategoryDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
   const [searchByName, setSearchByName] = useState<string>("");
   const [searchByArea, setSearchByArea] = useState<string>("");
   const [selectedCapacity, setSelectedCapacity] = useState<string>("");
@@ -61,23 +78,70 @@ export default function Hero() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
               {/* What are you looking for */}
               <div className="lg:col-span-1">
-                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                  <SelectTrigger className="w-full px-3 py-2 h-10 text-sm border border-gray-300 rounded focus:border-primary bg-white">
-                    <SelectValue placeholder="What are you looking for?" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white border border-gray-300 rounded shadow-lg">
-                    <SelectItem value="all-services">All Services</SelectItem>
-                    {categories?.filter((category) => 
-                      (category.id >= 22 && category.id <= 74) ||  // Service Providers
-                      (category.id >= 76 && category.id <= 101) || // Vendors
-                      (category.id >= 102 && category.id <= 131)   // Venues
-                    ).map((category) => (
-                      <SelectItem key={category.id} value={category.slug || `category-${category.id}`}>
-                        {category.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="relative" ref={categoryDropdownRef}>
+                  <button
+                    onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
+                    className="w-full px-3 py-2 h-10 text-sm border border-gray-300 rounded focus:border-primary bg-white flex items-center justify-between text-left"
+                  >
+                    <span className="text-gray-900">
+                      {selectedCategories.length === 0 
+                        ? "What are you looking for?" 
+                        : selectedCategories.length === 1
+                        ? categories?.find(cat => (cat.slug || `category-${cat.id}`) === selectedCategories[0])?.name || selectedCategories[0]
+                        : `${selectedCategories.length} services selected`}
+                    </span>
+                    <ChevronDown className="h-4 w-4 text-gray-400" />
+                  </button>
+                  
+                  {showCategoryDropdown && (
+                    <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
+                      <label className="flex items-center px-3 py-2 hover:bg-gray-50 cursor-pointer">
+                        <Checkbox
+                          checked={selectedCategories.includes("all-services")}
+                          onCheckedChange={(checked) => {
+                            if (checked) {
+                              setSelectedCategories(["all-services"]);
+                            } else {
+                              setSelectedCategories(prev => prev.filter(cat => cat !== "all-services"));
+                            }
+                          }}
+                          className="mr-2"
+                        />
+                        <span className="text-sm">All Services</span>
+                      </label>
+                      {categories?.filter((category) => 
+                        (category.id >= 22 && category.id <= 74) ||  // Service Providers
+                        (category.id >= 76 && category.id <= 101) || // Vendors
+                        (category.id >= 102 && category.id <= 131)   // Venues
+                      ).map((category) => {
+                        const categoryValue = category.slug || `category-${category.id}`;
+                        return (
+                          <label
+                            key={category.id}
+                            className="flex items-center px-3 py-2 hover:bg-gray-50 cursor-pointer"
+                          >
+                            <Checkbox
+                              checked={selectedCategories.includes(categoryValue)}
+                              onCheckedChange={(checked) => {
+                                if (checked) {
+                                  setSelectedCategories(prev => {
+                                    // Remove "all-services" if selecting specific categories
+                                    const filtered = prev.filter(cat => cat !== "all-services");
+                                    return [...filtered, categoryValue];
+                                  });
+                                } else {
+                                  setSelectedCategories(prev => prev.filter(cat => cat !== categoryValue));
+                                }
+                              }}
+                              className="mr-2"
+                            />
+                            <span className="text-sm">{category.name}</span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Province */}
@@ -210,8 +274,8 @@ export default function Hero() {
               {/* Search Button */}
               <div className="flex justify-center">
                 <Link href={
-                  selectedCategory === "all-services" ? "/vendors" :
-                  selectedCategory ? `/vendors?category=${selectedCategory}${searchByName && searchByName !== 'all' ? `&name=${searchByName}` : ''}${searchByArea && searchByArea !== 'all' ? `&area=${searchByArea}` : ''}${selectedCapacity && selectedCapacity !== 'all' ? `&capacity=${selectedCapacity}` : ''}${fromDate ? `&fromDate=${format(fromDate, 'yyyy-MM-dd')}` : ''}${toDate ? `&toDate=${format(toDate, 'yyyy-MM-dd')}` : ''}` : "/vendors"
+                  selectedCategories.includes("all-services") || selectedCategories.length === 0 ? "/vendors" :
+                  selectedCategories.length > 0 ? `/vendors?category=${selectedCategories.join(',')}${searchByName && searchByName !== 'all' ? `&name=${searchByName}` : ''}${searchByArea && searchByArea !== 'all' ? `&area=${searchByArea}` : ''}${selectedCapacity && selectedCapacity !== 'all' ? `&capacity=${selectedCapacity}` : ''}${fromDate ? `&fromDate=${format(fromDate, 'yyyy-MM-dd')}` : ''}${toDate ? `&toDate=${format(toDate, 'yyyy-MM-dd')}` : ''}` : "/vendors"
                 }>
                   <Button className="w-48 bg-primary text-white text-sm px-4 h-10 hover:bg-primary/90 font-medium">
                     Search
