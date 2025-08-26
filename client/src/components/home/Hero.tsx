@@ -19,6 +19,7 @@ import SouthAfricanBadge from "../shared/SouthAfricanBadge";
 import { Filter, Map, SortDesc, CalendarIcon, ChevronDown } from "lucide-react";
 
 export default function Hero() {
+  const [selectedServiceType, setSelectedServiceType] = useState<string>("all");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const categoryDropdownRef = useRef<HTMLDivElement>(null);
@@ -48,6 +49,27 @@ export default function Hero() {
     queryKey: ['/api/categories'],
   });
 
+  // Filter categories based on selected service type
+  const getFilteredCategories = () => {
+    if (!categories) return [];
+    
+    switch (selectedServiceType) {
+      case "venues":
+        return categories.filter(category => category.id >= 102 && category.id <= 131);
+      case "vendors":
+        return categories.filter(category => category.id >= 76 && category.id <= 101);
+      case "service-providers":
+        return categories.filter(category => category.id >= 22 && category.id <= 74);
+      case "all":
+      default:
+        return categories.filter(category => 
+          (category.id >= 22 && category.id <= 74) ||  // Service Providers
+          (category.id >= 76 && category.id <= 101) || // Vendors
+          (category.id >= 102 && category.id <= 131)   // Venues
+        );
+    }
+  };
+
   // Sample areas for the dropdown
   const areas = [
     "Cape Town", "Johannesburg", "Durban", "Pretoria", "Port Elizabeth", 
@@ -75,6 +97,64 @@ export default function Hero() {
           
           {/* Search Form */}
           <div className="bg-white rounded-lg shadow-lg p-4 mx-auto max-w-6xl" style={{ display: "block", visibility: "visible" }}>
+            {/* Service Type Selector */}
+            <div className="mb-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                <button
+                  onClick={() => {
+                    setSelectedServiceType("venues");
+                    setSelectedCategories([]);
+                  }}
+                  className={`px-3 py-2 text-sm rounded border transition-colors ${
+                    selectedServiceType === "venues"
+                      ? "bg-primary text-white border-primary"
+                      : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                  }`}
+                >
+                  Venues
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedServiceType("vendors");
+                    setSelectedCategories([]);
+                  }}
+                  className={`px-3 py-2 text-sm rounded border transition-colors ${
+                    selectedServiceType === "vendors"
+                      ? "bg-primary text-white border-primary"
+                      : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                  }`}
+                >
+                  Vendors
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedServiceType("service-providers");
+                    setSelectedCategories([]);
+                  }}
+                  className={`px-3 py-2 text-sm rounded border transition-colors ${
+                    selectedServiceType === "service-providers"
+                      ? "bg-primary text-white border-primary"
+                      : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                  }`}
+                >
+                  Service Providers
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedServiceType("all");
+                    setSelectedCategories([]);
+                  }}
+                  className={`px-3 py-2 text-sm rounded border transition-colors ${
+                    selectedServiceType === "all"
+                      ? "bg-primary text-white border-primary"
+                      : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                  }`}
+                >
+                  All
+                </button>
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
               {/* What are you looking for */}
               <div className="lg:col-span-1">
@@ -87,7 +167,7 @@ export default function Hero() {
                       {selectedCategories.length === 0 
                         ? "What are you looking for?" 
                         : selectedCategories.length === 1
-                        ? categories?.find(cat => (cat.slug || `category-${cat.id}`) === selectedCategories[0])?.name || selectedCategories[0]
+                        ? getFilteredCategories()?.find(cat => (cat.slug || `category-${cat.id}`) === selectedCategories[0])?.name || selectedCategories[0]
                         : `${selectedCategories.length} services selected`}
                     </span>
                     <ChevronDown className="h-4 w-4 text-gray-400" />
@@ -109,11 +189,7 @@ export default function Hero() {
                         />
                         <span className="text-sm">All Services</span>
                       </label>
-                      {categories?.filter((category) => 
-                        (category.id >= 22 && category.id <= 74) ||  // Service Providers
-                        (category.id >= 76 && category.id <= 101) || // Vendors
-                        (category.id >= 102 && category.id <= 131)   // Venues
-                      ).map((category) => {
+                      {getFilteredCategories().map((category) => {
                         const categoryValue = category.slug || `category-${category.id}`;
                         return (
                           <label
@@ -285,6 +361,7 @@ export default function Hero() {
                 <Button 
                   variant="outline"
                   onClick={() => {
+                    setSelectedServiceType("all");
                     setSelectedCategories([]);
                     setSearchByName("");
                     setSearchByArea("");
