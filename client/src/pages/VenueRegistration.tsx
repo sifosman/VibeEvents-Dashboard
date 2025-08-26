@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ChevronLeft, Building, Upload, Users, MessageSquare, MapPin, FileImage, Video, BookOpen, Edit3, Trash2, Plus } from "lucide-react";
+import { ChevronLeft, Building, Upload, Users, MessageSquare, MapPin, FileImage, Video, BookOpen, Edit3, Trash2, Plus, Globe, Facebook, Instagram } from "lucide-react";
 
 export default function VenueRegistration() {
   const [, setLocation] = useLocation();
@@ -36,6 +36,9 @@ export default function VenueRegistration() {
     pricing: "",
     availability: "",
     website: "",
+    facebookUrl: "",
+    instagramUrl: "",
+    tiktokUrl: "",
     termsAccepted: false
   });
   
@@ -67,6 +70,9 @@ export default function VenueRegistration() {
         pricing: "",
         availability: "Available year-round, booking required 3 months in advance",
         website: "https://grandballroom.com",
+        facebookUrl: "https://facebook.com/grandballroom",
+        instagramUrl: "https://instagram.com/grandballroom",
+        tiktokUrl: "https://tiktok.com/@grandballroom",
         termsAccepted: true
       });
       
@@ -475,14 +481,67 @@ export default function VenueRegistration() {
                 </div>
               </div>
 
-              <div>
-                <Label htmlFor="website">Website/Social Media</Label>
-                <Input
-                  id="website"
-                  value={formData.website}
-                  onChange={(e) => setFormData({...formData, website: e.target.value})}
-                  placeholder="Your website or social media links"
-                />
+              {/* Social Media & Online Presence */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-gray-900">Social Media & Online Presence</h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="website">Website Address</Label>
+                    <div className="relative">
+                      <Globe className="h-4 w-4 absolute left-3 top-3 text-gray-400" />
+                      <Input
+                        id="website"
+                        value={formData.website}
+                        onChange={(e) => setFormData({...formData, website: e.target.value})}
+                        placeholder="https://yourvenue.com"
+                        className="pl-10"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <Label htmlFor="facebookUrl">Facebook Page</Label>
+                    <div className="relative">
+                      <Facebook className="h-4 w-4 absolute left-3 top-3 text-gray-400" />
+                      <Input
+                        id="facebookUrl"
+                        value={formData.facebookUrl}
+                        onChange={(e) => setFormData({...formData, facebookUrl: e.target.value})}
+                        placeholder="https://facebook.com/yourvenue"
+                        className="pl-10"
+                      />
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="instagramUrl">Instagram Profile</Label>
+                    <div className="relative">
+                      <Instagram className="h-4 w-4 absolute left-3 top-3 text-gray-400" />
+                      <Input
+                        id="instagramUrl"
+                        value={formData.instagramUrl}
+                        onChange={(e) => setFormData({...formData, instagramUrl: e.target.value})}
+                        placeholder="https://instagram.com/yourvenue"
+                        className="pl-10"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <Label htmlFor="tiktokUrl">TikTok Profile</Label>
+                    <div className="relative">
+                      <MessageSquare className="h-4 w-4 absolute left-3 top-3 text-gray-400" />
+                      <Input
+                        id="tiktokUrl"
+                        value={formData.tiktokUrl}
+                        onChange={(e) => setFormData({...formData, tiktokUrl: e.target.value})}
+                        placeholder="https://tiktok.com/@yourvenue"
+                        className="pl-10"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div>
