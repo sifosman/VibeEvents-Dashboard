@@ -1,8 +1,8 @@
-# HowzEventz - Event Planning Platform
+# Vibeventz - Event Planning Platform
 
 ## Overview
 
-HowzEventz is a comprehensive event planning platform that connects event hosts with service providers. The platform serves as a marketplace where users can discover vendors, manage event planning tasks, track budgets, and coordinate all aspects of event organization. Built with React, TypeScript, and Express.js, it offers both web and mobile-responsive experiences for planning various types of events including weddings, corporate functions, festivals, and celebrations.
+Vibeventz is a comprehensive event planning platform that connects event hosts with service providers. The platform serves as a marketplace where users can discover vendors, manage event planning tasks, track budgets, and coordinate all aspects of event organization. Built with React, TypeScript, and Express.js, it offers both web and mobile-responsive experiences for planning various types of events including weddings, corporate functions, festivals, and celebrations.
 
 ## User Preferences
 

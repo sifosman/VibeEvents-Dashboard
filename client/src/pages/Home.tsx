@@ -7,8 +7,8 @@ export default function Home() {
   return (
     <>
       <Helmet>
-        <title>HowzEvent - Connect, Collaborate, Celebrate</title>
-        <meta name="description" content="Plan any type of event with HowzEvent. Find and book the best service providers for corporate functions, markets, festivals, concerts, sports events and celebrations." />
+        <title>Vibeventz - Connect, Collaborate, Celebrate</title>
+        <meta name="description" content="Plan any type of event with Vibeventz. Find and book the best service providers for corporate functions, markets, festivals, concerts, sports events and celebrations." />
       </Helmet>
       
       <Hero />

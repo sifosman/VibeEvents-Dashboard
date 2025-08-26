@@ -90,7 +90,7 @@ export default function MyPlanningPage() {
   return (
     <>
       <Helmet>
-        <title>My Planner | HowzEventz</title>
+        <title>My Planner | Vibeventz</title>
         <meta name="description" content="Manage your event planning tasks, budget, and calendar" />
       </Helmet>
 

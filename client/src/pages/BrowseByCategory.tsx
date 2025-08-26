@@ -90,7 +90,7 @@ export default function BrowseByCategory() {
   return (
     <>
       <Helmet>
-        <title>Browse by Category | HowzEventz</title>
+        <title>Browse by Category | Vibeventz</title>
         <meta name="description" content="Find the perfect vendors and services for your event by browsing our organized categories." />
       </Helmet>
 

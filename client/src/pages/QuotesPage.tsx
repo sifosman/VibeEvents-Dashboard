@@ -153,7 +153,7 @@ export default function QuotesPage() {
   return (
     <>
       <Helmet>
-        <title>My Quotes | HowzEventz</title>
+        <title>My Quotes | Vibeventz</title>
         <meta name="description" content="Manage your vendor quotes by status" />
       </Helmet>
 

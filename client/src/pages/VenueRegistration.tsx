@@ -108,8 +108,8 @@ export default function VenueRegistration() {
   return (
     <>
       <Helmet>
-        <title>Venue Registration | HowzEventz</title>
-        <meta name="description" content="Register your venue on HowzEventz" />
+        <title>Venue Registration | Vibeventz</title>
+        <meta name="description" content="Register your venue on Vibeventz" />
       </Helmet>
 
       <div className="container mx-auto py-4 px-4 max-w-3xl">

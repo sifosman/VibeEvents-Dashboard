@@ -32,6 +32,7 @@ import {
   ImagePlus,
   FileCheck
 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -1136,19 +1137,19 @@ export default function ProfileCustomization() {
                   <CardContent>
                     <div className="space-y-2 text-sm">
                       <div className="flex items-center">
-                        <CheckCircle2 className="h-4 w-4 text-green-500 mr-2" />
+                        <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
                         <span>AI blur detection enabled</span>
                       </div>
                       <div className="flex items-center">
-                        <CheckCircle2 className="h-4 w-4 text-green-500 mr-2" />
+                        <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
                         <span>Content moderation active</span>
                       </div>
                       <div className="flex items-center">
-                        <CheckCircle2 className="h-4 w-4 text-green-500 mr-2" />
+                        <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
                         <span>Image optimization</span>
                       </div>
                       <div className="flex items-center">
-                        <CheckCircle2 className="h-4 w-4 text-green-500 mr-2" />
+                        <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
                         <span>Secure storage (encrypted)</span>
                       </div>
                     </div>

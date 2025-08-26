@@ -78,7 +78,7 @@ export default function UserProfile() {
   return (
     <>
       <Helmet>
-        <title>My Profile - HowzEventz</title>
+        <title>My Profile - Vibeventz</title>
         <meta name="description" content="Manage your personal profile and account settings" />
       </Helmet>
 

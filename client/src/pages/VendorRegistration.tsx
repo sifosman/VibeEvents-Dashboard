@@ -78,8 +78,8 @@ export default function VendorRegistration() {
   return (
     <>
       <Helmet>
-        <title>Vendor Registration | HowzEventz</title>
-        <meta name="description" content="Register as a service provider on HowzEventz" />
+        <title>Vendor Registration | Vibeventz</title>
+        <meta name="description" content="Register as a service provider on Vibeventz" />
       </Helmet>
 
       <div className="container mx-auto py-4 px-4 max-w-3xl">

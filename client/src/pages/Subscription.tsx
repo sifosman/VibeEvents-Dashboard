@@ -12,7 +12,7 @@ export default function Subscription() {
   return (
     <>
       <Helmet>
-        <title>My Subscription | HowzEventz</title>
+        <title>My Subscription | Vibeventz</title>
         <meta name="description" content="Manage your subscription and registration options" />
       </Helmet>
 

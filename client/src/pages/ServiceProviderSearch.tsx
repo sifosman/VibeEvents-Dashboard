@@ -110,7 +110,7 @@ export default function ServiceProviderSearch({ categoryId }: ServiceProviderSea
   return (
     <>
       <Helmet>
-        <title>{category?.name ? `${category.name} Search` : 'Service Provider Search'} | HowzEventz</title>
+        <title>{category?.name ? `${category.name} Search` : 'Service Provider Search'} | Vibeventz</title>
         <meta name="description" content={`Find ${category?.name?.toLowerCase() || 'service providers'} for your event`} />
       </Helmet>
 

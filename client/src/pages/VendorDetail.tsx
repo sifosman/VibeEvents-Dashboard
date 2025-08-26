@@ -76,7 +76,7 @@ export default function VendorDetail() {
   return (
     <>
       <Helmet>
-        <title>{vendor?.name || "Vendor Details"} - HowzEvent</title>
+        <title>{vendor?.name || "Vendor Details"} - Vibeventz</title>
         <meta 
           name="description" 
           content={vendor?.description || "View details about this event service provider."}

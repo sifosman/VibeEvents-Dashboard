@@ -37,7 +37,8 @@ import {
   Smartphone,
   ArrowUpRight,
   ArrowDownRight,
-  ThumbsUp
+  ThumbsUp,
+  Eye
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { AppAnalytics as AppAnalyticsType } from '@shared/schema';
@@ -193,7 +194,7 @@ export default function AdminAnalytics() {
   return (
     <>
       <Helmet>
-        <title>Admin Analytics Dashboard - HowzEventz</title>
+        <title>Admin Analytics Dashboard - Vibeventz</title>
       </Helmet>
       
       <div className="bg-neutral py-10">

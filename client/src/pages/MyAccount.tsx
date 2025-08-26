@@ -53,7 +53,7 @@ export default function MyAccount() {
   return (
     <>
       <Helmet>
-        <title>My Account | HowzEventz</title>
+        <title>My Account | Vibeventz</title>
         <meta name="description" content="Manage your account settings and preferences" />
       </Helmet>
 
