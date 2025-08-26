@@ -33,85 +33,138 @@ export default function Subscription() {
           </div>
         </div>
 
-        {/* Subscription Plans */}
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold mb-4">Choose Your Plan</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            {/* Basic/Free Plan */}
-            <Card className="border-2 border-primary">
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle>Basic</CardTitle>
-                    <p className="text-sm text-muted-foreground">Free</p>
-                  </div>
-                  <span className="bg-primary text-primary-foreground px-2 py-1 rounded text-xs">Current</span>
-                </div>
-                <div className="text-3xl font-bold">R0<span className="text-sm font-normal">/month</span></div>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2 text-sm mb-6">
-                  <li>• Basic business listing</li>
-                  <li>• Up to 5 photos</li>
-                  <li>• Contact information display</li>
-                  <li>• Customer reviews</li>
-                  <li>• Basic search visibility</li>
-                </ul>
-                <Button variant="outline" className="w-full" disabled>
-                  Current Plan
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Standard Plan */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Standard</CardTitle>
-                <p className="text-sm text-muted-foreground">Most Popular</p>
-                <div className="text-3xl font-bold">R299<span className="text-sm font-normal">/month</span></div>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2 text-sm mb-6">
-                  <li>• Everything in Basic</li>
-                  <li>• Up to 20 photos</li>
-                  <li>• Video portfolio (3 videos)</li>
-                  <li>• Quote request management</li>
-                  <li>• Priority search listing</li>
-                  <li>• Social media integration</li>
-                  <li>• Basic analytics</li>
-                </ul>
-                <Button className="w-full">
-                  Upgrade to Standard
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Premium Plan */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Premium</CardTitle>
-                <p className="text-sm text-muted-foreground">For Professionals</p>
-                <div className="text-3xl font-bold">R599<span className="text-sm font-normal">/month</span></div>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2 text-sm mb-6">
-                  <li>• Everything in Standard</li>
-                  <li>• Unlimited photos</li>
-                  <li>• Unlimited videos</li>
-                  <li>• Featured business badge</li>
-                  <li>• Top search placement</li>
-                  <li>• Advanced analytics</li>
-                  <li>• Custom branding</li>
-                  <li>• Priority customer support</li>
-                </ul>
-                <Button className="w-full">
-                  Upgrade to Premium
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+        {/* Subscription Plans Table */}
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>Choose Your Plan</CardTitle>
+            <p className="text-muted-foreground">Compare features and select the best plan for your business</p>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b">
+                    <th className="text-left py-4 px-2">Features</th>
+                    <th className="text-center py-4 px-2">
+                      <div className="relative">
+                        <div className="text-lg font-bold">Basic</div>
+                        <div className="text-sm text-muted-foreground">Free</div>
+                        <div className="text-2xl font-bold mt-1">R0<span className="text-sm font-normal">/month</span></div>
+                        <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground px-2 py-1 rounded text-xs">Current</span>
+                      </div>
+                    </th>
+                    <th className="text-center py-4 px-2">
+                      <div>
+                        <div className="text-lg font-bold">Standard</div>
+                        <div className="text-sm text-muted-foreground">Most Popular</div>
+                        <div className="text-2xl font-bold mt-1">R299<span className="text-sm font-normal">/month</span></div>
+                      </div>
+                    </th>
+                    <th className="text-center py-4 px-2">
+                      <div>
+                        <div className="text-lg font-bold">Premium</div>
+                        <div className="text-sm text-muted-foreground">For Professionals</div>
+                        <div className="text-2xl font-bold mt-1">R599<span className="text-sm font-normal">/month</span></div>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b">
+                    <td className="py-3 px-2 font-medium">Business Listing</td>
+                    <td className="text-center py-3 px-2">✓</td>
+                    <td className="text-center py-3 px-2">✓</td>
+                    <td className="text-center py-3 px-2">✓</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="py-3 px-2 font-medium">Photo Upload</td>
+                    <td className="text-center py-3 px-2">Up to 5</td>
+                    <td className="text-center py-3 px-2">Up to 20</td>
+                    <td className="text-center py-3 px-2">Unlimited</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="py-3 px-2 font-medium">Video Portfolio</td>
+                    <td className="text-center py-3 px-2">-</td>
+                    <td className="text-center py-3 px-2">3 videos</td>
+                    <td className="text-center py-3 px-2">Unlimited</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="py-3 px-2 font-medium">Contact Information</td>
+                    <td className="text-center py-3 px-2">✓</td>
+                    <td className="text-center py-3 px-2">✓</td>
+                    <td className="text-center py-3 px-2">✓</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="py-3 px-2 font-medium">Customer Reviews</td>
+                    <td className="text-center py-3 px-2">✓</td>
+                    <td className="text-center py-3 px-2">✓</td>
+                    <td className="text-center py-3 px-2">✓</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="py-3 px-2 font-medium">Quote Request Management</td>
+                    <td className="text-center py-3 px-2">-</td>
+                    <td className="text-center py-3 px-2">✓</td>
+                    <td className="text-center py-3 px-2">✓</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="py-3 px-2 font-medium">Search Visibility</td>
+                    <td className="text-center py-3 px-2">Basic</td>
+                    <td className="text-center py-3 px-2">Priority</td>
+                    <td className="text-center py-3 px-2">Top Placement</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="py-3 px-2 font-medium">Social Media Integration</td>
+                    <td className="text-center py-3 px-2">-</td>
+                    <td className="text-center py-3 px-2">✓</td>
+                    <td className="text-center py-3 px-2">✓</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="py-3 px-2 font-medium">Analytics</td>
+                    <td className="text-center py-3 px-2">-</td>
+                    <td className="text-center py-3 px-2">Basic</td>
+                    <td className="text-center py-3 px-2">Advanced</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="py-3 px-2 font-medium">Featured Badge</td>
+                    <td className="text-center py-3 px-2">-</td>
+                    <td className="text-center py-3 px-2">-</td>
+                    <td className="text-center py-3 px-2">✓</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="py-3 px-2 font-medium">Custom Branding</td>
+                    <td className="text-center py-3 px-2">-</td>
+                    <td className="text-center py-3 px-2">-</td>
+                    <td className="text-center py-3 px-2">✓</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="py-3 px-2 font-medium">Customer Support</td>
+                    <td className="text-center py-3 px-2">Standard</td>
+                    <td className="text-center py-3 px-2">Standard</td>
+                    <td className="text-center py-3 px-2">Priority</td>
+                  </tr>
+                  <tr>
+                    <td className="py-4 px-2"></td>
+                    <td className="text-center py-4 px-2">
+                      <Button variant="outline" disabled className="w-full">
+                        Current Plan
+                      </Button>
+                    </td>
+                    <td className="text-center py-4 px-2">
+                      <Button className="w-full">
+                        Upgrade to Standard
+                      </Button>
+                    </td>
+                    <td className="text-center py-4 px-2">
+                      <Button className="w-full">
+                        Upgrade to Premium
+                      </Button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Registration Options Info */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
