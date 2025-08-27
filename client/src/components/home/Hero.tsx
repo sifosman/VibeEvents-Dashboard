@@ -56,10 +56,20 @@ export default function Hero() {
   
   const { data: categories, isLoading: categoriesLoading, error: categoriesError } = useQuery<Category[]>({
     queryKey: ['/api/categories'],
-    retry: 3,
-    retryDelay: 1000,
+    retry: 5, // More retries for production
+    retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes
   });
+
+  // Debug logging for production
+  React.useEffect(() => {
+    if (categoriesError) {
+      console.error('Categories fetch error:', categoriesError);
+    }
+    if (categories) {
+      console.log('Categories loaded successfully:', categories.length, 'categories');
+    }
+  }, [categories, categoriesError]);
 
   // Filter categories based on selected service type
   const getFilteredCategories = (): Category[] => {

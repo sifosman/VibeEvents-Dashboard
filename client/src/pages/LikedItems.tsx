@@ -31,7 +31,20 @@ const LikedItems: React.FC = () => {
       return response.json();
     },
     enabled: !!userId,
+    retry: 5, // More retries for production
+    retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
+    staleTime: 2 * 60 * 1000, // Cache for 2 minutes
   });
+
+  // Debug logging for production
+  React.useEffect(() => {
+    if (isError) {
+      console.error('Favourites fetch error');
+    }
+    if (likedItems) {
+      console.log('Favourites loaded successfully:', likedItems.length, 'items');
+    }
+  }, [likedItems, isError]);
 
   // Handle unlike (remove from shortlist)
   const handleUnlike = async (vendorId: number) => {
