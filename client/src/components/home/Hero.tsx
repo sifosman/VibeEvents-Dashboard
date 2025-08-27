@@ -244,7 +244,7 @@ export default function Hero() {
                   </button>
                   
                   {showCategoryDropdown && (
-                    <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
+                    <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
                       {categoriesLoading ? (
                         <div className="px-3 py-2 text-sm text-gray-500">Loading categories...</div>
                       ) : categoriesError ? (
@@ -314,7 +314,7 @@ export default function Hero() {
                 </button>
                 
                 {showProvinceDropdown && (
-                  <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
+                  <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
                     {provinces.map((province) => (
                       <label
                         key={province}
@@ -353,7 +353,7 @@ export default function Hero() {
                 </button>
                 
                 {showCityDropdown && selectedProvinces.length > 0 && (
-                  <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
+                  <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
                     {getAvailableCities().map((city) => (
                       <label
                         key={city}
