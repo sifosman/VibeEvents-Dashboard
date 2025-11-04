@@ -1,12 +1,7 @@
 {
   "framework": null,
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "headers": [
-    { "source": "/(.*)", "headers": [{"key":"X-Content-Type-Options","value":"nosniff"}]} 
-  ],
-  "routes": [
-    { "src": "^/$", "dest": "/Project_Dashboard.html" },
-    { "src": "^/index.html$", "dest": "/Project_Dashboard.html" }
+  "rewrites": [
+    { "source": "/", "destination": "/Project_Dashboard.html" },
+    { "source": "/index.html", "destination": "/Project_Dashboard.html" }
   ]
 }
