@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vibeventz - Project Dashboard</title>
+<style>
+ :root{
+  --brand:#3b82f6; /* accent blue */
+  --brand-strong:#1e40af;
+  --success:#22c55e;
+  --warning:#f59e0b;
+  --danger:#ef4444;
+  --ink:#e5e7eb;
+  --muted:#94a3b8;
+  --line:#1f2937;
+  --bg:#0b1220; /* deep navy */
+  --card:#0f172a; /* slate-900 */
+ }
+ *{box-sizing:border-box;margin:0;padding:0}
+ body{font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;letter-spacing:.01em;background:radial-gradient(1200px 600px at 10% -10%,rgba(59,130,246,.15),transparent),radial-gradient(900px 500px at 120% -20%,rgba(30,64,175,.15),transparent),var(--bg);color:var(--ink);line-height:1.6}
+ .header{background:linear-gradient(180deg,rgba(30,41,59,.7),rgba(15,23,42,.9));border-bottom:1px solid var(--line);padding:20px 20px 16px;border-top:4px solid var(--brand-strong);backdrop-filter:blur(6px)}
+ .logo{font-size:22px;font-weight:800;color:#fff}
+ .container{max-width:1400px;margin:0 auto;padding:24px}
+ .overview{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:24px}
+ .stat-card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));border:1px solid var(--line);border-radius:12px;padding:18px 20px;box-shadow:0 10px 30px rgba(0,0,0,.25);}
+ .stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+ .stat-value{font-size:28px;font-weight:800;color:#fff}
+ .progress-bar{width:100%;height:10px;background:#0b1220;border:1px solid var(--line);border-radius:999px;margin-top:10px;overflow:hidden}
+ .progress-fill{height:100%;background:linear-gradient(90deg,var(--brand-strong),var(--brand));transition:width .35s ease}
+ .section{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:24px;box-shadow:0 8px 24px rgba(0,0,0,.3)}
+ .section-title{font-size:16px;font-weight:800;color:#fff;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--line);letter-spacing:.06em;text-transform:uppercase}
+ .badge{display:inline-block;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700}
+ .badge-pending{background:rgba(245,158,11,.15);color:#fbbf24}
+ .badge-in-progress{background:rgba(59,130,246,.15);color:#93c5fd}
+ .badge-completed{background:rgba(34,197,94,.15);color:#86efac}
+ .phase-card{border:1px solid var(--line);border-radius:8px;padding:14px;margin-bottom:14px;background:rgba(2,6,23,.5)}
+ .phase-card.active{border-color:var(--brand);background:rgba(30,58,138,.25)}
+ .phase-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+ .phase-name{font-size:15px;font-weight:700}
+ .task-item{padding:12px;margin-bottom:8px;background:rgba(255,255,255,.02);border:1px solid var(--line);border-radius:8px;display:flex;gap:12px;align-items:flex-start}
+ .task-item.completed{opacity:.75}
+ .task-checkbox{width:18px;height:18px;cursor:pointer}
+ .btn{padding:8px 14px;border:none;border-radius:8px;font-weight:700;cursor:pointer;background:linear-gradient(90deg,var(--brand-strong),var(--brand));color:#fff}
+ .btn:hover{filter:brightness(1.08)}
+ .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(2,6,23,.7);z-index:1000;align-items:center;justify-content:center}
+ .modal.active{display:flex}
+ .modal-content{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;max-width:620px;width:90%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.45)}
+ .form-group{margin-bottom:14px}
+ .form-label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em}
+ .form-input,.form-textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.02);color:#fff}
+ .form-textarea{min-height:100px;resize:vertical}
+ .notes-list{list-style:none;padding:0}
+ .note-item{padding:10px;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:8px;margin-bottom:8px}
+ .note-date{font-size:12px;color:var(--muted);margin-bottom:4px}
+ .feedback-item{padding:14px;background:rgba(245,158,11,.12);border-radius:8px;border-left:4px solid var(--warning);margin-bottom:14px}
+ /* schedule vs progress graphic */
+ .compare-wrap{display:grid;gap:10px}
+ .compare-row{display:flex;align-items:center;gap:10px}
+ .compare-label{width:110px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+ .compare-bar{flex:1;height:12px;background:#0b1220;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+ .compare-fill{height:100%;background:linear-gradient(90deg,#6366f1,#22c55e);transition:width .35s ease}
+ .status-line{margin-top:8px;font-size:13px;color:#cbd5e1}
+ </style>
+<!-- Supabase JS (optional; fill in URL/KEY below to enable cloud sync) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<div class="header"><div class="container"><div class="logo">📱 Vibeventz Project Dashboard</div><p style="margin-top:8px;color:var(--muted)">Quote: OWD-2025-2746 | Client: Mohamed Bera | Budget: R 115,000</p></div></div>
+<div class="container">
+<div class="overview">
+<div class="stat-card"><div class="stat-label">Overall Progress</div><div class="stat-value"><span id="progress">0</span>%</div><div class="progress-bar"><div class="progress-fill" id="progressBar" style="width:0%"></div></div></div>
+<div class="stat-card"><div class="stat-label">Current Phase</div><div class="stat-value" style="font-size:18px">Discovery</div><p style="font-size:13px;color:var(--muted);margin-top:8px">Month 1 of 5</p></div>
+<div class="stat-card"><div class="stat-label">Days Elapsed</div><div class="stat-value" id="daysElapsed">0</div><p style="font-size:13px;color:var(--muted);margin-top:8px"><span id="daysRemaining">150</span> days remaining</p></div>
+<div class="stat-card"><div class="stat-label">Payments</div><div class="stat-value" style="font-size:20px">R <span id="paid">0</span></div><p style="font-size:13px;color:var(--muted);margin-top:8px">R 115,000 remaining</p></div>
+</div>
+
+<div class="section"><div class="section-title">📋 Phase 1: Discovery & Preparation (Month 1)</div><span class="badge badge-in-progress">In Progress</span><div class="progress-bar" style="margin:12px 0"><div class="progress-fill" id="phase1Bar" style="width:0%"></div></div><div id="phase1Tasks"></div><button class="btn" style="margin-top:12px" onclick="addTask(1)">+ Add Task</button></div>
+
+<div class="section"><div class="section-title">⚙️ Phase 2: Mobile Enablement (Month 2)</div><span class="badge badge-pending">Pending</span><div class="progress-bar" style="margin:12px 0"><div class="progress-fill" id="phase2Bar" style="width:0%"></div></div><div id="phase2Tasks"></div></div>
+
+<div class="section"><div class="section-title">🎨 Phase 3: Feature Hardening (Month 3)</div><span class="badge badge-pending">Pending</span><div class="progress-bar" style="margin:12px 0"><div class="progress-fill" id="phase3Bar" style="width:0%"></div></div><div id="phase3Tasks"></div></div>
+
+<div class="section"><div class="section-title">🧪 Phase 4: QA, Beta & Compliance (Month 4)</div><span class="badge badge-pending">Pending</span><div class="progress-bar" style="margin:12px 0"><div class="progress-fill" id="phase4Bar" style="width:0%"></div></div><div id="phase4Tasks"></div></div>
+
+<div class="section"><div class="section-title">🚀 Phase 5: Submission & Launch (Month 5)</div><span class="badge badge-pending">Pending</span><div class="progress-bar" style="margin:12px 0"><div class="progress-fill" id="phase5Bar" style="width:0%"></div></div><div id="phase5Tasks"></div></div>
+
+<div class="section"><div class="section-title">💬 Client Feedback</div><div id="feedbackList"></div><button class="btn" onclick="openFeedbackModal()">+ Add Feedback</button></div>
+
+<div class="section"><div class="section-title">📅 Upcoming Meetings</div><div id="meetingList"></div><button class="btn" onclick="openMeetingModal()">+ Schedule Meeting</button></div>
+
+<div class="section"><div class="section-title">📄 Documents & Files</div><div id="documentList"></div><button class="btn" onclick="openDocModal()">+ Upload Document</button></div>
+</div>
+
+<div class="container">
+  <div class="section">
+    <div class="section-title">📈 Schedule vs Progress</div>
+    <div class="compare-wrap">
+      <div class="compare-row">
+        <div class="compare-label">Planned</div>
+        <div class="compare-bar"><div class="compare-fill" id="plannedFill" style="width:0%"></div></div>
+        <div style="width:56px;text-align:right" id="plannedPct">0%</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-label">Actual</div>
+        <div class="compare-bar"><div class="compare-fill" id="actualFill" style="width:0%"></div></div>
+        <div style="width:56px;text-align:right" id="actualPct">0%</div>
+      </div>
+    </div>
+    <div class="status-line" id="scheduleStatus">Status: —</div>
+  </div>
+  </div>
+
+<div id="taskModal" class="modal"><div class="modal-content"><h3 id="modalTitle" style="color:var(--brand);margin-bottom:20px">Task Details</h3><div class="form-group"><label class="form-label">Task Name</label><input type="text" id="taskName" class="form-input"></div><div class="form-group"><label class="form-label">Description</label><textarea id="taskDesc" class="form-textarea"></textarea></div><div class="form-group"><label class="form-label">Subtasks</label><ul class="notes-list" id="subtaskList"></ul><div style="display:flex;gap:8px;margin-top:8px"><input type="text" id="newSubtaskName" class="form-input" placeholder="Subtask name"><button class="btn" style="white-space:nowrap" onclick="addSubtask()">+ Add Subtask</button></div></div><div class="form-group"><label class="form-label">Notes</label><ul class="notes-list" id="taskNotes"></ul><textarea id="newNote" class="form-textarea" placeholder="Add a note..."></textarea><button class="btn" style="margin-top:8px" onclick="addNote()">Add Note</button></div><div style="display:flex;gap:8px;margin-top:20px"><button class="btn" onclick="saveTask()">Save</button><button class="btn" style="background:var(--muted)" onclick="closeModal()">Close</button></div></div></div>
+
+<div id="feedbackModal" class="modal"><div class="modal-content"><h3 style="color:var(--brand);margin-bottom:20px">Client Feedback</h3><div class="form-group"><label class="form-label">Feedback Type</label><select id="feedbackType" class="form-input"><option>General</option><option>Feature Request</option><option>Bug Report</option><option>Design Change</option></select></div><div class="form-group"><label class="form-label">Message</label><textarea id="feedbackMsg" class="form-textarea"></textarea></div><div style="display:flex;gap:8px;margin-top:20px"><button class="btn" onclick="saveFeedback()">Save</button><button class="btn" style="background:var(--muted)" onclick="closeModal()">Close</button></div></div></div>
+
+<script>
+// Optional: set these to enable Supabase sync
+const SUPABASE_URL = ""; // e.g. https://xyzcompany.supabase.co
+const SUPABASE_ANON_KEY = ""; // e.g. eyJhbGciOiJIUzI1...
+let supabaseClient = null;
+const TOTAL_DAYS = 150; // planned timeline (days)
+
+const tasks={1:[
+{name:"Discovery Call with Client",desc:"60-90 min requirements call",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Client creates Apple Developer Account",desc:"$99/year - BLOCKING",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Client creates Google Play Console",desc:"$25 once - BLOCKING",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Receive 50% Deposit (R 57,500)",desc:"Payment milestone 1",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Collect Brand Assets",desc:"Logo, colors, fonts",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Finalize Payment Provider",desc:"PayFast/Yoco decision",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Create Firebase Project",desc:"Push notifications setup",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Set Up Supabase Backend",desc:"Database, Auth, Storage",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Design Database Schema",desc:"Tables, relationships",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Create GitHub Repository",desc:"Version control, CI",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Draft Legal Documents",desc:"Terms, Privacy, Vendor Agreement",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Weekly Check-in #1",desc:"Progress review",done:false,completed_at:null,notes:[],subtasks:[]}
+],2:[
+{name:"Initialize React Native + Expo",desc:"TypeScript, folder structure",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Configure React Navigation",desc:"Stack, tabs, drawer",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Implement Auth Flows",desc:"Sign up, login, verification",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Device Permissions",desc:"Camera, storage access",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Media Upload",desc:"Photos & videos",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Push Notification Handlers",desc:"FCM/APNs integration",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Multi-Role System",desc:"Customer/Vendor/Admin",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Weekly Check-in #2-5",desc:"Monthly progress reviews",done:false,completed_at:null,notes:[],subtasks:[]}
+],3:[
+{name:"Build Search & Filters",desc:"Category, location, date filters",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"My Planning Module",desc:"Events Diary, Quotes, Bookings, Budget",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Vendor Profiles",desc:"Features, Reviews, About, Calendar",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Booking Flows",desc:"Quote requests & Instant Booking",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Payment Integration",desc:"Provider integration, deposits",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"In-app Messaging",desc:"Customer ↔ Vendor chat",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Reviews & Ratings",desc:"Star ratings, comments, photos",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Admin Console v1",desc:"Moderation, approvals",done:false,completed_at:null,notes:[],subtasks:[]}
+],4:[
+{name:"Internal QA Testing",desc:"Bug fixes, edge cases",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"TestFlight Beta (iOS)",desc:"Closed testing group",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Google Closed Testing",desc:"Beta on Play Store",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Privacy & Data Safety Forms",desc:"Both stores compliance",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Performance Optimization",desc:"Load times, crashes",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Receive 30% Payment (R 34,500)",desc:"Beta milestone payment",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Security Audit",desc:"Penetration testing",done:false,completed_at:null,notes:[],subtasks:[]}
+],5:[
+{name:"Prepare Store Listings",desc:"Icons, screenshots, descriptions",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Submit to Apple App Store",desc:"Review process 1-3 days",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Submit to Google Play",desc:"Review ~24 hours",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Staged Rollout",desc:"10% → 50% → 100%",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Monitor Launch Metrics",desc:"Crashes, analytics, reviews",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Receive 20% Payment (R 23,000)",desc:"Final payment on launch",done:false,completed_at:null,notes:[],subtasks:[]},
+{name:"Post-launch Support",desc:"3 months warranty",done:false,completed_at:null,notes:[],subtasks:[]}
+]};
+
+let feedback=[],meetings=[],documents=[],currentPhase=1,currentTask=null,startDate=new Date();
+
+function renderTasks(phase){const container=document.getElementById(`phase${phase}Tasks`);container.innerHTML='';tasks[phase].forEach((t,i)=>{const subs=t.subtasks||[];const doneCount=subs.filter(s=>s.done).length;const subsInfo=subs.length?` • ${doneCount}/${subs.length} subtasks`:"";const completedInfo=t.completed_at?` • completed ${new Date(t.completed_at).toLocaleString()}`:"";const div=document.createElement('div');div.className=`task-item${t.done?' completed':''}`;div.innerHTML=`<input type=\"checkbox\" class=\"task-checkbox\" ${t.done?'checked':''} onchange=\"toggleTask(${phase},${i})\"><div style=\"flex:1\"><div style=\"font-weight:600\">${t.name}</div><div style=\"font-size:12px;color:var(--muted)\">${t.desc}${subsInfo}${completedInfo}${t.notes&&t.notes.length?' • '+t.notes.length+' notes':''}</div></div><button class=\"btn\" style=\"padding:4px 12px;font-size:12px\" onclick=\"openTaskModal(${phase},${i})\">📝 Notes</button>`;container.appendChild(div)});updateProgress();}
+
+function toggleTask(phase,idx){const t=tasks[phase][idx];t.done=!t.done;t.completed_at=t.done?new Date().toISOString():null;renderTasks(phase);save();syncTaskToSupabase(phase,idx).catch(()=>{});}
+
+function updateProgress(){let total=0,done=0;for(let p in tasks){tasks[p].forEach(t=>{total++;if(t.done)done++;});}
+  const pct=Math.round((total? (done/total*100):0));
+  document.getElementById('progress').textContent=pct;document.getElementById('progressBar').style.width=pct+'%';
+  for(let p=1;p<=5;p++){const phaseDone=tasks[p].filter(t=>t.done).length;const phaseTotal=tasks[p].length;const phasePct=Math.round(phaseTotal? (phaseDone/phaseTotal*100):0);document.getElementById(`phase${p}Bar`).style.width=phasePct+'%';}
+  const days=Math.floor((new Date()-startDate)/(1000*60*60*24));
+  const remaining=Math.max(TOTAL_DAYS - days,0);
+  document.getElementById('daysElapsed').textContent=days;
+  const remEl=document.getElementById('daysRemaining'); if(remEl) remEl.textContent=remaining;
+  // schedule vs progress compare
+  const schedulePct = Math.max(0, Math.min(100, Math.round((days / Math.max(TOTAL_DAYS,1))*100)));
+  const delta = pct - schedulePct; // positive = ahead
+  const plannedFill=document.getElementById('plannedFill'); const actualFill=document.getElementById('actualFill');
+  const plannedPctEl=document.getElementById('plannedPct'); const actualPctEl=document.getElementById('actualPct');
+  if(plannedFill) plannedFill.style.width=schedulePct+'%'; if(actualFill) actualFill.style.width=pct+'%';
+  if(plannedPctEl) plannedPctEl.textContent=schedulePct+'%'; if(actualPctEl) actualPctEl.textContent=pct+'%';
+  const statusEl=document.getElementById('scheduleStatus');
+  const daysDelta=Math.round((delta/100)*TOTAL_DAYS);
+  let statusText = delta>5? `Ahead by ${Math.abs(delta)}% (~${Math.abs(daysDelta)} days)` : (delta<-5? `Behind by ${Math.abs(delta)}% (~${Math.abs(daysDelta)} days)` : 'On Track (±5%)');
+  if(statusEl) statusEl.textContent = `Status: ${statusText}`;
+}
+
+function openTaskModal(phase,idx){currentPhase=phase;currentTask=idx;const t=tasks[phase][idx];document.getElementById('modalTitle').textContent=t.name;document.getElementById('taskName').value=t.name;document.getElementById('taskDesc').value=t.desc;const notesList=document.getElementById('taskNotes');notesList.innerHTML='';(t.notes||[]).forEach(n=>{const li=document.createElement('li');li.className='note-item';li.innerHTML=`<div class=\"note-date\">${n.date}</div><div>${n.text}</div>`;notesList.appendChild(li);});const subsList=document.getElementById('subtaskList');subsList.innerHTML='';(t.subtasks||[]).forEach((s,si)=>{const li=document.createElement('li');li.className='note-item';li.innerHTML=`<div style=\"display:flex;align-items:center;gap:8px\"><input type=\"checkbox\" ${s.done?'checked':''} onchange=\"toggleSubtask(${si})\"><div style=\"flex:1\"><strong>${s.name}</strong><div class=\"note-date\">${s.completed_at?('completed '+new Date(s.completed_at).toLocaleString()):''}</div></div></div>`;subsList.appendChild(li);});document.getElementById('taskModal').classList.add('active');}
+
+function addNote(){const text=document.getElementById('newNote').value.trim();if(!text)return;const t=tasks[currentPhase][currentTask];t.notes=t.notes||[];t.notes.push({date:new Date().toLocaleString(),text});document.getElementById('newNote').value='';openTaskModal(currentPhase,currentTask);save();syncTaskToSupabase(currentPhase,currentTask).catch(()=>{});}
+
+function addSubtask(){const name=document.getElementById('newSubtaskName').value.trim();if(!name)return;const t=tasks[currentPhase][currentTask];t.subtasks=t.subtasks||[];t.subtasks.push({name,done:false,completed_at:null});document.getElementById('newSubtaskName').value='';openTaskModal(currentPhase,currentTask);save();syncTaskToSupabase(currentPhase,currentTask).catch(()=>{});}
+
+function toggleSubtask(si){const t=tasks[currentPhase][currentTask];const s=t.subtasks[si];s.done=!s.done;s.completed_at=s.done?new Date().toISOString():null; // auto-complete task if all subtasks done
+if((t.subtasks||[]).length>0){const allDone=t.subtasks.every(x=>x.done);t.done=allDone;t.completed_at=allDone?new Date().toISOString():null;}
+openTaskModal(currentPhase,currentTask);renderTasks(currentPhase);save();syncTaskToSupabase(currentPhase,currentTask).catch(()=>{});}
+
+function saveTask(){const t=tasks[currentPhase][currentTask];t.name=document.getElementById('taskName').value;t.desc=document.getElementById('taskDesc').value;renderTasks(currentPhase);closeModal();save();syncTaskToSupabase(currentPhase,currentTask).catch(()=>{});}
+
+function addTask(phase){const name=prompt('Task name:');const desc=prompt('Description:');if(name){tasks[phase].push({name,desc,done:false,completed_at:null,notes:[],subtasks:[]});renderTasks(phase);save();syncAllToSupabase().catch(()=>{});}}
+
+function openFeedbackModal(){document.getElementById('feedbackModal').classList.add('active');}
+
+function saveFeedback(){const type=document.getElementById('feedbackType').value;const msg=document.getElementById('feedbackMsg').value.trim();if(!msg)return;feedback.push({date:new Date().toLocaleString(),type,msg,status:'Open'});renderFeedback();document.getElementById('feedbackMsg').value='';closeModal();save();}
+
+function renderFeedback(){const list=document.getElementById('feedbackList');list.innerHTML='';if(!feedback.length){list.innerHTML='<p style="color:var(--muted)">No feedback yet.</p>';return;}feedback.forEach(f=>{const div=document.createElement('div');div.className='feedback-item';div.innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:8px"><strong>${f.type}</strong><span style="font-size:12px;color:var(--muted)">${f.date}</span></div><div>${f.msg}</div><div style="margin-top:8px"><span class="badge ${f.status==='Resolved'?'badge-completed':'badge-pending'}">${f.status}</span></div>`;list.appendChild(div);});}
+
+function openMeetingModal(){const title=prompt('Meeting title:');const date=prompt('Date & time:');if(title){meetings.push({title,date,notes:''});renderMeetings();save();}}
+
+function renderMeetings(){const list=document.getElementById('meetingList');list.innerHTML='';if(!meetings.length){list.innerHTML='<p style="color:var(--muted)">No meetings scheduled.</p>';return;}meetings.forEach((m,i)=>{const div=document.createElement('div');div.className='note-item';div.innerHTML=`<strong>${m.title}</strong><div style="font-size:12px;color:var(--muted)">${m.date}</div>`;list.appendChild(div);});}
+
+function openDocModal(){const name=prompt('Document name:');const url=prompt('URL or note:');if(name){documents.push({name,url,date:new Date().toLocaleString()});renderDocuments();save();}}
+
+function renderDocuments(){const list=document.getElementById('documentList');list.innerHTML='';if(!documents.length){list.innerHTML='<p style="color:var(--muted)">No documents uploaded.</p>';return;}documents.forEach(d=>{const div=document.createElement('div');div.className='note-item';div.innerHTML=`<strong>${d.name}</strong><div style="font-size:12px;color:var(--muted)">${d.date}</div><div style="font-size:13px;margin-top:4px">${d.url}</div>`;list.appendChild(div);});}
+
+function closeModal(){document.getElementById('taskModal').classList.remove('active');document.getElementById('feedbackModal').classList.remove('active');}
+
+function save(){localStorage.setItem('vibeventzData',JSON.stringify({tasks,feedback,meetings,documents,startDate}));}
+
+function load(){const data=localStorage.getItem('vibeventzData');if(data){const parsed=JSON.parse(data);Object.assign(tasks,parsed.tasks||{});feedback=parsed.feedback||[];meetings=parsed.meetings||[];documents=parsed.documents||[];startDate=new Date(parsed.startDate||Date.now());}
+  // If Supabase configured, pull latest from cloud
+  if(SUPABASE_URL && SUPABASE_ANON_KEY){initSupabase();syncFromSupabase().catch(()=>{});} }
+
+async function initSupabase(){try{supabaseClient = window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);}catch(e){console.warn('Supabase init failed',e);}}
+
+async function syncFromSupabase(){if(!supabaseClient)return;const {data,error}=await supabaseClient.from('dashboard_tasks').select('id,phase,name,description,done,completed_at,notes,subtasks,order_index').order('phase').order('order_index');if(error){console.warn(error);return;}const grouped={1:[],2:[],3:[],4:[],5:[]};(data||[]).forEach(row=>{grouped[row.phase].push({id:row.id,name:row.name,desc:row.description||'',done:!!row.done,completed_at:row.completed_at,notes:row.notes||[],subtasks:row.subtasks||[]});});for(let p=1;p<=5;p++){if(grouped[p].length){tasks[p]=grouped[p];renderTasks(p);} }updateProgress();}
+
+async function syncTaskToSupabase(phase,idx){if(!supabaseClient)return;const t=tasks[phase][idx];const payload={phase,name:t.name,description:t.desc,done:t.done,completed_at:t.completed_at,notes:t.notes||[],subtasks:t.subtasks||[],order_index:idx};if(!t.id){const {data,error}=await supabaseClient.from('dashboard_tasks').insert(payload).select('id').single();if(!error&&data){t.id=data.id;}}else{await supabaseClient.from('dashboard_tasks').update(payload).eq('id',t.id);} }
+
+async function syncAllToSupabase(){if(!supabaseClient)return;for(let p=1;p<=5;p++){for(let i=0;i<tasks[p].length;i++){await syncTaskToSupabase(p,i);} } }
+
+load();for(let i=1;i<=5;i++)renderTasks(i);renderFeedback();renderMeetings();renderDocuments();updateProgress();
+</script>
+</body>
+</html>
