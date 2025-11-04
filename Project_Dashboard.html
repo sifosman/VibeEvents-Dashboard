@@ -41,6 +41,7 @@
  .phase-name{font-size:15px;font-weight:700}
  .task-item{padding:12px;margin-bottom:8px;background:rgba(255,255,255,.02);border:1px solid var(--line);border-radius:8px;display:flex;gap:12px;align-items:flex-start}
  .task-item.completed{opacity:.75}
+ .task-item.dragging{opacity:.5;outline:1px dashed var(--brand)}
  .task-checkbox{width:22px;height:22px;cursor:pointer}
  .btn{padding:10px 14px;border:none;border-radius:8px;font-weight:700;cursor:pointer;background:linear-gradient(90deg,var(--brand-strong),var(--brand));color:#fff}
  .btn:hover{filter:brightness(1.08)}
@@ -188,7 +189,21 @@ const tasks={1:[
 
 let feedback=[],meetings=[],documents=[],currentPhase=1,currentTask=null,startDate=new Date();
 
-function renderTasks(phase){const container=document.getElementById(`phase${phase}Tasks`);container.innerHTML='';tasks[phase].forEach((t,i)=>{const subs=t.subtasks||[];const doneCount=subs.filter(s=>s.done).length;const subsInfo=subs.length?` • ${doneCount}/${subs.length} subtasks`:"";const completedInfo=t.completed_at?` • completed ${new Date(t.completed_at).toLocaleString()}`:"";const div=document.createElement('div');div.className=`task-item${t.done?' completed':''}`;div.innerHTML=`<input type=\"checkbox\" class=\"task-checkbox\" ${t.done?'checked':''} onchange=\"toggleTask(${phase},${i})\"><div style=\"flex:1\"><div style=\"font-weight:600\">${t.name}</div><div style=\"font-size:12px;color:var(--muted)\">${t.desc}${subsInfo}${completedInfo}${t.notes&&t.notes.length?' • '+t.notes.length+' notes':''}</div></div><button class=\"btn\" style=\"padding:4px 12px;font-size:12px\" onclick=\"openTaskModal(${phase},${i})\">📝 Notes</button>`;container.appendChild(div)});updateProgress();}
+let dragData=null;
+function renderTasks(phase){const container=document.getElementById(`phase${phase}Tasks`);container.innerHTML='';
+  // allow dropping anywhere in the phase list
+  container.ondragover=(e)=>{e.preventDefault();};
+  container.ondrop=(e)=>{e.preventDefault();if(!dragData)return;const toPhase=phase;const toIndex=tasks[toPhase].length;moveTask(dragData.fromPhase,dragData.fromIndex,toPhase,toIndex);dragData=null;};
+  tasks[phase].forEach((t,i)=>{const subs=t.subtasks||[];const doneCount=subs.filter(s=>s.done).length;const subsInfo=subs.length?` • ${doneCount}/${subs.length} subtasks`:"";const completedInfo=t.completed_at?` • completed ${new Date(t.completed_at).toLocaleString()}`:"";const div=document.createElement('div');div.className=`task-item${t.done?' completed':''}`;div.setAttribute('draggable','true');
+    div.ondragstart=(e)=>{dragData={fromPhase:phase,fromIndex:i};div.classList.add('dragging');};
+    div.ondragend=()=>{div.classList.remove('dragging');};
+    div.ondragover=(e)=>{e.preventDefault();};
+    div.ondrop=(e)=>{e.preventDefault();if(!dragData)return;moveTask(dragData.fromPhase,dragData.fromIndex,phase,i);dragData=null;};
+    div.innerHTML=`<input type=\"checkbox\" class=\"task-checkbox\" ${t.done?'checked':''} onchange=\"toggleTask(${phase},${i})\"><div style=\"flex:1\"><div style=\"font-weight:600\">${t.name}</div><div style=\"font-size:12px;color:var(--muted)\">${t.desc}${subsInfo}${completedInfo}${t.notes&&t.notes.length?' • '+t.notes.length+' notes':''}</div></div><button class=\"btn\" style=\"padding:4px 12px;font-size:12px\" onclick=\"openTaskModal(${phase},${i})\">📝 Notes</button>`;
+    container.appendChild(div)});
+  updateProgress();}
+
+function moveTask(fromPhase,fromIndex,toPhase,toIndex){if(fromPhase===toPhase && fromIndex===toIndex)return;const source=tasks[fromPhase];const [item]=source.splice(fromIndex,1);const target=tasks[toPhase];const insertAt=Math.max(0,Math.min(toIndex,target.length));target.splice(insertAt,0,item);renderTasks(fromPhase);if(fromPhase!==toPhase)renderTasks(toPhase);save();if(supabaseClient){syncAllToSupabase().catch(()=>{});} }
 
 function toggleTask(phase,idx){const t=tasks[phase][idx];t.done=!t.done;t.completed_at=t.done?new Date().toISOString():null;renderTasks(phase);save();syncTaskToSupabase(phase,idx).catch(()=>{});}
 
