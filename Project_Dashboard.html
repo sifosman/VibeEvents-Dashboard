@@ -42,6 +42,12 @@
  .task-item{padding:12px;margin-bottom:8px;background:rgba(255,255,255,.02);border:1px solid var(--line);border-radius:8px;display:flex;gap:12px;align-items:flex-start}
  .task-item.completed{opacity:.75}
  .task-item.dragging{opacity:.5;outline:1px dashed var(--brand)}
+ .drag-handle{cursor:grab;user-select:none;color:var(--muted);display:flex;align-items:center}
+ .drag-handle:active{cursor:grabbing}
+ .task-item.moved-up{animation:flashUp .9s ease}
+ .task-item.moved-down{animation:flashDown .9s ease}
+ @keyframes flashUp{0%{box-shadow:0 0 0 0 rgba(34,197,94,.0);background:rgba(34,197,94,.08)}60%{box-shadow:0 0 0 6px rgba(34,197,94,.0)}100%{box-shadow:none;background:rgba(255,255,255,.02)}}
+ @keyframes flashDown{0%{box-shadow:0 0 0 0 rgba(59,130,246,.0);background:rgba(59,130,246,.08)}60%{box-shadow:0 0 0 6px rgba(59,130,246,.0)}100%{box-shadow:none;background:rgba(255,255,255,.02)}}
  .task-checkbox{width:22px;height:22px;cursor:pointer}
  .btn{padding:10px 14px;border:none;border-radius:8px;font-weight:700;cursor:pointer;background:linear-gradient(90deg,var(--brand-strong),var(--brand));color:#fff}
  .btn:hover{filter:brightness(1.08)}
@@ -191,19 +197,32 @@ let feedback=[],meetings=[],documents=[],currentPhase=1,currentTask=null,startDa
 
 let dragData=null;
 function renderTasks(phase){const container=document.getElementById(`phase${phase}Tasks`);container.innerHTML='';
-  // allow dropping anywhere in the phase list
+  // allow dropping anywhere in the phase list (append to end)
   container.ondragover=(e)=>{e.preventDefault();};
   container.ondrop=(e)=>{e.preventDefault();if(!dragData)return;const toPhase=phase;const toIndex=tasks[toPhase].length;moveTask(dragData.fromPhase,dragData.fromIndex,toPhase,toIndex);dragData=null;};
-  tasks[phase].forEach((t,i)=>{const subs=t.subtasks||[];const doneCount=subs.filter(s=>s.done).length;const subsInfo=subs.length?` • ${doneCount}/${subs.length} subtasks`:"";const completedInfo=t.completed_at?` • completed ${new Date(t.completed_at).toLocaleString()}`:"";const div=document.createElement('div');div.className=`task-item${t.done?' completed':''}`;div.setAttribute('draggable','true');
-    div.ondragstart=(e)=>{dragData={fromPhase:phase,fromIndex:i};div.classList.add('dragging');};
-    div.ondragend=()=>{div.classList.remove('dragging');};
+  tasks[phase].forEach((t,i)=>{const subs=t.subtasks||[];const doneCount=subs.filter(s=>s.done).length;const subsInfo=subs.length?` • ${doneCount}/${subs.length} subtasks`:"";const completedInfo=t.completed_at?` • completed ${new Date(t.completed_at).toLocaleString()}`:"";const div=document.createElement('div');div.className=`task-item${t.done?' completed':''}`;
+    // visible drag handle only
+    div.innerHTML=`<span class=\"drag-handle\" title=\"Drag to reorder\">⋮⋮</span>
+    <input type=\"checkbox\" class=\"task-checkbox\" ${t.done?'checked':''} onchange=\"toggleTask(${phase},${i})\">
+    <div style=\"flex:1\"><div style=\"font-weight:600\">${t.name}</div><div style=\"font-size:12px;color:var(--muted)\">${t.desc}${subsInfo}${completedInfo}${t.notes&&t.notes.length?' • '+t.notes.length+' notes':""}</div></div>
+    <button class=\"btn\" style=\"padding:4px 12px;font-size:12px\" onclick=\"openTaskModal(${phase},${i})\">📝 Notes</button>`;
+    const handle=div.querySelector('.drag-handle');
+    handle.setAttribute('draggable','true');
+    handle.ondragstart=(e)=>{dragData={fromPhase:phase,fromIndex:i};div.classList.add('dragging');e.dataTransfer.effectAllowed='move';};
+    handle.ondragend=()=>{div.classList.remove('dragging');};
+    // item-level drop inserts before this item
     div.ondragover=(e)=>{e.preventDefault();};
     div.ondrop=(e)=>{e.preventDefault();if(!dragData)return;moveTask(dragData.fromPhase,dragData.fromIndex,phase,i);dragData=null;};
-    div.innerHTML=`<input type=\"checkbox\" class=\"task-checkbox\" ${t.done?'checked':''} onchange=\"toggleTask(${phase},${i})\"><div style=\"flex:1\"><div style=\"font-weight:600\">${t.name}</div><div style=\"font-size:12px;color:var(--muted)\">${t.desc}${subsInfo}${completedInfo}${t.notes&&t.notes.length?' • '+t.notes.length+' notes':''}</div></div><button class=\"btn\" style=\"padding:4px 12px;font-size:12px\" onclick=\"openTaskModal(${phase},${i})\">📝 Notes</button>`;
     container.appendChild(div)});
   updateProgress();}
 
-function moveTask(fromPhase,fromIndex,toPhase,toIndex){if(fromPhase===toPhase && fromIndex===toIndex)return;const source=tasks[fromPhase];const [item]=source.splice(fromIndex,1);const target=tasks[toPhase];const insertAt=Math.max(0,Math.min(toIndex,target.length));target.splice(insertAt,0,item);renderTasks(fromPhase);if(fromPhase!==toPhase)renderTasks(toPhase);save();if(supabaseClient){syncAllToSupabase().catch(()=>{});} }
+function moveTask(fromPhase,fromIndex,toPhase,toIndex){if(fromPhase===toPhase && fromIndex===toIndex)return;const source=tasks[fromPhase];const [item]=source.splice(fromIndex,1);const target=tasks[toPhase];const insertAt=Math.max(0,Math.min(toIndex,target.length));target.splice(insertAt,0,item);
+  // re-render affected phases
+  renderTasks(fromPhase);if(fromPhase!==toPhase)renderTasks(toPhase);
+  // highlight moved item direction
+  const movedList=document.getElementById(`phase${toPhase}Tasks`);const movedEl=movedList && movedList.children[insertAt];
+  if(movedEl){const movedClass=(fromPhase===toPhase&&insertAt<fromIndex)?'moved-up':'moved-down';movedEl.classList.add(movedClass);setTimeout(()=>movedEl.classList.remove(movedClass),900);} 
+  save();if(supabaseClient){syncAllToSupabase().catch(()=>{});} }
 
 function toggleTask(phase,idx){const t=tasks[phase][idx];t.done=!t.done;t.completed_at=t.done?new Date().toISOString():null;renderTasks(phase);save();syncTaskToSupabase(phase,idx).catch(()=>{});}
 
