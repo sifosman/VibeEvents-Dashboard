@@ -138,10 +138,11 @@
 <div id="feedbackModal" class="modal"><div class="modal-content"><h3 style="color:var(--brand);margin-bottom:20px">Client Feedback</h3><div class="form-group"><label class="form-label">Feedback Type</label><select id="feedbackType" class="form-input"><option>General</option><option>Feature Request</option><option>Bug Report</option><option>Design Change</option></select></div><div class="form-group"><label class="form-label">Message</label><textarea id="feedbackMsg" class="form-textarea"></textarea></div><div style="display:flex;gap:8px;margin-top:20px"><button class="btn" onclick="saveFeedback()">Save</button><button class="btn" style="background:var(--muted)" onclick="closeModal()">Close</button></div></div></div>
 
 <script>
-// Optional: set these to enable Supabase sync
-const SUPABASE_URL = ""; // e.g. https://xyzcompany.supabase.co
-const SUPABASE_ANON_KEY = ""; // e.g. eyJhbGciOiJIUzI1...
-let supabaseClient = null;
+  // Optional: set these to enable Supabase sync
+  let SUPABASE_URL = "";
+  let SUPABASE_ANON_KEY = "";
+  let SUPABASE_BUCKET = "Funxions"; // Supabase Storage bucket for documents/files
+  let supabaseClient = null;
 const TOTAL_DAYS = 150; // planned timeline (days)
 
 const tasks={1:[
@@ -263,29 +264,178 @@ function addTask(phase){const name=prompt('Task name:');const desc=prompt('Descr
 
 function openFeedbackModal(){document.getElementById('feedbackModal').classList.add('active');}
 
-function saveFeedback(){const type=document.getElementById('feedbackType').value;const msg=document.getElementById('feedbackMsg').value.trim();if(!msg)return;feedback.push({date:new Date().toLocaleString(),type,msg,status:'Open'});renderFeedback();document.getElementById('feedbackMsg').value='';closeModal();save();}
+function saveFeedback(){const type=document.getElementById('feedbackType').value;const msg=document.getElementById('feedbackMsg').value.trim();if(!msg)return;const entry={date:new Date().toLocaleString(),type,msg,status:'Open'};feedback.push(entry);renderFeedback();document.getElementById('feedbackMsg').value='';closeModal();save();
+  // Persist to Supabase if available
+  insertFeedbackToSupabase(entry).catch(()=>{});
+}
 
 function renderFeedback(){const list=document.getElementById('feedbackList');list.innerHTML='';if(!feedback.length){list.innerHTML='<p style="color:var(--muted)">No feedback yet.</p>';return;}feedback.forEach(f=>{const div=document.createElement('div');div.className='feedback-item';div.innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:8px"><strong>${f.type}</strong><span style="font-size:12px;color:var(--muted)">${f.date}</span></div><div>${f.msg}</div><div style="margin-top:8px"><span class="badge ${f.status==='Resolved'?'badge-completed':'badge-pending'}">${f.status}</span></div>`;list.appendChild(div);});}
 
-function openMeetingModal(){const title=prompt('Meeting title:');const date=prompt('Date & time:');if(title){meetings.push({title,date,notes:''});renderMeetings();save();}}
+function openMeetingModal(){const title=prompt('Meeting title:');const date=prompt('Date & time:');if(title){const entry={title,date,notes:''};meetings.push(entry);renderMeetings();save();insertMeetingToSupabase(entry).catch(()=>{});}}
 
 function renderMeetings(){const list=document.getElementById('meetingList');list.innerHTML='';if(!meetings.length){list.innerHTML='<p style="color:var(--muted)">No meetings scheduled.</p>';return;}meetings.forEach((m,i)=>{const div=document.createElement('div');div.className='note-item';div.innerHTML=`<strong>${m.title}</strong><div style="font-size:12px;color:var(--muted)">${m.date}</div>`;list.appendChild(div);});}
 
-function openDocModal(){const name=prompt('Document name:');const url=prompt('URL or note:');if(name){documents.push({name,url,date:new Date().toLocaleString()});renderDocuments();save();}}
+function openDocModal(){
+  // If Supabase is configured, open a file picker and upload to Storage
+  if (supabaseClient) {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.onchange = async () => {
+      const file = input.files && input.files[0];
+      if (!file) return;
+      try {
+        const folder = 'dashboard';
+        const filename = `${Date.now()}_${file.name}`;
+        const path = `${folder}/${filename}`;
+        const { error: upErr } = await supabaseClient
+          .storage
+          .from(SUPABASE_BUCKET)
+          .upload(path, file, { upsert: false, contentType: file.type });
+        if (upErr) { console.warn(upErr); alert('Upload failed'); return; }
+        const { data: pub } = supabaseClient
+          .storage
+          .from(SUPABASE_BUCKET)
+          .getPublicUrl(path);
+        documents.push({ name: file.name, url: pub.publicUrl, date: new Date().toLocaleString() });
+        renderDocuments();
+        save();
+        // Refresh from storage to reflect canonical list
+        syncDocumentsFromStorage().catch(()=>{});
+      } catch (e) {
+        console.warn(e);
+      }
+    };
+    input.click();
+  } else {
+    // Fallback to manual entry if Supabase not configured
+    const name = prompt('Document name:');
+    const url = prompt('URL or note:');
+    if (name) { documents.push({ name, url, date: new Date().toLocaleString() }); renderDocuments(); save(); }
+  }
+}
 
-function renderDocuments(){const list=document.getElementById('documentList');list.innerHTML='';if(!documents.length){list.innerHTML='<p style="color:var(--muted)">No documents uploaded.</p>';return;}documents.forEach(d=>{const div=document.createElement('div');div.className='note-item';div.innerHTML=`<strong>${d.name}</strong><div style="font-size:12px;color:var(--muted)">${d.date}</div><div style="font-size:13px;margin-top:4px">${d.url}</div>`;list.appendChild(div);});}
+function renderDocuments(){const list=document.getElementById('documentList');list.innerHTML='';if(!documents.length){list.innerHTML='<p style="color:var(--muted)">No documents uploaded.</p>';return;}documents.forEach(d=>{const div=document.createElement('div');div.className='note-item';const urlHtml = d.url ? `<a href="${d.url}" target="_blank" rel="noopener">${d.url}</a>` : '';
+  const actions = supabaseClient && d.path ? `<div style="margin-top:8px;display:flex;gap:8px"><button class="btn" style="padding:4px 10px;font-size:12px;background:#ef4444" onclick="deleteDocument('${d.path.replace(/'/g,"\\'")}')">Delete</button><button class="btn" style="padding:4px 10px;font-size:12px;background:#3b82f6" onclick="renameDocument('${d.path.replace(/'/g,"\\'")}','${(d.name||'').replace(/'/g,"\\'")}')">Rename</button></div>` : '';
+  div.innerHTML=`<strong>${d.name||'Untitled'}</strong><div style="font-size:12px;color:var(--muted)">${d.date||''}</div><div style="font-size:13px;margin-top:4px;word-break:break-all">${urlHtml}</div>${actions}`;list.appendChild(div);});}
 
 function closeModal(){document.getElementById('taskModal').classList.remove('active');document.getElementById('feedbackModal').classList.remove('active');}
 
 function save(){localStorage.setItem('vibeventzData',JSON.stringify({tasks,feedback,meetings,documents,startDate}));}
 
-function load(){const data=localStorage.getItem('vibeventzData');if(data){const parsed=JSON.parse(data);Object.assign(tasks,parsed.tasks||{});feedback=parsed.feedback||[];meetings=parsed.meetings||[];documents=parsed.documents||[];startDate=new Date(parsed.startDate||Date.now());}
-  // If Supabase configured, pull latest from cloud
-  if(SUPABASE_URL && SUPABASE_ANON_KEY){initSupabase();syncFromSupabase().catch(()=>{});} }
+async function load(){const data=localStorage.getItem('vibeventzData');if(data){const parsed=JSON.parse(data);Object.assign(tasks,parsed.tasks||{});feedback=parsed.feedback||[];meetings=parsed.meetings||[];documents=parsed.documents||[];startDate=new Date(parsed.startDate||Date.now());}
+  // Fetch public Supabase config from server
+  try{
+    const res = await fetch('/api/dashboard-config');
+    if (res.ok){
+      const cfg = await res.json();
+      SUPABASE_URL = cfg.supabaseUrl || '';
+      SUPABASE_ANON_KEY = cfg.supabaseAnonKey || '';
+      SUPABASE_BUCKET = cfg.bucket || SUPABASE_BUCKET;
+    }
+  }catch(e){ console.warn('Failed to fetch config', e); }
+  if(SUPABASE_URL && SUPABASE_ANON_KEY){initSupabase();await Promise.allSettled([
+    syncFromSupabase(),
+    syncDocumentsFromStorage(),
+    syncFeedbackFromSupabase(),
+    syncMeetingsFromSupabase(),
+  ]);} }
 
 async function initSupabase(){try{supabaseClient = window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);}catch(e){console.warn('Supabase init failed',e);}}
 
 async function syncFromSupabase(){if(!supabaseClient)return;const {data,error}=await supabaseClient.from('dashboard_tasks').select('id,phase,name,description,done,completed_at,notes,subtasks,order_index').order('phase').order('order_index');if(error){console.warn(error);return;}const grouped={1:[],2:[],3:[],4:[],5:[]};(data||[]).forEach(row=>{grouped[row.phase].push({id:row.id,name:row.name,desc:row.description||'',done:!!row.done,completed_at:row.completed_at,notes:row.notes||[],subtasks:row.subtasks||[]});});for(let p=1;p<=5;p++){if(grouped[p].length){tasks[p]=grouped[p];renderTasks(p);} }updateProgress();}
+
+async function syncDocumentsFromStorage(){
+  if(!supabaseClient) return;
+  try{
+    const folder = 'dashboard';
+    const { data, error } = await supabaseClient
+      .storage
+      .from(SUPABASE_BUCKET)
+      .list(folder, { limit: 100, sortBy: { column: 'created_at', order: 'desc' } });
+    if (error) { console.warn(error); return; }
+    const docs = [];
+    for (const item of (data||[])){
+      const path = `${folder}/${item.name}`;
+      const { data: pub } = supabaseClient
+        .storage
+        .from(SUPABASE_BUCKET)
+        .getPublicUrl(path);
+      docs.push({ name: item.name, url: pub.publicUrl, path, date: (item.created_at ? new Date(item.created_at).toLocaleString() : new Date().toLocaleString()) });
+    }
+    documents = docs;
+    renderDocuments();
+    save();
+  }catch(e){ console.warn(e); }
+}
+
+async function deleteDocument(path){
+  if(!supabaseClient){alert('Cloud not configured');return;}
+  if(!confirm('Delete this document?')) return;
+  try{
+    const { error } = await supabaseClient.storage.from(SUPABASE_BUCKET).remove([path]);
+    if (error) { console.warn(error); alert('Delete failed'); return; }
+    // Refresh list
+    await syncDocumentsFromStorage();
+  }catch(e){ console.warn(e); }
+}
+
+async function renameDocument(oldPath,currentName){
+  if(!supabaseClient){alert('Cloud not configured');return;}
+  const newName = prompt('New file name:', currentName || '');
+  if(!newName || newName === currentName) return;
+  const folder = oldPath.split('/').slice(0,-1).join('/');
+  const newPath = `${folder}/${newName}`;
+  try{
+    // Try move; if not supported, fallback to copy+remove
+    let mv = await supabaseClient.storage.from(SUPABASE_BUCKET).move(oldPath, newPath);
+    if (mv.error){
+      const { data: download, error: dlErr } = await supabaseClient.storage.from(SUPABASE_BUCKET).download(oldPath);
+      if (dlErr) { console.warn(dlErr); alert('Rename failed'); return; }
+      const { error: upErr } = await supabaseClient.storage.from(SUPABASE_BUCKET).upload(newPath, download, { upsert: true });
+      if (upErr) { console.warn(upErr); alert('Rename failed'); return; }
+      await supabaseClient.storage.from(SUPABASE_BUCKET).remove([oldPath]);
+    }
+    await syncDocumentsFromStorage();
+  }catch(e){ console.warn(e); alert('Rename failed'); }
+}
+
+// Feedback sync
+async function syncFeedbackFromSupabase(){
+  if(!supabaseClient) return;
+  try{
+    const { data, error } = await supabaseClient.from('dashboard_feedback').select('id,type,msg,status,created_at').order('created_at', { ascending: false });
+    if (error) { console.warn(error); return; }
+    feedback = (data||[]).map(r => ({ type: r.type, msg: r.msg, status: r.status || 'Open', date: new Date(r.created_at).toLocaleString() }));
+    renderFeedback();
+    save();
+  }catch(e){ console.warn(e); }
+}
+
+async function insertFeedbackToSupabase(entry){
+  if(!supabaseClient) return;
+  try{
+    await supabaseClient.from('dashboard_feedback').insert({ type: entry.type, msg: entry.msg, status: entry.status || 'Open' });
+  }catch(e){ console.warn(e); }
+}
+
+// Meetings sync
+async function syncMeetingsFromSupabase(){
+  if(!supabaseClient) return;
+  try{
+    const { data, error } = await supabaseClient.from('dashboard_meetings').select('id,title,date,notes,created_at').order('created_at', { ascending: false });
+    if (error) { console.warn(error); return; }
+    meetings = (data||[]).map(r => ({ title: r.title, date: r.date, notes: r.notes || '' }));
+    renderMeetings();
+    save();
+  }catch(e){ console.warn(e); }
+}
+
+async function insertMeetingToSupabase(entry){
+  if(!supabaseClient) return;
+  try{
+    await supabaseClient.from('dashboard_meetings').insert({ title: entry.title, date: entry.date, notes: entry.notes || '' });
+  }catch(e){ console.warn(e); }
+}
 
 async function syncTaskToSupabase(phase,idx){if(!supabaseClient)return;const t=tasks[phase][idx];const payload={phase,name:t.name,description:t.desc,done:t.done,completed_at:t.completed_at,notes:t.notes||[],subtasks:t.subtasks||[],order_index:idx};if(!t.id){const {data,error}=await supabaseClient.from('dashboard_tasks').insert(payload).select('id').single();if(!error&&data){t.id=data.id;}}else{await supabaseClient.from('dashboard_tasks').update(payload).eq('id',t.id);} }
 
