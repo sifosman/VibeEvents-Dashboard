@@ -194,6 +194,9 @@ const tasks={1:[
 {name:"Post-launch Support",desc:"3 months warranty",done:false,completed_at:null,notes:[],subtasks:[]}
 ]};
 
+// Snapshot of the original default tasks to allow restoration/merge
+const DEFAULT_TASKS = JSON.parse(JSON.stringify(tasks));
+
 let feedback=[],meetings=[],documents=[],currentPhase=1,currentTask=null,startDate=new Date();
 
 let dragData=null;
@@ -342,7 +345,34 @@ async function load(){const data=localStorage.getItem('vibeventzData');if(data){
 
 async function initSupabase(){try{supabaseClient = window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);}catch(e){console.warn('Supabase init failed',e);}}
 
-async function syncFromSupabase(){if(!supabaseClient)return;const {data,error}=await supabaseClient.from('dashboard_tasks').select('id,phase,name,description,done,completed_at,notes,subtasks,order_index').order('phase').order('order_index');if(error){console.warn(error);return;}const grouped={1:[],2:[],3:[],4:[],5:[]};(data||[]).forEach(row=>{grouped[row.phase].push({id:row.id,name:row.name,desc:row.description||'',done:!!row.done,completed_at:row.completed_at,notes:row.notes||[],subtasks:row.subtasks||[]});});for(let p=1;p<=5;p++){if(grouped[p].length){tasks[p]=grouped[p];renderTasks(p);} }updateProgress();}
+async function syncFromSupabase(){
+  if(!supabaseClient) return;
+  const {data,error}=await supabaseClient
+    .from('dashboard_tasks')
+    .select('id,phase,name,description,done,completed_at,notes,subtasks,order_index')
+    .order('phase')
+    .order('order_index');
+  if(error){console.warn(error);return;}
+  const grouped={1:[],2:[],3:[],4:[],5:[]};
+  (data||[]).forEach(row=>{
+    grouped[row.phase].push({id:row.id,name:row.name,desc:row.description||'',done:!!row.done,completed_at:row.completed_at,notes:row.notes||[],subtasks:row.subtasks||[]});
+  });
+  // Merge in any missing default tasks by name
+  for(let p=1;p<=5;p++){
+    const existingNames = new Set(grouped[p].map(t=>t.name));
+    (DEFAULT_TASKS[p]||[]).forEach(dt=>{
+      if(!existingNames.has(dt.name)){
+        grouped[p].push(JSON.parse(JSON.stringify(dt)));
+      }
+    });
+    // If still empty, fall back entirely to defaults
+    tasks[p] = grouped[p].length ? grouped[p] : JSON.parse(JSON.stringify(DEFAULT_TASKS[p]||[]));
+    renderTasks(p);
+  }
+  updateProgress();
+  // Upsert any missing defaults to Supabase to keep cloud in sync
+  try{ await syncAllToSupabase(); }catch(_e){}
+}
 
 async function syncDocumentsFromStorage(){
   if(!supabaseClient) return;
